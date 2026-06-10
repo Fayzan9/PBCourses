@@ -7,20 +7,21 @@ import {
   Scene5_MusicSpace, Scene6_ProductSpace, 
   Scene7_ImageSpace, Scene8_LanguageSpace, Scene9_SemanticGalaxy, 
   Scene10_ChatGPTReveal, Scene11_Unification, Scene12_MathReveal, 
-  Scene13_InteractivePlayground, Scene14_FinalModel 
+  Scene13_InteractivePlayground, Scene14_FinalModel, Scene15_NextHook
 } from './scenes/Scenes';
 import {
   Scene2_1_CuriosityHook, Scene2_2_HowDoWeCompare, Scene2_3_RealWorldProximity,
   Scene2_4_EuclideanDistance, Scene2_5_HigherDimensions, Scene2_6_MagnitudeTrapQuestion,
   Scene2_7_SameDifferent, Scene2_8_CosineIdea, Scene2_9_CosineSimilarity,
-  Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox
+  Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox,
+  Scene2_13_NextHook
 } from './scenes/Chapter2Scenes';
 import {
   Scene3_1_CuriosityHook, Scene3_2_HowToMeasure, Scene3_3_RealWorldAnalogies,
   Scene3_4_AngleExplorer, Scene3_5_WhatAboutPerpendicular, Scene3_6_ZeroAlignment,
   Scene3_7_OppositeNegative, Scene3_8_ShadowProjection, Scene3_9_CanWeSkipAngle,
   Scene3_10_CoordinateShortcut, Scene3_11_GrandEquivalence, Scene3_12_WhySignalMatters,
-  Scene3_13_SignalStrength
+  Scene3_13_SignalStrength, Scene3_14_NextHook
 } from './scenes/Chapter3Scenes';
 import {
   Scene4_1_WarpCuriosity,
@@ -44,6 +45,7 @@ import {
   Scene4_19_NonLinearity,
   Scene4_20_DeepNetworks,
   Scene4_21_MatrixSandbox,
+  Scene4_22_NextHook,
 } from './scenes/Chapter4Scenes';
 
 const CHAPTERS = [
@@ -67,7 +69,8 @@ const CHAPTERS = [
       { component: Scene11_Unification, title: "The Great Unification" },
       { component: Scene12_MathReveal, title: "Meet the Vector" },
       { component: Scene13_InteractivePlayground, title: "Interactive Sandbox" },
-      { component: Scene14_FinalModel, title: "Core Mental Model" }
+      { component: Scene14_FinalModel, title: "Core Mental Model" },
+      { component: Scene15_NextHook,    title: "What's Next" }
     ]
   },
   {
@@ -86,7 +89,8 @@ const CHAPTERS = [
       { component: Scene2_9_CosineSimilarity,         title: "Cosine Similarity" },
       { component: Scene2_10_CosineMath,              title: "The Normalization Trick" },
       { component: Scene2_11_WhenToUseWhich,          title: "Think: Which Metric?" },
-      { component: Scene2_12_ProximitySandbox,        title: "Proximity Sandbox" }
+      { component: Scene2_12_ProximitySandbox,        title: "Proximity Sandbox" },
+      { component: Scene2_13_NextHook,                 title: "What's Next" }
     ]
   },
   {
@@ -106,7 +110,8 @@ const CHAPTERS = [
       { component: Scene3_10_CoordinateShortcut,       title: "Coordinate Shortcut" },
       { component: Scene3_11_GrandEquivalence,         title: "Two Paths, One Answer" },
       { component: Scene3_12_WhySignalMatters,         title: "Think: Signal Strength" },
-      { component: Scene3_13_SignalStrength,            title: "Signal Strength Sandbox" }
+      { component: Scene3_13_SignalStrength,            title: "Signal Strength Sandbox" },
+      { component: Scene3_14_NextHook,                   title: "What's Next" }
     ]
   },
   {
@@ -134,7 +139,8 @@ const CHAPTERS = [
       { component: Scene4_18_StackLinearQuestion,title: "Think: Stack 100 Layers?" },
       { component: Scene4_19_NonLinearity,       title: "The Bend" },
       { component: Scene4_20_DeepNetworks,       title: "Depth = Power" },
-      { component: Scene4_21_MatrixSandbox,      title: "Matrix Sandbox" }
+      { component: Scene4_21_MatrixSandbox,      title: "Matrix Sandbox" },
+      { component: Scene4_22_NextHook,            title: "What's Next" }
     ]
   }
 ];

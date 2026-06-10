@@ -1516,67 +1516,96 @@ export const Scene4_21_MatrixSandbox: React.FC = () => {
     { name: 'Collapse', vals: [1,    1,    1,    1   ] },
   ];
 
-  const SliderEntry: React.FC<{ label: string; value: number; onChange: (v: number) => void; color: string }> = ({ label, value, onChange, color }) => (
-    <div>
-      <div className="flex justify-between text-xs font-mono font-bold mb-1" style={{ color }}>
-        <span>{label}</span>
-        <span>{value.toFixed(1)}</span>
+  const SliderEntry: React.FC<{ label: string; sublabel: string; value: number; onChange: (v: number) => void; color: string }> = ({ label, sublabel, value, onChange, color }) => {
+    const pct = ((value + 2) / 4) * 100;
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-5 h-5 rounded-md flex items-center justify-center text-[11px] font-black font-mono text-white" style={{ backgroundColor: color }}>{label}</span>
+            <span className="text-[11px] font-semibold text-slate-500">{sublabel}</span>
+          </div>
+          <span className="text-sm font-black font-mono" style={{ color }}>{value.toFixed(1)}</span>
+        </div>
+        <div className="relative h-7 flex items-center">
+          <input
+            type="range" min="-2" max="2" step="0.1" value={value}
+            onChange={e => onChange(Number(e.target.value))}
+            className="w-full appearance-none cursor-pointer rounded-full h-2"
+            style={{
+              background: `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%)`,
+              accentColor: color,
+            }}
+          />
+        </div>
       </div>
-      <input
-        type="range" min="-2" max="2" step="0.1" value={value}
-        onChange={e => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-lg appearance-none cursor-pointer"
-        style={{ accentColor: color }}
-      />
-    </div>
-  );
+    );
+  };
 
   return (
     <SlideLayout
       title="Your Matrix, Your Space"
       text="Drag the sliders or pick a preset. Watch space warp live. Try the Collapse preset and see what happens to the determinant — and to the grid."
       sidebarContent={
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap gap-1.5">
-            {presets.map(p => (
-              <button
-                key={p.name}
-                onClick={() => { setA(p.vals[0]); setB(p.vals[1]); setC(p.vals[2]); setD(p.vals[3]); }}
-                className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-[11px] font-bold text-slate-600 hover:border-violet-300 hover:text-violet-600 transition-all cursor-pointer"
-              >
-                {p.name}
-              </button>
-            ))}
+        <div className="flex flex-col gap-3">
+          {/* Presets */}
+          <div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">Presets</div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {presets.map(p => (
+                <button
+                  key={p.name}
+                  onClick={() => { setA(p.vals[0]); setB(p.vals[1]); setC(p.vals[2]); setD(p.vals[3]); }}
+                  className="px-2 py-2 rounded-xl bg-white border border-slate-200 text-[11px] font-bold text-slate-600 hover:border-violet-400 hover:text-violet-700 hover:bg-violet-50 hover:shadow-sm transition-all cursor-pointer active:scale-95"
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">Matrix M</div>
-            <div className="grid grid-cols-2 gap-2 font-mono text-center mb-3">
-              {[['a', a, '#E11D48'], ['b', b, '#D97706'], ['c', c, '#7C3AED'], ['d', d, '#0284C7']].map(([lbl, val, clr]) => (
-                <div key={lbl as string} className="bg-slate-50 border border-slate-200 rounded-lg py-2 text-xl font-black" style={{ color: clr as string }}>
-                  {(val as number).toFixed(1)}
+          {/* Matrix display */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-3">Matrix M</div>
+            <div className="grid grid-cols-2 gap-2 font-mono text-center mb-4">
+              {([['a', a, '#E11D48'], ['b', b, '#D97706'], ['c', c, '#7C3AED'], ['d', d, '#0284C7']] as [string, number, string][]).map(([lbl, val, clr]) => (
+                <div key={lbl} className="flex flex-col items-center justify-center rounded-xl py-2.5 border" style={{ borderColor: clr + '33', backgroundColor: clr + '0D' }}>
+                  <span className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: clr + 'AA' }}>{lbl}</span>
+                  <span className="text-2xl font-black leading-none" style={{ color: clr }}>{val.toFixed(1)}</span>
                 </div>
               ))}
             </div>
-            <div className="flex flex-col gap-3">
-              <SliderEntry label="a  (top-left)"     value={a} onChange={setA} color="#E11D48" />
-              <SliderEntry label="b  (top-right)"    value={b} onChange={setB} color="#D97706" />
-              <SliderEntry label="c  (bottom-left)"  value={c} onChange={setC} color="#7C3AED" />
-              <SliderEntry label="d  (bottom-right)" value={d} onChange={setD} color="#0284C7" />
+            <div className="flex flex-col gap-4">
+              <SliderEntry label="a" sublabel="top-left"     value={a} onChange={setA} color="#E11D48" />
+              <SliderEntry label="b" sublabel="top-right"    value={b} onChange={setB} color="#D97706" />
+              <SliderEntry label="c" sublabel="bottom-left"  value={c} onChange={setC} color="#7C3AED" />
+              <SliderEntry label="d" sublabel="bottom-right" value={d} onChange={setD} color="#0284C7" />
             </div>
           </div>
 
-          <div className={`rounded-xl p-3 border text-xs font-bold font-mono transition-all ${
+          {/* Determinant badge */}
+          <div className={`rounded-2xl px-4 py-3 border flex items-center justify-between transition-all ${
             Math.abs(det) < 0.05
-              ? 'bg-rose-50 border-rose-300 text-rose-700'
+              ? 'bg-rose-50 border-rose-200 text-rose-700'
+              : det < 0
+              ? 'bg-amber-50 border-amber-200 text-amber-700'
               : 'bg-slate-50 border-slate-200 text-slate-600'
           }`}>
-            det(M) = {det.toFixed(2)}
-            {Math.abs(det) < 0.05 && (
-              <span className="block text-[10px] mt-1 font-medium text-rose-500">
-                Space collapsed to a line — information is lost forever.
-              </span>
-            )}
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-wider opacity-60 font-bold mb-0.5">Determinant</div>
+              <div className="text-xl font-black font-mono">det(M) = {det.toFixed(2)}</div>
+              {Math.abs(det) < 0.05 && (
+                <div className="text-[10px] mt-1 font-semibold text-rose-500">Space collapsed — info lost forever.</div>
+              )}
+              {det < -0.05 && (
+                <div className="text-[10px] mt-1 font-semibold text-amber-500">Negative: space is flipped!</div>
+              )}
+            </div>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-black ${
+              Math.abs(det) < 0.05 ? 'bg-rose-200 text-rose-700' : det < 0 ? 'bg-amber-200 text-amber-700' : 'bg-slate-200 text-slate-600'
+            }`}>
+              {Math.abs(det) < 0.05 ? '0' : det < 0 ? '↔' : '✓'}
+            </div>
           </div>
         </div>
       }
@@ -1587,3 +1616,59 @@ export const Scene4_21_MatrixSandbox: React.FC = () => {
     </SlideLayout>
   );
 };
+
+// ==========================================
+// CHAPTER 4 → CHAPTER 5: Next Hook
+// ==========================================
+export const Scene4_22_NextHook: React.FC = () => (
+  <div className="flex flex-col items-center justify-center h-full px-8 text-center max-w-3xl mx-auto relative">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-emerald-400/10 filter blur-[120px] pointer-events-none" />
+
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      className="flex flex-col items-center gap-6 z-10"
+    >
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 14 }}
+        className="text-6xl select-none"
+      >
+        🧲
+      </motion.div>
+
+      <span className="text-xs font-mono uppercase tracking-widest text-emerald-600 font-extrabold">Up Next · Chapter 5</span>
+
+      <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-tight">
+        You can warp space.<br />
+        <span className="text-emerald-600">But which directions survive?</span>
+      </h1>
+
+      <div className="w-16 h-1.5 bg-gradient-to-r from-emerald-400 to-sky-500 rounded-full" />
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.8 }}
+        className="text-slate-500 text-lg font-medium leading-relaxed max-w-md"
+      >
+        Every matrix has special directions that only get scaled — not rotated. These <em>eigenvectors</em> reveal what a transformation fundamentally does, and they power PCA, Google PageRank, and more.
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.6, duration: 0.7 }}
+        className="flex items-center gap-4 mt-2"
+      >
+        {[['Eigenvectors', '#059669'], ['Eigenvalues', '#0284C7'], ['PCA', '#7C3AED']].map(([label, color]) => (
+          <div key={label} className="px-3 py-1.5 rounded-full border text-xs font-bold" style={{ borderColor: color + '55', color, backgroundColor: color + '11' }}>
+            {label}
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  </div>
+);
