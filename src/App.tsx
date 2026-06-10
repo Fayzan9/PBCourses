@@ -47,6 +47,30 @@ import {
   Scene4_21_MatrixSandbox,
   Scene4_22_NextHook,
 } from './scenes/Chapter4Scenes';
+import {
+  Scene5_1_CuriosityHook,
+  Scene5_2_RubberSheetThink,
+  Scene5_3_RealWorldAnalogies,
+  Scene5_4_WobbleTest,
+  Scene5_5_WhatMakesSpecial,
+  Scene5_6_TheEquation,
+  Scene5_7_WhatIsLambda,
+  Scene5_8_EigenvalueExplorer,
+  Scene5_9_GeometricPicture,
+  Scene5_10_CanEveryMatrix,
+  Scene5_11_CharacteristicEquation,
+  Scene5_12_WorkedExample,
+  Scene5_13_NegativeLambda,
+  Scene5_14_Diagonalization,
+  Scene5_15_PCAIntuition,
+  Scene5_16_WhyMLLoves,
+  Scene5_17_SymmetricMatrices,
+  Scene5_18_Spectrum,
+  Scene5_19_RankThink,
+  Scene5_20_EigenSandbox,
+  Scene5_21_GrandSummary,
+  Scene5_22_NextHook,
+} from './scenes/Chapter5Scenes';
 
 const CHAPTERS = [
   {
@@ -141,6 +165,35 @@ const CHAPTERS = [
       { component: Scene4_20_DeepNetworks,       title: "Depth = Power" },
       { component: Scene4_21_MatrixSandbox,      title: "Matrix Sandbox" },
       { component: Scene4_22_NextHook,            title: "What's Next" }
+    ]
+  },
+  {
+    id: 5,
+    title: "Eigenvectors & Eigenvalues",
+    subtitle: "Chapter 5: The Skeleton of Every Transformation",
+    scenes: [
+      { component: Scene5_1_CuriosityHook,            title: "Special Directions" },
+      { component: Scene5_2_RubberSheetThink,          title: "Think: The Rubber Sheet" },
+      { component: Scene5_3_RealWorldAnalogies,        title: "Eigenvectors Everywhere" },
+      { component: Scene5_4_WobbleTest,                title: "The Wobble Test" },
+      { component: Scene5_5_WhatMakesSpecial,          title: "Think: What Makes Special?" },
+      { component: Scene5_6_TheEquation,               title: "The Equation Revealed" },
+      { component: Scene5_7_WhatIsLambda,              title: "Think: What Is λ?" },
+      { component: Scene5_8_EigenvalueExplorer,        title: "Feel the Eigenvalue" },
+      { component: Scene5_9_GeometricPicture,          title: "Eigenvectors in the Grid" },
+      { component: Scene5_10_CanEveryMatrix,           title: "Think: Every Matrix?" },
+      { component: Scene5_11_CharacteristicEquation,   title: "Finding Eigenvalues (Math)" },
+      { component: Scene5_12_WorkedExample,            title: "Worked Example" },
+      { component: Scene5_13_NegativeLambda,           title: "Think: Negative λ" },
+      { component: Scene5_14_Diagonalization,          title: "Why Eigenvectors Are Powerful" },
+      { component: Scene5_15_PCAIntuition,             title: "PCA: The Spread Direction" },
+      { component: Scene5_16_WhyMLLoves,               title: "Think: Why ML Loves Them" },
+      { component: Scene5_17_SymmetricMatrices,        title: "Symmetric = Guaranteed" },
+      { component: Scene5_18_Spectrum,                 title: "The Eigenvalue Spectrum" },
+      { component: Scene5_19_RankThink,                title: "Think: Rank the Eigenvalues" },
+      { component: Scene5_20_EigenSandbox,             title: "Eigen Sandbox" },
+      { component: Scene5_21_GrandSummary,             title: "Everything You Now Know" },
+      { component: Scene5_22_NextHook,                 title: "What's Next" },
     ]
   }
 ];
