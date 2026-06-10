@@ -9,45 +9,83 @@ import {
   Scene10_ChatGPTReveal, Scene11_Unification, Scene12_MathReveal, 
   Scene13_InteractivePlayground, Scene14_FinalModel 
 } from './scenes/Scenes';
+import {
+  Scene2_1_ProximityCuriosity, Scene2_2_EuclideanDistance, Scene2_2b_HighDimEuclidean,
+  Scene2_3_MagnitudeTrap, Scene2_4_CosineSimilarity, Scene2_4b_CosineMath,
+  Scene2_5_ProximitySandbox
+} from './scenes/Chapter2Scenes';
 
-const SCENES = [
-  { component: Scene1_Curiosity, title: "Curiosity" },
-  { component: Scene2_PersonRep, title: "Measurements to Numbers" },
-  { component: Scene3_PeoplePoints, title: "People Become Locations" },
-  { component: Scene4_MovieSpace, title: "Movie Space (2D)" },
-  { component: Scene4b_ThreeDSpace, title: "Adding a 3rd Dimension (3D)" },
-  { component: Scene4c_HighDimSpace, title: "Hyper-Dimensions" },
-  { component: Scene5_MusicSpace, title: "Music Clustering" },
-  { component: Scene6_ProductSpace, title: "Product Space" },
-  { component: Scene7_ImageSpace, title: "Images are Grids" },
-  { component: Scene8_LanguageSpace, title: "Language Space" },
-  { component: Scene9_SemanticGalaxy, title: "Semantic Galaxy" },
-  { component: Scene10_ChatGPTReveal, title: "ChatGPT Brain" },
-  { component: Scene11_Unification, title: "The Great Unification" },
-  { component: Scene12_MathReveal, title: "Meet the Vector" },
-  { component: Scene13_InteractivePlayground, title: "Interactive Sandbox" },
-  { component: Scene14_FinalModel, title: "Core Mental Model" }
+const CHAPTERS = [
+  {
+    id: 1,
+    title: "Everything Can Become a Point",
+    subtitle: "Chapter 1: The Secret Language of Modern AI",
+    scenes: [
+      { component: Scene1_Curiosity, title: "Curiosity" },
+      { component: Scene2_PersonRep, title: "Measurements to Numbers" },
+      { component: Scene3_PeoplePoints, title: "People Become Locations" },
+      { component: Scene4_MovieSpace, title: "Movie Space (2D)" },
+      { component: Scene4b_ThreeDSpace, title: "Adding a 3rd Dimension (3D)" },
+      { component: Scene4c_HighDimSpace, title: "Hyper-Dimensions" },
+      { component: Scene5_MusicSpace, title: "Music Clustering" },
+      { component: Scene6_ProductSpace, title: "Product Space" },
+      { component: Scene7_ImageSpace, title: "Images are Grids" },
+      { component: Scene8_LanguageSpace, title: "Language Space" },
+      { component: Scene9_SemanticGalaxy, title: "Semantic Galaxy" },
+      { component: Scene10_ChatGPTReveal, title: "ChatGPT Brain" },
+      { component: Scene11_Unification, title: "The Great Unification" },
+      { component: Scene12_MathReveal, title: "Meet the Vector" },
+      { component: Scene13_InteractivePlayground, title: "Interactive Sandbox" },
+      { component: Scene14_FinalModel, title: "Core Mental Model" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Measuring Proximity",
+    subtitle: "Chapter 2: Similarity & Distance Metrics",
+    scenes: [
+      { component: Scene2_1_ProximityCuriosity, title: "Proximity Curiosity" },
+      { component: Scene2_2_EuclideanDistance, title: "Euclidean Distance" },
+      { component: Scene2_2b_HighDimEuclidean, title: "Adding Dimensions (3D)" },
+      { component: Scene2_3_MagnitudeTrap, title: "The Magnitude Trap" },
+      { component: Scene2_4_CosineSimilarity, title: "Cosine Similarity" },
+      { component: Scene2_4b_CosineMath, title: "Inside Cosine Math" },
+      { component: Scene2_5_ProximitySandbox, title: "Proximity Sandbox" }
+    ]
+  }
 ];
 
 export const App: React.FC = () => {
-  const [currentScene, setCurrentScene] = useState(0);
+  const [activeChapterIdx, setActiveChapterIdx] = useState(0);
+  const [currentSceneIdx, setCurrentSceneIdx] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const totalScenes = SCENES.length;
+  const activeChapter = CHAPTERS[activeChapterIdx];
+  const activeScene = activeChapter.scenes[currentSceneIdx];
+  const totalScenes = activeChapter.scenes.length;
 
   const navigateNext = () => {
-    if (currentScene < totalScenes - 1) {
+    if (currentSceneIdx < totalScenes - 1) {
       setDirection(1);
-      setCurrentScene(c => c + 1);
+      setCurrentSceneIdx(c => c + 1);
+    } else if (activeChapterIdx < CHAPTERS.length - 1) {
+      setDirection(1);
+      setActiveChapterIdx(c => c + 1);
+      setCurrentSceneIdx(0);
     }
   };
 
   const navigatePrev = () => {
-    if (currentScene > 0) {
+    if (currentSceneIdx > 0) {
       setDirection(-1);
-      setCurrentScene(c => c - 1);
+      setCurrentSceneIdx(c => c - 1);
+    } else if (activeChapterIdx > 0) {
+      setDirection(-1);
+      const prevChapterIdx = activeChapterIdx - 1;
+      setActiveChapterIdx(prevChapterIdx);
+      setCurrentSceneIdx(CHAPTERS[prevChapterIdx].scenes.length - 1);
     }
   };
 
@@ -73,7 +111,7 @@ export const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentScene, isSidebarOpen]);
+  }, [currentSceneIdx, activeChapterIdx, isSidebarOpen, totalScenes]);
 
   // Touch Swipe Gesture Detectors
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -96,12 +134,19 @@ export const App: React.FC = () => {
   };
 
   const jumpToScene = (idx: number) => {
-    setDirection(idx > currentScene ? 1 : -1);
-    setCurrentScene(idx);
+    setDirection(idx > currentSceneIdx ? 1 : -1);
+    setCurrentSceneIdx(idx);
     setIsSidebarOpen(false);
   };
 
-  const ActiveComponent = SCENES[currentScene].component;
+  const selectChapter = (chapterIdx: number) => {
+    setDirection(chapterIdx > activeChapterIdx ? 1 : -1);
+    setActiveChapterIdx(chapterIdx);
+    setCurrentSceneIdx(0);
+    setIsSidebarOpen(false);
+  };
+
+  const ActiveComponent = activeScene.component;
 
   // Animation variants for slide transitions
   const slideVariants = {
@@ -144,7 +189,7 @@ export const App: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
+            className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 animate-pulse-slow"
             title="Open navigation menu"
           >
             <Menu size={20} />
@@ -156,10 +201,10 @@ export const App: React.FC = () => {
             </div>
             <div>
               <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-                Everything Can Become a Point
+                {activeChapter.title}
               </h1>
               <p className="text-xs text-slate-500 font-bold">
-                Chapter 1: The Secret Language of Modern AI
+                {activeChapter.subtitle}
               </p>
             </div>
           </div>
@@ -167,8 +212,8 @@ export const App: React.FC = () => {
 
         {/* Progress Tracker dots */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
-          {SCENES.map((scene, idx) => {
-            const isActive = idx === currentScene;
+          {activeChapter.scenes.map((scene, idx) => {
+            const isActive = idx === currentSceneIdx;
             return (
               <button
                 key={idx}
@@ -230,12 +275,28 @@ export const App: React.FC = () => {
                     Fundamentals
                   </div>
 
-                  {/* Chapter 1 */}
+                  {/* Chapter 1 Button */}
                   <button
-                    onClick={() => jumpToScene(0)}
-                    className="w-full text-left py-2 px-3 rounded-xl text-sm font-extrabold transition-all cursor-pointer bg-vector/10 text-vector border border-vector/20"
+                    onClick={() => selectChapter(0)}
+                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                      activeChapterIdx === 0
+                        ? 'bg-vector/10 text-vector border border-vector/20'
+                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
+                    }`}
                   >
                     Chapter 1: Everything is a Point
+                  </button>
+
+                  {/* Chapter 2 Button */}
+                  <button
+                    onClick={() => selectChapter(1)}
+                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                      activeChapterIdx === 1
+                        ? 'bg-vector/10 text-vector border border-vector/20'
+                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
+                    }`}
+                  >
+                    Chapter 2: Measuring Proximity
                   </button>
                 </div>
               </div>
@@ -249,7 +310,7 @@ export const App: React.FC = () => {
         <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
-              key={currentScene}
+              key={`${activeChapterIdx}-${currentSceneIdx}`}
               custom={direction}
               variants={slideVariants}
               initial="enter"
@@ -278,7 +339,7 @@ export const App: React.FC = () => {
 
         {/* Numeric progress indicator */}
         <div className="text-xs font-mono text-slate-500 flex items-center gap-1 font-bold">
-          <span className="text-vector">{(currentScene + 1).toString().padStart(2, '0')}</span>
+          <span className="text-vector">{(currentSceneIdx + 1).toString().padStart(2, '0')}</span>
           <span>/</span>
           <span>{totalScenes.toString().padStart(2, '0')}</span>
         </div>
@@ -287,7 +348,7 @@ export const App: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={navigatePrev}
-            disabled={currentScene === 0}
+            disabled={activeChapterIdx === 0 && currentSceneIdx === 0}
             className="flex items-center justify-center p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
           >
             <ArrowLeft size={16} />
@@ -295,7 +356,7 @@ export const App: React.FC = () => {
           
           <button
             onClick={navigateNext}
-            disabled={currentScene === totalScenes - 1}
+            disabled={activeChapterIdx === CHAPTERS.length - 1 && currentSceneIdx === totalScenes - 1}
             className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-vector text-white hover:bg-sky-600 transition-all font-bold disabled:opacity-30 disabled:pointer-events-none shadow glow-vector cursor-pointer"
           >
             <span>Continue</span>

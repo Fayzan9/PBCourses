@@ -144,13 +144,12 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
     const touch = e.touches[0];
     processDrag(touch.clientX, touch.clientY, e.currentTarget);
   };
-
   const handleDragEnd = () => {
     setIsDragging(false);
   };
 
   return (
-    <div className={`relative flex items-center justify-center w-full h-full max-w-[800px] max-h-[460px] p-4 bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl ${className}`}>
+    <div className={`relative flex items-center justify-center w-full h-full max-w-[1000px] max-h-[560px] p-4 bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl ${className}`}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto select-none"
@@ -225,8 +224,7 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
         </g>
 
         {/* Axis Ticks */}
-        <g fill="rgba(71, 85, 105, 0.7)" fontSize="13" fontFamily="sans-serif">
-          {/* X Ticks */}
+        <g fill="rgba(71, 85, 105, 0.7)" fontSize="16" fontFamily="sans-serif">
           {xGridValues.map((val, i) => (
             <g key={`tick-x-${i}`}>
               <line
@@ -278,7 +276,7 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
           y={axisX_Pixel + 36}
           textAnchor="end"
           fill="#475569"
-          fontSize="15"
+          fontSize="18"
           fontWeight="800"
           letterSpacing="0.05em"
           className="uppercase tracking-wider"
@@ -290,7 +288,7 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
           y={padding - 15}
           textAnchor="start"
           fill="#475569"
-          fontSize="15"
+          fontSize="18"
           fontWeight="800"
           letterSpacing="0.05em"
           className="uppercase tracking-wider"
@@ -425,14 +423,14 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
 
               {/* Label near Point */}
               <text
-                x={pointX + 12}
-                y={pointY - 12}
+                x={pointX + 16}
+                y={pointY - 16}
                 fill={isHovered ? '#0F172A' : '#475569'}
-                fontSize="14"
+                fontSize="17"
                 fontWeight={isHovered ? '700' : '500'}
                 className="font-medium"
               >
-                {p.label} <tspan fill={p.color} fontWeight="bold" fontSize="12">[{p.coords[0].toFixed(1)}, {p.coords[1].toFixed(1)}]</tspan>
+                {p.label} <tspan fill={p.color} fontWeight="bold" fontSize="14">[{p.coords[0].toFixed(1)}, {p.coords[1].toFixed(1)}]</tspan>
               </text>
             </g>
           );
