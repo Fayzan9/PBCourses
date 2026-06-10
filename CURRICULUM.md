@@ -1,207 +1,544 @@
-# Complete AI Intuition Course — Full Curriculum Plan
+# AI Series — Master Curriculum Framework
+
+## Mission
+
+The goal of the AI Series is not to teach isolated mathematical topics.
+
+The goal is to build a complete mental model of modern Artificial Intelligence from first principles.
+
+By the end of the curriculum, a learner should understand:
+
+* How data becomes vectors
+* How vectors become representations
+* How neural networks transform representations
+* How optimization creates intelligence
+* How transformers generate language
+* How modern AI systems are built
+
+The curriculum progresses from intuition and geometry to machine learning and large language models.
 
 ---
 
-## ✅ Done
+# Curriculum Architecture
 
-| Ch | Title | Core Takeaway |
-|---|---|---|
-| 1 | Everything Can Become a Point | Vectors, embeddings, high-dimensional space |
-| 2 | Measuring Proximity | Euclidean distance, cosine similarity |
-| 3 | The Dot Product | Projection, alignment, signal strength |
-| 4 | Matrix Transformations | Linear maps, neural layers, composing transforms |
-| 5 | Eigenvectors & Eigenvalues | Natural axes, PCA, spectral decomposition |
+The curriculum is divided into seven stages.
 
----
+```text
+Stage 1
+Mathematical Foundations
+        ↓
+Stage 2
+Representation Learning
+        ↓
+Stage 3
+Optimization & Learning
+        ↓
+Stage 4
+Neural Networks
+        ↓
+Stage 5
+Deep Learning
+        ↓
+Stage 6
+Transformers & LLMs
+        ↓
+Stage 7
+Modern AI Systems
+```
 
-## 📐 Foundation Block — Linear Algebra Completion
-
-### Ch 6 — Singular Value Decomposition (SVD)
-- What if the matrix isn't square?
-- U·Σ·Vᵀ decomposition — rotate, scale, rotate back
-- Singular values vs eigenvalues
-- Low-rank approximation: keep top-k singular vectors
-- Image compression walkthrough (rank-1, rank-5, rank-50 reconstruction)
-- Recommender systems: user-movie matrix decomposed
-- Connection to attention mechanism in transformers
-- Interactive: SVD slider showing reconstruction quality
-
-### Ch 7 — Probability & Distributions
-- Why AI outputs probabilities, not hard answers
-- Sample spaces as geometric regions
-- Gaussian distribution — the bell curve as a vector space shape
-- Joint probability, conditional probability
-- Bayes' theorem: updating beliefs with evidence
-- The "surprise" of an event → information content
-- Real examples: spam filter, medical diagnosis, autocomplete confidence
+Each stage answers questions raised by the previous stage.
 
 ---
 
-## 🔥 Learning Block — How AI Trains
+# Stage 1 — Mathematical Foundations
 
-### Ch 8 — Loss Functions & Optimization Landscapes
-- What is a loss function? Measuring wrongness as a number
-- Loss surface as a landscape — hills, valleys, saddle points
-- Why we want the minimum
-- Mean Squared Error (regression) — geometric interpretation
-- Cross-Entropy Loss (classification) — why it punishes confident wrong answers harder
-- Softmax: turning raw scores into probabilities
-- Interactive: drag a prediction, watch loss change live
+Purpose:
 
-### Ch 9 — Gradient Descent
-- The gradient as "direction of steepest uphill"
-- Gradient = vector of partial derivatives
-- Gradient descent = walk downhill step by step
-- Learning rate: step size matters
-- Too large → diverge. Too small → stuck.
-- Momentum, Adam optimizer intuition
-- Saddle points and local minima
-- Interactive: 2D loss landscape with animated descent path
-- 3D loss surface visualization
+Build geometric intuition for AI.
 
-### Ch 10 — Backpropagation
-- How does a network know which weights to change?
-- Chain rule as "credit assignment through a chain"
-- Forward pass vs backward pass
-- Computational graphs — nodes are operations, edges are gradients
-- Vanishing gradients: why deep networks struggled pre-ReLU
-- ReLU as a gradient gate
-- Step-by-step: backprop through a 3-layer network
-- Interactive: adjust one weight, watch the gradient flow backwards
+Students should learn to think in spaces, vectors, transformations, and dimensions.
 
 ---
 
-## 🏗️ Architecture Block — How Models Are Built
+## Chapter 1 — Vectors: Everything is a Point
 
-### Ch 11 — Neural Networks in Depth
-- One neuron: weighted sum + nonlinearity
-- Universal approximation theorem (intuition only)
-- Width vs depth: what each adds
-- Activation functions: sigmoid, tanh, ReLU, GELU
-- Batch normalization — why and what it does geometrically
-- Dropout as a regularizer — ensembles for free
-- Overfitting and underfitting as geometric concepts
-- Interactive: build a small network, watch decision boundary form
+Question:
 
-### Ch 12 — Convolutional Neural Networks (CNNs)
-- Images as 3D tensors (H × W × C)
-- Convolution = sliding dot product
-- What filters learn: edges → textures → objects → semantics
-- Pooling: throwing away location, keeping presence
-- Receptive field: why depth = bigger picture
-- Transfer learning: why ImageNet features transfer to medical imaging
-- Interactive: visualize a filter sliding over an image
+How can machines represent anything?
 
-### Ch 13 — Embeddings in Depth
-- Word2Vec: predicting context trains meaning
-- Skip-gram objective as a dot product game
-- "king − man + woman = queen" — why arithmetic works
-- Contrastive learning (CLIP): pull matching pairs, push non-matching
-- Cosine similarity as the retrieval mechanism
-- Embedding spaces for images, text, audio, video
-- Nearest-neighbor search in embedding space (FAISS intuition)
-- Real demo: t-SNE projection of word embeddings
+Core Ideas:
+
+* Vectors
+* Dimensions
+* Embeddings
+* Feature representations
+
+Outcome:
+
+Everything can be represented as a point in space.
 
 ---
 
-## ⚡ Transformer Block — The Architecture of Modern AI
+## Chapter 2 — Distance & Similarity
 
-### Ch 14 — Attention Mechanism
-- The core problem: words depend on context far away
-- Query, Key, Value — the library analogy
-- Attention score = Q·Kᵀ = dot product similarity
-- Softmax turns scores into a soft lookup
-- Weighted sum of Values = context-aware representation
-- Scaled dot product attention — why divide by √d
-- Masked attention for autoregressive generation
-- Interactive: sentence with attention weights visualized live
+Question:
 
-### Ch 15 — Multi-Head Attention & Transformers
-- One head = one type of relationship
-- Multiple heads = multiple relationship types simultaneously
-- Concatenate + project: merge all heads
-- Position encodings: giving the model a sense of order
-- Feed-forward layers after attention: per-position processing
-- Layer normalization and residual connections
-- Encoder vs decoder architecture
-- The full transformer diagram, built piece by piece
+How do we compare points?
 
-### Ch 16 — How LLMs Work End-to-End
-- Tokenization: text → integers → embedding lookup
-- The embedding table: a giant matrix of learned vectors
-- All prior chapters combined: embed → attend → MLP → attend → … → predict
-- Next-token prediction as the training objective
-- Temperature and sampling strategies
-- In-context learning: why few-shot prompting works
-- RLHF intuition: human preferences as a reward signal
-- Emergent capabilities: why scale changes everything
+Core Ideas:
+
+* Euclidean distance
+* Cosine similarity
+* Similarity search
+
+Outcome:
+
+Nearby points represent similar concepts.
 
 ---
 
-## 📊 Practical AI Block — Applied & Modern
+## Chapter 3 — The Dot Product
 
-### Ch 17 — Regularization & Generalization
-- Bias-variance tradeoff as a geometric concept
-- L1 (Lasso): sparse solutions, feature selection
-- L2 (Ridge/weight decay): pulling weights toward zero
-- Dropout, early stopping, data augmentation
-- The double descent phenomenon
-- When to regularize and how much
+Question:
 
-### Ch 18 — Optimization Deep Dive
-- SGD, mini-batch gradient descent
-- Momentum: rolling ball analogy
-- RMSProp: adaptive learning rates per parameter
-- Adam: momentum + adaptive rates combined
-- Learning rate schedules: warmup, cosine decay
-- Gradient clipping
-- Mixed precision training (fp16/bf16)
+How do we measure alignment?
 
-### Ch 19 — Diffusion Models
-- The reverse process: denoise step by step
-- Forward process: add noise progressively (Gaussian chain)
-- Score matching: learning the gradient of the data distribution
-- U-Net architecture for noise prediction
-- CLIP guidance: steering generation with text embeddings
-- Stable Diffusion end-to-end intuition
-- Interactive: step through denoising iterations
+Core Ideas:
 
-### Ch 20 — Reinforcement Learning Intuition
-- Agent, environment, state, action, reward
-- Policy as a function from state to action probabilities
-- Value function: expected future reward from a state
-- Q-learning: learn action-values
-- Policy gradient: maximize expected reward via gradient
-- PPO (what ChatGPT uses for RLHF)
-- Exploration vs exploitation
-- Connection to how LLMs learn from human feedback
+* Projection
+* Dot product
+* Geometric interpretation
+
+Outcome:
+
+The dot product becomes the fundamental similarity operation.
 
 ---
 
-## 🧭 Course Capstone
+## Chapter 4 — Matrix Transformations
 
-### Ch 21 — Everything Connected
-- One unified diagram: from raw data → tokens → embeddings → attention → loss → gradient → update
-- How every chapter feeds into this pipeline
-- What "understanding" means to a model
-- Open problems: reasoning, grounding, alignment
-- What to learn next: research papers, libraries, projects
+Question:
+
+How do we transform spaces?
+
+Core Ideas:
+
+* Matrix multiplication
+* Scaling
+* Rotation
+* Shearing
+
+Outcome:
+
+Matrices become transformation machines.
 
 ---
 
-## 📌 Summary
+## Chapter 5 — Eigenvectors & Eigenvalues
 
-**Total: 21 chapters, ~400 scenes**
+Question:
 
-### Critical Path (minimum to understand modern LLMs)
-**Ch 6 → Ch 8 → Ch 9 → Ch 10 → Ch 14 → Ch 15 → Ch 16**
+What directions survive a transformation?
 
-### Full Learning Blocks
-| Block | Chapters | Focus |
-|---|---|---|
-| Foundation | 1–7 | Math intuition: vectors, matrices, probability |
-| Learning | 8–10 | How AI trains: loss, gradients, backprop |
-| Architecture | 11–13 | Building blocks: NNs, CNNs, embeddings |
-| Transformers | 14–16 | Attention, transformers, LLMs end-to-end |
-| Practical | 17–20 | Regularization, optimizers, diffusion, RL |
-| Capstone | 21 | Everything unified |
+Core Ideas:
+
+* Eigenvectors
+* Eigenvalues
+* PCA intuition
+
+Outcome:
+
+Transformations have preferred directions.
+
+---
+
+## Chapter 6 — Singular Value Decomposition
+
+Question:
+
+How do we analyze any matrix?
+
+Core Ideas:
+
+* Rotate
+* Stretch
+* Rotate
+* Low-rank structure
+
+Outcome:
+
+Every matrix becomes understandable.
+
+---
+
+## Chapter 7 — Dimensionality Reduction
+
+Question:
+
+Can we compress information?
+
+Core Ideas:
+
+* PCA
+* Compression
+* Latent spaces
+
+Outcome:
+
+High-dimensional data contains hidden structure.
+
+---
+
+# Stage 2 — Representation Learning
+
+Purpose:
+
+Understand how AI creates meaning from data.
+
+---
+
+## Chapter 8 — Probability & Uncertainty
+
+Question:
+
+How do we reason under uncertainty?
+
+Core Ideas:
+
+* Random variables
+* Probability distributions
+* Expected value
+
+---
+
+## Chapter 9 — Information Theory
+
+Question:
+
+What is information?
+
+Core Ideas:
+
+* Entropy
+* Surprise
+* Compression
+
+---
+
+## Chapter 10 — Embeddings
+
+Question:
+
+How does AI represent meaning?
+
+Core Ideas:
+
+* Word embeddings
+* Semantic spaces
+* Similarity
+
+---
+
+## Chapter 11 — Attention as Similarity Search
+
+Question:
+
+How does a model find relevant information?
+
+Core Ideas:
+
+* Query
+* Key
+* Value
+
+Outcome:
+
+Attention emerges naturally from vector similarity.
+
+---
+
+# Stage 3 — Optimization & Learning
+
+Purpose:
+
+Understand how models improve themselves.
+
+---
+
+## Chapter 12 — Loss Functions
+
+Question:
+
+How do we measure mistakes?
+
+---
+
+## Chapter 13 — Derivatives
+
+Question:
+
+How do we measure change?
+
+---
+
+## Chapter 14 — Gradients
+
+Question:
+
+Which direction improves performance fastest?
+
+---
+
+## Chapter 15 — Gradient Descent
+
+Question:
+
+How do models learn?
+
+---
+
+## Chapter 16 — Backpropagation
+
+Question:
+
+How does learning flow through deep networks?
+
+---
+
+# Stage 4 — Neural Networks
+
+Purpose:
+
+Build complete neural networks from first principles.
+
+---
+
+## Chapter 17 — The Artificial Neuron
+
+Question:
+
+What is the simplest learning machine?
+
+---
+
+## Chapter 18 — Activation Functions
+
+Question:
+
+Why isn't linearity enough?
+
+---
+
+## Chapter 19 — Deep Neural Networks
+
+Question:
+
+Why does depth matter?
+
+---
+
+## Chapter 20 — Classification
+
+Question:
+
+How do networks make decisions?
+
+---
+
+## Chapter 21 — Overfitting
+
+Question:
+
+Why do models memorize?
+
+---
+
+## Chapter 22 — Regularization
+
+Question:
+
+How do we generalize?
+
+---
+
+# Stage 5 — Deep Learning
+
+Purpose:
+
+Modern architectures.
+
+---
+
+## Chapter 23 — Convolutional Neural Networks
+
+Question:
+
+How do models see?
+
+---
+
+## Chapter 24 — Sequence Models
+
+Question:
+
+How do models understand order?
+
+---
+
+## Chapter 25 — Recurrent Neural Networks
+
+Question:
+
+How can information persist over time?
+
+---
+
+## Chapter 26 — The Limits of Recurrence
+
+Question:
+
+Why did RNNs fail to scale?
+
+---
+
+# Stage 6 — Transformers & LLMs
+
+Purpose:
+
+Build a transformer from scratch.
+
+---
+
+## Chapter 27 — Self-Attention
+
+Question:
+
+How does a token find relevant context?
+
+---
+
+## Chapter 28 — Multi-Head Attention
+
+Question:
+
+Can we look in multiple ways simultaneously?
+
+---
+
+## Chapter 29 — Positional Encoding
+
+Question:
+
+How do transformers know order?
+
+---
+
+## Chapter 30 — Transformer Blocks
+
+Question:
+
+How does a transformer layer work?
+
+---
+
+## Chapter 31 — Language Modeling
+
+Question:
+
+What does GPT actually predict?
+
+---
+
+## Chapter 32 — Tokenization
+
+Question:
+
+How does language become numbers?
+
+---
+
+## Chapter 33 — Training GPT
+
+Question:
+
+How does a language model learn?
+
+---
+
+## Chapter 34 — Emergence
+
+Question:
+
+Why do surprising capabilities appear?
+
+---
+
+# Stage 7 — Modern AI Systems
+
+Purpose:
+
+Connect theory to real-world AI.
+
+---
+
+## Chapter 35 — Retrieval-Augmented Generation
+
+Question:
+
+How does AI use external knowledge?
+
+---
+
+## Chapter 36 — Vector Databases
+
+Question:
+
+How do we search billions of embeddings?
+
+---
+
+## Chapter 37 — Fine-Tuning
+
+Question:
+
+How do we specialize models?
+
+---
+
+## Chapter 38 — RLHF
+
+Question:
+
+How do models learn human preferences?
+
+---
+
+## Chapter 39 — Agents
+
+Question:
+
+How do models take actions?
+
+---
+
+## Chapter 40 — Multimodal AI
+
+Question:
+
+How do models understand text, images, audio, and video together?
+
+---
+
+# Graduation Outcome
+
+A student completing the curriculum should be able to explain:
+
+1. How data becomes vectors.
+2. How vectors become embeddings.
+3. How neural networks transform embeddings.
+4. How gradients enable learning.
+5. How transformers perform attention.
+6. How GPT generates language.
+7. How modern AI systems are built and deployed.
+
+The curriculum should feel like one continuous story rather than forty disconnected lessons.
