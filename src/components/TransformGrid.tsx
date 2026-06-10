@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { type Vec2, type Mat2, mulMV, lerpMat, easeOutCubic, fmt, eigenvalues, eigenvector } from './mathHelpers';
+import { LAYOUT_CONFIG } from './layoutConfig';
 
 export function useAnimatedMatrix(target: Mat2, duration = 650): Mat2 {
   const [mat, setMat] = useState<Mat2>(target);
@@ -54,7 +55,10 @@ export const TransformGrid: React.FC<{
   range?: number;
 }> = ({
   M, highlightVec = null, showOriginalVec = false, extraVec = null,
-  width = 480, height = 480, scale = 68, range = 3,
+  width = LAYOUT_CONFIG.graphWidth,
+  height = LAYOUT_CONFIG.graphHeight,
+  scale = LAYOUT_CONFIG.graphScale,
+  range = LAYOUT_CONFIG.graphRange,
 }) => {
   const cx = width / 2, cy = height / 2;
 
@@ -151,7 +155,10 @@ export const VecLabel: React.FC<{ x: number; y: number; text: string; color: str
 export const EigenGrid: React.FC<EigenGridProps> = ({
   M, showEigen = false, showBasisOnly = false,
   highlightVecs = [],
-  width = 480, height = 480, scale = 68, range = 3,
+  width = LAYOUT_CONFIG.graphWidth,
+  height = LAYOUT_CONFIG.graphHeight,
+  scale = LAYOUT_CONFIG.graphScale,
+  range = LAYOUT_CONFIG.graphRange,
 }) => {
   const cx = width / 2, cy = height / 2;
   const pt = (x: number, y: number): Vec2 => {

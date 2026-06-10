@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { type Vec2, type Mat2, mulMV, norm, fmt } from '../../components/mathHelpers';
 import { useAnimatedMatrix } from '../../components/TransformGrid';
+import { LAYOUT_CONFIG } from '../../components/layoutConfig';
 
 const MARKER_DEFS = (
   <defs>
@@ -91,8 +92,8 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
   const testRot  = Math.acos(testDot) * 180 / Math.PI;
 
   return (
-    <div className="flex flex-col lg:flex-row items-stretch gap-5 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
-      <div className="flex-[65] min-h-0 min-w-0 flex items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl shadow-inner overflow-hidden p-2">
+    <div className={LAYOUT_CONFIG.containerClass}>
+      <div className={LAYOUT_CONFIG.leftSideClass}>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
           {MARKER_DEFS}
           <rect width={W} height={H} fill="white" rx="16" />
@@ -221,7 +222,7 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
         </svg>
       </div>
 
-      <div className="flex-[35] min-w-0 flex flex-col gap-3 shrink-0 pt-2 pb-2 overflow-y-auto">
+      <div className={LAYOUT_CONFIG.rightSideClass}>
         <div>
           <h2 className="text-xl font-black text-slate-800 leading-tight mb-1">Seeing Eigenvectors</h2>
           <p className="text-slate-400 text-xs leading-relaxed">
