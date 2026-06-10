@@ -129,7 +129,7 @@ export const App: React.FC = () => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      className="relative flex flex-col justify-between w-full min-h-screen bg-[#F8FAFC] text-[#0F172A] overflow-x-hidden font-sans space-grid-pattern-fine"
+      className="relative flex flex-col justify-between w-full h-screen max-h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans space-grid-pattern-fine"
     >
       {/* Background soft atmosphere */}
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-vector/5 opacity-30 filter blur-[120px] pointer-events-none" />
@@ -171,8 +171,8 @@ export const App: React.FC = () => {
       </header>
 
       {/* CORE STAGE */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-center z-10">
-        <div className="w-full relative min-h-[580px]">
+      <main className="flex-1 min-h-0 w-full max-w-7xl mx-auto px-6 py-2 flex items-center justify-center z-10 overflow-hidden">
+        <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={currentScene}
@@ -181,7 +181,7 @@ export const App: React.FC = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              className="w-full flex items-center justify-center"
+              className="w-full h-full flex items-center justify-center"
             >
               <ActiveComponent />
             </motion.div>

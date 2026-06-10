@@ -27,6 +27,8 @@ interface VisualizationSpaceProps {
   customLines?: CustomLine[];
   showGrid?: boolean;
   highlightConnections?: boolean;
+  draggablePointId?: string | null; // Id of point that can be dragged
+  onDragPoint?: (coords: number[]) => void; // Callback when point is dragged
   className?: string;
 }
 
@@ -40,11 +42,14 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   customLines = [],
   showGrid = true,
   highlightConnections = false,
+  draggablePointId = null,
+  onDragPoint,
   className = '',
 }) => {
   const [hoveredPoint, setHoveredPoint] = useState<VisualPoint | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // SVG Dimension Definitions - Scaled up further
+  // SVG Dimension Definitions
   const width = 900;
   const height = 620;
   const padding = 80;
@@ -66,6 +71,19 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
     return height - padding - pct * (height - 2 * padding);
   };
 
+  // Helper functions to map SVG pixel values back to mathematical coordinates
+  const invertX = (pixelX: number) => {
+    const pct = (pixelX - padding) / (width - 2 * padding);
+    const clampedPct = Math.max(0, Math.min(1, pct));
+    return xMin + clampedPct * (xMax - xMin);
+  };
+
+  const invertY = (pixelY: number) => {
+    const pct = (height - padding - pixelY) / (height - 2 * padding);
+    const clampedPct = Math.max(0, Math.min(1, pct));
+    return yMin + clampedPct * (yMax - yMin);
+  };
+
   // Determine positions for rendering the axes (ensuring they always show in-bounds)
   const axisX_Val = (yMin <= 0 && yMax >= 0) ? 0 : yMin;
   const axisY_Val = (xMin <= 0 && xMax >= 0) ? 0 : xMin;
@@ -74,19 +92,61 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   const axisX_Pixel = scaleY(axisX_Val);
 
   // Generate grid values
-  const xTicks = 5;
-  const yTicks = 5;
-  const xGridValues = Array.from({ length: xTicks + 1 }, (_, i) => xMin + (i * (xMax - xMin)) / xTicks);
-  const yGridValues = Array.from({ length: yTicks + 1 }, (_, i) => yMin + (i * (yMax - yMin)) / yTicks);
+  const xGridValues = Array.from({ length: 6 }, (_, i) => xMin + (i * (xMax - xMin)) / 5);
+  const yGridValues = Array.from({ length: 6 }, (_, i) => yMin + (i * (yMax - yMin)) / 5);
 
   const handleMouseEnter = (p: VisualPoint) => {
+    if (isDragging) return;
     setHoveredPoint(p);
     if (onPointHover) onPointHover(p.id);
   };
 
   const handleMouseLeave = () => {
+    if (isDragging) return;
     setHoveredPoint(null);
     if (onPointHover) onPointHover(null);
+  };
+
+  // Drag Gesture Listeners
+  const processDrag = (clientX: number, clientY: number, svgEl: SVGSVGElement) => {
+    if (!onDragPoint || !draggablePointId) return;
+    const rect = svgEl.getBoundingClientRect();
+    const relativeX = clientX - rect.left;
+    const relativeY = clientY - rect.top;
+
+    const svgX = (relativeX / rect.width) * width;
+    const svgY = (relativeY / rect.height) * height;
+
+    const mathX = invertX(svgX);
+    const mathY = invertY(svgY);
+
+    onDragPoint([mathX, mathY]);
+  };
+
+  const handleMouseDownOnPoint = (e: React.MouseEvent, pointId: string) => {
+    if (pointId !== draggablePointId) return;
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleTouchStartOnPoint = (_e: React.TouchEvent, pointId: string) => {
+    if (pointId !== draggablePointId) return;
+    setIsDragging(true);
+  };
+
+  const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!isDragging) return;
+    processDrag(e.clientX, e.clientY, e.currentTarget);
+  };
+
+  const handleSvgTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    processDrag(touch.clientX, touch.clientY, e.currentTarget);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -94,6 +154,11 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto select-none"
+        onMouseMove={handleSvgMouseMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onTouchMove={handleSvgTouchMove}
+        onTouchEnd={handleDragEnd}
       >
         {/* Definition for Grid Markers and Gradients */}
         <defs>
@@ -184,7 +249,6 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
           ))}
           {/* Y Ticks */}
           {yGridValues.map((val, i) => {
-            // Avoid drawing redundant labels near origin if needed
             return (
               <g key={`tick-y-${i}`}>
                 <line
@@ -318,16 +382,19 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
 
         {/* Plot Coordinates Points */}
         {points.map((p) => {
-          const isHovered = hoveredPoint?.id === p.id || activePointId === p.id;
+          const isHovered = hoveredPoint?.id === p.id || activePointId === p.id || (isDragging && p.id === draggablePointId);
+          const isDraggable = p.id === draggablePointId;
           const pointX = scaleX(p.coords[0]);
           const pointY = scaleY(p.coords[1]);
 
           return (
             <g
               key={p.id}
-              className="cursor-pointer"
+              className={`${isDraggable ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-pointer'}`}
               onMouseEnter={() => handleMouseEnter(p)}
               onMouseLeave={handleMouseLeave}
+              onMouseDown={(e) => handleMouseDownOnPoint(e, p.id)}
+              onTouchStart={(e) => handleTouchStartOnPoint(e, p.id)}
             >
               {/* Ripple Ring Effect on Active/Hovered points */}
               {isHovered && (
@@ -348,9 +415,9 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
               <motion.circle
                 cx={pointX}
                 cy={pointY}
-                r={isHovered ? 9 : 7}
+                r={isHovered ? 10 : 7}
                 fill={p.color}
-                stroke="#F8FAFC"
+                stroke={isDraggable ? '#0F172A' : '#F8FAFC'}
                 strokeWidth={isHovered ? 2.5 : 1.5}
                 animate={{ cx: pointX, cy: pointY }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
@@ -372,7 +439,7 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
         })}
       </svg>
 
-      {/* Floating HTML details overlay card (Optimized for light mode) */}
+      {/* Floating HTML details overlay card */}
       <AnimatePresence>
         {hoveredPoint && (
           <motion.div

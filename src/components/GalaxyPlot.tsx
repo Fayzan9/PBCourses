@@ -187,7 +187,7 @@ export const GalaxyPlot: React.FC = () => {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
-        className="w-full h-[540px] cursor-grab active:cursor-grabbing overflow-hidden bg-slate-50/50"
+        className="w-full h-[420px] cursor-grab active:cursor-grabbing overflow-hidden bg-slate-50/50"
       >
         <svg
           viewBox="0 0 700 700"

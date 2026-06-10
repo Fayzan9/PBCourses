@@ -4,7 +4,7 @@ import {
   User, Film, Music, Sparkles, Smartphone, Laptop, 
   Camera, Headphones, Brain
 } from 'lucide-react';
-import { Math } from '../components/Math';
+import { Math as KaTeXMath } from '../components/Math';
 import { VisualizationSpace, type VisualPoint } from '../components/VisualizationSpace';
 import { PixelGrid } from '../components/PixelGrid';
 import { GalaxyPlot } from '../components/GalaxyPlot';
@@ -21,7 +21,7 @@ export const Scene1_Curiosity: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[65vh] px-4 text-center max-w-4xl mx-auto">
+    <div className="flex flex-col items-center justify-center h-full py-2 px-4 text-center max-w-4xl mx-auto">
       <div className="flex flex-col gap-5 md:gap-7 mb-10">
         {items.map((item, idx) => (
           <motion.h1
@@ -66,7 +66,7 @@ export const Scene2_PersonRep: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       {/* Left Column: Visual Silhouette (Scaled Up) */}
       <div className="relative flex items-center justify-center w-80 h-[420px] bg-white border border-slate-200 rounded-2xl p-8 shadow-md">
         <svg viewBox="0 0 100 150" className="w-full h-full text-slate-400">
@@ -138,12 +138,12 @@ export const Scene3_PeoplePoints: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
           points={points}
           dimensions={['Height (cm)', 'Weight (kg)']}
-          ranges={[[140, 200], [40, 100]]}
+          ranges={[[0, 200], [0, 100]]}
           showGrid
         />
       </div>
@@ -175,14 +175,21 @@ export const Scene4_MovieSpace: React.FC = () => {
     { id: 'yourmovie', label: 'Your Custom Movie', coords: [action, comedy], color: '#059669', details: 'Adjust sliders to move this point!', icon: <Sparkles size={12} /> }
   ];
 
+  const handleDragMovie = (newCoords: number[]) => {
+    setAction(Math.round(newCoords[0]));
+    setComedy(Math.round(newCoords[1]));
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
           points={points}
           dimensions={['Action Score', 'Comedy Score']}
           ranges={[[0, 100], [0, 100]]}
           showVectors
+          draggablePointId="yourmovie"
+          onDragPoint={handleDragMovie}
         />
       </div>
 
@@ -244,7 +251,7 @@ export const Scene5_MusicSpace: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
           points={points}
@@ -279,7 +286,7 @@ export const Scene6_ProductSpace: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
           points={points}
@@ -304,7 +311,7 @@ export const Scene6_ProductSpace: React.FC = () => {
 // ==========================================
 export const Scene7_ImageSpace: React.FC = () => {
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <PixelGrid />
       </div>
@@ -336,7 +343,7 @@ export const Scene8_LanguageSpace: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
           points={points}
@@ -364,7 +371,7 @@ export const Scene8_LanguageSpace: React.FC = () => {
 // ==========================================
 export const Scene9_SemanticGalaxy: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 max-w-6xl mx-auto gap-5 text-center">
+    <div className="flex flex-col items-center justify-center h-full py-2 px-4 max-w-6xl mx-auto gap-5 text-center">
       <div className="max-w-2xl">
         <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-1">The Semantic Galaxy</h2>
         <p className="text-slate-500 text-sm font-semibold">
@@ -399,7 +406,7 @@ export const Scene10_ChatGPTReveal: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       {/* Visual representation of chat pipeline */}
       <div className="w-full max-w-[500px] bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 relative overflow-hidden shadow-md">
         <div className="absolute top-2.5 right-3 text-[10px] font-mono text-slate-400 uppercase tracking-widest flex items-center gap-1 font-bold">
@@ -467,7 +474,7 @@ export const Scene11_Unification: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       {/* Left panel showing current active conversion */}
       <div className="w-full max-w-[480px] bg-white border border-slate-200 rounded-2xl p-8 flex flex-col gap-6 relative min-h-[300px] justify-center items-center shadow-md">
         <AnimatePresence mode="wait">
@@ -514,14 +521,14 @@ export const Scene11_Unification: React.FC = () => {
 // ==========================================
 export const Scene12_MathReveal: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[65vh] px-4 max-w-4xl mx-auto text-center gap-8">
+    <div className="flex flex-col items-center justify-center h-full py-2 px-4 max-w-4xl mx-auto text-center gap-8">
       <div className="flex flex-col gap-1">
         <span className="text-xs font-mono text-[#7C3AED] uppercase tracking-widest font-bold">Formal Definition</span>
         <h2 className="text-4xl font-extrabold text-slate-800">Meet the Vector</h2>
       </div>
 
       <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-md max-w-lg w-full flex flex-col gap-5">
-        <Math tex="\vec{v} = [v_1, v_2, v_3, \dots, v_n]" block />
+        <KaTeXMath tex="\vec{v} = [v_1, v_2, v_3, \dots, v_n]" block />
         
         <p className="text-slate-600 text-sm font-semibold">
           In math, this ordered list of coordinates is called a Vector.
@@ -552,11 +559,11 @@ export const Scene13_InteractivePlayground: React.FC = () => {
     person: {
       title: 'Person Vector',
       dimLabels: ['Height (cm)', 'Weight (kg)'],
-      dimRanges: [[100, 200], [30, 120]] as [number, number][],
+      dimRanges: [[0, 220], [0, 130]] as [number, number][],
       desc: 'Mapping physical features as space locations.',
       coordsMap: (a: number, b: number) => [
-        100 + (a / 100) * 100,
-        30 + (b / 100) * 90
+        (a / 100) * 220,
+        (b / 100) * 130
       ]
     },
     movie: {
@@ -586,10 +593,10 @@ export const Scene13_InteractivePlayground: React.FC = () => {
     protein: {
       title: 'Protein Vector',
       dimLabels: ['Charge (pH)', 'Hydrophobicity'],
-      dimRanges: [[-10, 10], [0, 1]] as [number, number][],
+      dimRanges: [[0, 14], [0, 1]] as [number, number][],
       desc: 'Mapping cellular biology into ML structures.',
       coordsMap: (a: number, b: number) => [
-        -10 + (a / 100) * 20,
+        (a / 100) * 14,
         (b / 100)
       ]
     }
@@ -609,8 +616,31 @@ export const Scene13_InteractivePlayground: React.FC = () => {
     }
   ];
 
+  const handleDragPlayground = (newCoords: number[]) => {
+    const [mathX, mathY] = newCoords;
+    let valA = 50;
+    let valB = 50;
+
+    if (selectedType === 'person') {
+      valA = (mathX / 220) * 100;
+      valB = (mathY / 130) * 100;
+    } else if (selectedType === 'movie' || selectedType === 'song') {
+      valA = mathX;
+      valB = mathY;
+    } else if (selectedType === 'product') {
+      valA = (mathX / 2000) * 100;
+      valB = (mathY / 2500) * 100;
+    } else if (selectedType === 'protein') {
+      valA = (mathX / 14) * 100;
+      valB = mathY * 100;
+    }
+
+    setCoordA(Math.max(0, Math.min(100, Math.round(valA))));
+    setCoordB(Math.max(0, Math.min(100, Math.round(valB))));
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 min-h-[70vh] max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
       {/* Visualization Grid Panel */}
       <div className="w-full max-w-[640px] flex justify-center">
         <VisualizationSpace
@@ -618,6 +648,8 @@ export const Scene13_InteractivePlayground: React.FC = () => {
           dimensions={config.dimLabels}
           ranges={config.dimRanges}
           showVectors
+          draggablePointId="custom-playground-point"
+          onDragPoint={handleDragPlayground}
         />
       </div>
 
@@ -701,7 +733,7 @@ export const Scene13_InteractivePlayground: React.FC = () => {
 // ==========================================
 export const Scene14_FinalModel: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center max-w-3xl mx-auto relative">
+    <div className="flex flex-col items-center justify-center h-full py-2 px-6 text-center max-w-3xl mx-auto relative">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-vector/5 filter blur-[100px] pointer-events-none" />
 
       <motion.div
