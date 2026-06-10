@@ -15,10 +15,11 @@ import {
   Scene2_5_ProximitySandbox
 } from './scenes/Chapter2Scenes';
 import {
-  Scene3_1_AlignmentQuestion, Scene3_2_ParallelVectors, Scene3_3_OrthogonalVectors,
-  Scene3_4_ShadowProjection, Scene3_5_TrigCosineConnection, Scene3_6_ScalingShadow,
-  Scene3_7_CoordinateShortcut, Scene3_8_HorizontalAgreement, Scene3_9_VerticalAgreement,
-  Scene3_10_SummingUp, Scene3_11_SignalAmplification
+  Scene3_1_CuriosityHook, Scene3_2_HowToMeasure, Scene3_3_RealWorldAnalogies,
+  Scene3_4_AngleExplorer, Scene3_5_WhatAboutPerpendicular, Scene3_6_ZeroAlignment,
+  Scene3_7_OppositeNegative, Scene3_8_ShadowProjection, Scene3_9_CanWeSkipAngle,
+  Scene3_10_CoordinateShortcut, Scene3_11_GrandEquivalence, Scene3_12_WhySignalMatters,
+  Scene3_13_SignalStrength
 } from './scenes/Chapter3Scenes';
 import {
   Scene4_1_WarpCuriosity,
@@ -87,17 +88,19 @@ const CHAPTERS = [
     title: "The Dot Product",
     subtitle: "Chapter 3: Projection & Feature Alignment",
     scenes: [
-      { component: Scene3_1_AlignmentQuestion, title: "Force Alignment" },
-      { component: Scene3_2_ParallelVectors, title: "Perfect Alignment" },
-      { component: Scene3_3_OrthogonalVectors, title: "Zero Alignment" },
-      { component: Scene3_4_ShadowProjection, title: "Vector Shadow Projection" },
-      { component: Scene3_5_TrigCosineConnection, title: "The Trig Shadow" },
-      { component: Scene3_6_ScalingShadow, title: "Scaling the Shadow" },
-      { component: Scene3_7_CoordinateShortcut, title: "Coordinate Shortcut" },
-      { component: Scene3_8_HorizontalAgreement, title: "Horizontal Agreement" },
-      { component: Scene3_9_VerticalAgreement, title: "Vertical Agreement" },
-      { component: Scene3_10_SummingUp, title: "The Grand Equivalence" },
-      { component: Scene3_11_SignalAmplification, title: "Signal Strength" }
+      { component: Scene3_1_CuriosityHook,           title: "What is Alignment?" },
+      { component: Scene3_2_HowToMeasure,             title: "Think: How to Measure" },
+      { component: Scene3_3_RealWorldAnalogies,        title: "Real-World Agreement" },
+      { component: Scene3_4_AngleExplorer,             title: "Rotate & Observe" },
+      { component: Scene3_5_WhatAboutPerpendicular,    title: "Think: Perpendicular" },
+      { component: Scene3_6_ZeroAlignment,             title: "Zero Alignment" },
+      { component: Scene3_7_OppositeNegative,          title: "Opposition is Negative" },
+      { component: Scene3_8_ShadowProjection,          title: "The Shadow" },
+      { component: Scene3_9_CanWeSkipAngle,            title: "Think: Skip the Angle?" },
+      { component: Scene3_10_CoordinateShortcut,       title: "Coordinate Shortcut" },
+      { component: Scene3_11_GrandEquivalence,         title: "Two Paths, One Answer" },
+      { component: Scene3_12_WhySignalMatters,         title: "Think: Signal Strength" },
+      { component: Scene3_13_SignalStrength,            title: "Signal Strength Sandbox" }
     ]
   },
   {
