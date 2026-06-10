@@ -43,9 +43,9 @@ export const SvgGridLines: React.FC<{
 }> = ({
   cx, cy, scale, range, width, height,
   showTicks = true,
-  tickColor = '#cbd5e1',
-  gridColor = '#f1f5f9',
-  axisColor = '#94a3b8'
+  tickColor = '#94a3b8',
+  gridColor = '#e8ecf2',
+  axisColor = '#7e93a8'
 }) => {
   const lines: React.ReactNode[] = [];
   const ticks: React.ReactNode[] = [];
@@ -53,26 +53,37 @@ export const SvgGridLines: React.FC<{
   for (let i = -range; i <= range; i++) {
     const ax = i === 0;
     lines.push(
-      <line key={`h${i}`} x1={cx + i * scale} y1={18} x2={cx + i * scale} y2={height - 18}
-        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.5 : 0.8} />,
-      <line key={`v${i}`} x1={18} y1={cy - i * scale} x2={width - 18} y2={cy - i * scale}
-        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.5 : 0.8} />
+      <line key={`h${i}`} x1={cx + i * scale} y1={14} x2={cx + i * scale} y2={height - 14}
+        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.8 : 1} />,
+      <line key={`v${i}`} x1={14} y1={cy - i * scale} x2={width - 14} y2={cy - i * scale}
+        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.8 : 1} />
     );
 
     if (i !== 0 && showTicks) {
       ticks.push(
         <g key={`t-${i}`}>
-          <text x={cx + i * scale} y={cy + 15} textAnchor="middle" fill={tickColor} fontSize="9">{i}</text>
-          <text x={cx + 7} y={cy - i * scale + 4} fill={tickColor} fontSize="9">{i}</text>
+          <line x1={cx + i * scale} y1={cy - 4} x2={cx + i * scale} y2={cy + 4} stroke={tickColor} strokeWidth="1.2" />
+          <text x={cx + i * scale} y={cy + 16} textAnchor="middle" fill={tickColor} fontSize="10" fontWeight="600">{i}</text>
+          <line x1={cx - 4} y1={cy - i * scale} x2={cx + 4} y2={cy - i * scale} stroke={tickColor} strokeWidth="1.2" />
+          <text x={cx - 9} y={cy - i * scale + 4} textAnchor="end" fill={tickColor} fontSize="10" fontWeight="600">{i}</text>
         </g>
       );
     }
   }
 
+  // Axis labels
+  const axisLabels = showTicks ? (
+    <>
+      <text x={width - 16} y={cy - 8} fill={axisColor} fontSize="12" fontWeight="700">x</text>
+      <text x={cx + 8} y={18} fill={axisColor} fontSize="12" fontWeight="700">y</text>
+    </>
+  ) : null;
+
   return (
     <>
       {lines}
       {ticks}
+      {axisLabels}
     </>
   );
 };

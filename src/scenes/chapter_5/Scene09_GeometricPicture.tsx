@@ -83,8 +83,17 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
       <div className={LAYOUT_CONFIG.leftSideClass}>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
           {MARKER_DEFS}
-          <rect width={W} height={H} fill="white" rx="16" />
-          <SvgGridLines cx={CX} cy={CY} scale={SC} range={3} width={W} height={H} showTicks={true} tickColor="#e2e8f0" />
+          <defs>
+            <radialGradient id="c5g9-bg" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stopColor="#f5f3ff" />
+              <stop offset="100%" stopColor="#f1f5f9" />
+            </radialGradient>
+          </defs>
+          <rect width={W} height={H} fill="url(#c5g9-bg)" rx="18" />
+          {/* Unit circle reference */}
+          <circle cx={CX} cy={CY} r={SC}
+            fill="none" stroke="#c4b5fd" strokeWidth="1.2" strokeDasharray="5 4" opacity="0.6" />
+          <SvgGridLines cx={CX} cy={CY} scale={SC} range={3} width={W} height={H} showTicks={true} />
 
           {p.evecs.map((ev, i) => {
             if (!shown.includes(i)) return null;
@@ -95,22 +104,42 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
 
             return (
               <g key={i}>
+                {/* Direction ray */}
                 <line x1={CX} y1={CY} x2={nx} y2={ny}
-                  stroke={ev.color} strokeWidth="0.8" strokeDasharray="5 4" opacity="0.15" />
+                  stroke={ev.color} strokeWidth="1" strokeDasharray="5 4" opacity="0.18" />
+                {/* Glow halo on before vector */}
+                <line x1={CX} y1={CY} x2={beforeTip[0]} y2={beforeTip[1]}
+                  stroke={ev.color} strokeWidth="10" strokeLinecap="round" opacity="0.14" />
                 <line x1={CX} y1={CY} x2={beforeTip[0]} y2={beforeTip[1]}
                   stroke={ev.color} strokeWidth="3" strokeDasharray="8 4"
                   markerEnd={`url(#g4-${ev.marker})`} />
-                <text x={beforeTip[0] + (ev.vec[0] >= 0 ? 8 : -8)} y={beforeTip[1] - 14}
-                  fill={ev.color} fontSize="10" fontWeight="bold"
-                  textAnchor={ev.vec[0] >= 0 ? 'start' : 'end'}>
-                  [{fmt(ev.vec[0])},{fmt(ev.vec[1])}]
-                </text>
+                {/* Label badge */}
+                {(() => {
+                  const ox = ev.vec[0] >= 0 ? 8 : -8;
+                  const lx = beforeTip[0] + ox;
+                  const ly = beforeTip[1] - 16;
+                  const txt = `[${fmt(ev.vec[0])},${fmt(ev.vec[1])}]`;
+                  const w = txt.length * 5.8 + 10;
+                  return (
+                    <g>
+                      <rect x={lx - 2} y={ly - 12} width={w} height={16} rx="4"
+                        fill={ev.color} opacity="0.9" />
+                      <text x={lx + w/2 - 2} y={ly} textAnchor="middle"
+                        fill="white" fontSize="10" fontWeight="bold">{txt}</text>
+                    </g>
+                  );
+                })()}
                 {showOutput && (
                   <motion.g key={`after-${i}-${active}`}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    {/* Glow halo on after vector */}
+                    <line x1={CX} y1={CY} x2={afterTip[0]} y2={afterTip[1]}
+                      stroke={ev.color} strokeWidth="14" strokeLinecap="round" opacity="0.18" />
                     <line x1={CX} y1={CY} x2={afterTip[0]} y2={afterTip[1]}
                       stroke={ev.color} strokeWidth="5"
                       markerEnd={`url(#g4-${ev.marker})`} />
+                    <circle cx={afterTip[0]} cy={afterTip[1]} r="5" fill={ev.color} />
+                    <circle cx={afterTip[0]} cy={afterTip[1]} r="9" fill="none" stroke={ev.color} strokeWidth="1.5" opacity="0.3" />
                     {(() => {
                       const bx = afterTip[0] + (scaled[0] >= 0 ? 10 : -10);
                       const by = afterTip[1] + (scaled[1] <= 0 ? -16 : 10);
@@ -154,12 +183,23 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
                 return (
                   <>
                     <line x1={CX} y1={CY} x2={bTip[0]} y2={bTip[1]}
+                      stroke="#94a3b8" strokeWidth="8" strokeLinecap="round" opacity="0.14" />
+                    <line x1={CX} y1={CY} x2={bTip[0]} y2={bTip[1]}
                       stroke="#94a3b8" strokeWidth="3" strokeDasharray="8 4" markerEnd="url(#g4-slate)" />
-                    <text x={bTip[0] + 8} y={bTip[1] - 14} fill="#94a3b8" fontSize="10" fontWeight="bold">
-                      [{fmt(testVec[0])},{fmt(testVec[1])}]
-                    </text>
+                    {(() => {
+                      const txt = `[${fmt(testVec[0])},${fmt(testVec[1])}]`;
+                      const w = txt.length * 5.8 + 10;
+                      return (
+                        <g>
+                          <rect x={bTip[0] + 6} y={bTip[1] - 28} width={w} height={16} rx="4" fill="#64748B" opacity="0.9" />
+                          <text x={bTip[0] + 6 + w/2} y={bTip[1] - 16} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{txt}</text>
+                        </g>
+                      );
+                    })()}
                     {showOutput && (
                       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <line x1={CX} y1={CY} x2={aTip[0]} y2={aTip[1]}
+                          stroke="#E11D48" strokeWidth="12" strokeLinecap="round" opacity="0.18" />
                         <line x1={CX} y1={CY} x2={aTip[0]} y2={aTip[1]}
                           stroke="#E11D48" strokeWidth="5" markerEnd="url(#g4-red)" />
                         <text x={aTip[0] + 8} y={aTip[1] - 14} fill="#E11D48" fontSize="10" fontWeight="bold">
@@ -182,16 +222,18 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
 
           {!p.hasReal && shown.length === 0 && (
             <g>
-              <rect x={CX - 120} y={CY - 22} width={240} height={44} rx={10} fill="#FEF3C7" />
-              <text x={CX} y={CY - 5} textAnchor="middle" fill="#D97706" fontSize="11" fontWeight="bold">
+              <rect x={CX - 130} y={CY - 26} width={260} height={52} rx="12" fill="#FEF3C7" stroke="#FDE68A" strokeWidth="1.5" />
+              <text x={CX} y={CY - 7} textAnchor="middle" fill="#D97706" fontSize="12" fontWeight="800">
                 Every vector rotates 45°
               </text>
-              <text x={CX} y={CY + 12} textAnchor="middle" fill="#D97706" fontSize="10">
-                No direction survives unchanged
+              <text x={CX} y={CY + 12} textAnchor="middle" fill="#D97706" fontSize="11">
+                No direction survives — no real eigenvectors
               </text>
             </g>
           )}
+          {/* Origin */}
           <circle cx={CX} cy={CY} r="5.5" fill="#0f172a" />
+          <circle cx={CX} cy={CY} r="10" fill="none" stroke="#0f172a" strokeWidth="1.2" opacity="0.15" />
         </svg>
       </div>
 
