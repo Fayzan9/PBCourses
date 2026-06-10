@@ -406,81 +406,262 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════
-// SCENE 2.4 — Euclidean Distance (Draggable)
+// SCENE 2.3b — Why Do We Need a Formula?
 // ═══════════════════════════════════════════════════════════════
 
+export const Scene2_3b_WhyFormula: React.FC = () => {
+  const [step, setStep] = useState(0);
+
+  const reasons = [
+    {
+      icon: '👁️',
+      title: "Visual intuition breaks at 3D",
+      body: "You can see 'closer' on a 2D chart. But ChatGPT uses 1,536-dimensional vectors. There's no chart for that — we need arithmetic.",
+      color: '#0284C7', bg: 'bg-sky-50', border: 'border-sky-200',
+    },
+    {
+      icon: '⚡',
+      title: "Computers need exact numbers",
+      body: 'A recommendation engine compares your taste vector to 50 million songs every second. "Looks about the same" won\'t cut it — we need a number.',
+      color: '#7C3AED', bg: 'bg-violet-50', border: 'border-violet-200',
+    },
+    {
+      icon: '🏆',
+      title: "Formulas let us rank and sort",
+      body: 'With a number, we can rank 1,000 candidates and pick the top 5. Without a formula, we can\'t sort. Without sorting, no search engine, no recommendation, no AI retrieval.',
+      color: '#059669', bg: 'bg-emerald-50', border: 'border-emerald-200',
+    },
+  ];
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full max-w-3xl mx-auto px-6 gap-6">
+      <div className="text-center">
+        <motion.p className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-1"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Bridge</motion.p>
+        <motion.h2 className="text-3xl font-black text-slate-800"
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          Intuition is great. But we need a number.
+        </motion.h2>
+      </div>
+
+      <div className="flex flex-col gap-3 w-full">
+        {reasons.map((r, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: step >= i ? 1 : 0.1, x: step >= i ? 0 : -20 }}
+            transition={{ duration: 0.4 }}
+            onClick={() => setStep(Math.max(step, i + 1))}
+            className={`${r.bg} border ${r.border} rounded-2xl p-4 flex items-start gap-4 cursor-pointer hover:shadow-md transition-all`}
+          >
+            <div className="text-3xl shrink-0 mt-0.5">{r.icon}</div>
+            <div>
+              <div className="font-black text-slate-800 text-base mb-1" style={{ color: r.color }}>{r.title}</div>
+              <div className="text-slate-600 text-sm font-medium leading-relaxed">{r.body}</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {step >= reasons.length ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="px-6 py-3 bg-slate-800 text-white rounded-2xl text-sm font-bold text-center"
+        >
+          Next up: the formula — then a live interactive to feel it. →
+        </motion.div>
+      ) : (
+        <motion.p animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
+          className="text-xs font-mono text-slate-400 uppercase tracking-widest">
+          tap each card to unlock
+        </motion.p>
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SCENE 2.4 — Euclidean Distance (Annotated Draggable)
+// ═══════════════════════════════════════════════════════════════
+
+const AnnotatedEuclidCanvas: React.FC<{
+  ax: number; ay: number;
+  bx: number; by: number;
+  onDrag: (x: number, y: number) => void;
+}> = ({ ax, ay, bx, by, onDrag }) => {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const dragging = useRef(false);
+  const W = 480, H = 480, PAD = 52;
+  const pw = W - PAD * 2, ph = H - PAD * 2;
+
+  const toSvg = (x: number, y: number): [number, number] => [
+    PAD + (x / 100) * pw,
+    PAD + ph - (y / 100) * ph,
+  ];
+
+  const svgToData = useCallback((clientX: number, clientY: number) => {
+    const rect = svgRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    const sx = (clientX - rect.left) * scaleX, sy = (clientY - rect.top) * scaleY;
+    onDrag(
+      Math.max(2, Math.min(98, ((sx - PAD) / pw) * 100)),
+      Math.max(2, Math.min(98, (1 - (sy - PAD) / ph) * 100)),
+    );
+  }, [onDrag]);
+
+  const [sAx, sAy] = toSvg(ax, ay);
+  const [sBx, sBy] = toSvg(bx, by);
+  const [sCx, sCy] = toSvg(bx, ay); // right-angle corner
+
+  const dx = bx - ax, dy = by - ay;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // midpoints for leg labels
+  const mHx = (sAx + sCx) / 2, mHy = sCy;
+  const mVx = sCx,              mVy = (sCy + sBy) / 2;
+  const mDx = (sAx + sBx) / 2, mDy = (sAy + sBy) / 2;
+
+  // right-angle box size/orientation
+  const boxSize = 10;
+  const signX = dx >= 0 ? 1 : -1;
+  const signY = dy >= 0 ? -1 : 1;
+
+  const ticks = [0, 25, 50, 75, 100];
+
+  return (
+    <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full cursor-crosshair"
+      onMouseDown={e => { dragging.current = true; svgToData(e.clientX, e.clientY); }}
+      onMouseMove={e => { if (dragging.current) svgToData(e.clientX, e.clientY); }}
+      onMouseUp={() => { dragging.current = false; }}
+      onMouseLeave={() => { dragging.current = false; }}
+      onTouchStart={e => { dragging.current = true; svgToData(e.touches[0].clientX, e.touches[0].clientY); }}
+      onTouchMove={e => { if (dragging.current) svgToData(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }}
+      onTouchEnd={() => { dragging.current = false; }}
+    >
+      {DEFS_MARKERS}
+      <rect width={W} height={H} fill="white" rx="16" />
+
+      {/* Grid + tick labels */}
+      {ticks.map(t => {
+        const [xi] = toSvg(t, 0);
+        const [, yi] = toSvg(0, t);
+        return (
+          <g key={t}>
+            <line x1={xi} y1={PAD} x2={xi} y2={PAD + ph} stroke="#f1f5f9" strokeWidth="1" />
+            <line x1={PAD} y1={yi} x2={PAD + pw} y2={yi} stroke="#f1f5f9" strokeWidth="1" />
+            <text x={xi} y={PAD + ph + 16} textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="bold">{t}</text>
+            <text x={PAD - 6} y={yi + 4} textAnchor="end" fill="#94a3b8" fontSize="10" fontWeight="bold">{t}</text>
+          </g>
+        );
+      })}
+
+      {/* Axes */}
+      <line x1={PAD} y1={PAD} x2={PAD} y2={PAD + ph} stroke="#cbd5e1" strokeWidth="1.5" />
+      <line x1={PAD} y1={PAD + ph} x2={PAD + pw} y2={PAD + ph} stroke="#cbd5e1" strokeWidth="1.5" />
+      <text x={PAD + pw / 2} y={H - 4} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="bold">Action Rating</text>
+      <text x={12} y={PAD + ph / 2} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="bold" transform={`rotate(-90,12,${PAD + ph / 2})`}>Comedy Rating</text>
+
+      {/* Triangle legs */}
+      <line x1={sAx} y1={sAy} x2={sCx} y2={sCy} stroke="#E11D48" strokeWidth="2" strokeDasharray="6 3" />
+      <line x1={sCx} y1={sCy} x2={sBx} y2={sBy} stroke="#0284C7" strokeWidth="2" strokeDasharray="6 3" />
+
+      {/* Right-angle box */}
+      <polyline
+        points={`${sCx},${sCy - signY * boxSize} ${sCx + signX * boxSize},${sCy - signY * boxSize} ${sCx + signX * boxSize},${sCy}`}
+        fill="none" stroke="#94a3b8" strokeWidth="1.5"
+      />
+
+      {/* Hypotenuse */}
+      <line x1={sAx} y1={sAy} x2={sBx} y2={sBy} stroke="#059669" strokeWidth="3" />
+
+      {/* Δx label on horizontal leg */}
+      <rect x={mHx - 26} y={mHy + (dy >= 0 ? 6 : -22)} width="52" height="16" fill="white" rx="5" opacity="0.92" stroke="#E11D48" strokeWidth="1" />
+      <text x={mHx} y={mHy + (dy >= 0 ? 18 : -10)} textAnchor="middle" fill="#E11D48" fontSize="11" fontWeight="bold">Δx = {Math.abs(dx).toFixed(0)}</text>
+
+      {/* Δy label on vertical leg */}
+      <rect x={mVx + (dx >= 0 ? 6 : -58)} y={mVy - 8} width="52" height="16" fill="white" rx="5" opacity="0.92" stroke="#0284C7" strokeWidth="1" />
+      <text x={mVx + (dx >= 0 ? 32 : -32)} y={mVy + 4} textAnchor="middle" fill="#0284C7" fontSize="11" fontWeight="bold">Δy = {Math.abs(dy).toFixed(0)}</text>
+
+      {/* Distance badge on hypotenuse */}
+      <rect x={mDx - 32} y={mDy - 12} width="64" height="22" fill="#059669" rx="11" />
+      <text x={mDx} y={mDy + 4} textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">d = {dist.toFixed(1)}</text>
+
+      {/* Point A with coordinate label */}
+      <circle cx={sAx} cy={sAy} r="7" fill="#E11D48" />
+      <rect x={sAx - 42} y={sAy - 32} width="84" height="20" fill="white" rx="5" opacity="0.95" stroke="#E11D48" strokeWidth="1.2" />
+      <text x={sAx} y={sAy - 17} textAnchor="middle" fill="#E11D48" fontSize="11" fontWeight="bold">A [{ax}, {ay}]</text>
+
+      {/* Point B with coordinate label + drag ring */}
+      <circle cx={sBx} cy={sBy} r="12" fill="none" stroke="#0284C7" strokeWidth="2" opacity="0.35" />
+      <circle cx={sBx} cy={sBy} r="7" fill="#0284C7" />
+      <rect x={sBx - 48} y={sBy - 32} width="96" height="20" fill="white" rx="5" opacity="0.95" stroke="#0284C7" strokeWidth="1.2" />
+      <text x={sBx} y={sBy - 17} textAnchor="middle" fill="#0284C7" fontSize="11" fontWeight="bold">B [{bx.toFixed(0)}, {by.toFixed(0)}] ← drag</text>
+    </svg>
+  );
+};
+
 export const Scene2_4_EuclideanDistance: React.FC = () => {
-  const pA = { x: 25, y: 30 };
+  const ax = 25, ay = 30;
   const [bx, setBx] = useState(72);
   const [by, setBy] = useState(70);
 
-  const dx = bx - pA.x, dy = by - pA.y;
+  const dx = bx - ax, dy = by - ay;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   const handleDrag = useCallback((x: number, y: number) => {
-    setBx(Math.round(x));
-    setBy(Math.round(y));
+    setBx(parseFloat(x.toFixed(1)));
+    setBy(parseFloat(y.toFixed(1)));
   }, []);
-
-  const points: PlotPoint[] = [
-    { id: 'A', x: pA.x, y: pA.y, color: '#E11D48', label: 'Movie A', radius: 7 },
-    { id: 'B', x: bx,   y: by,   color: '#0284C7', label: 'Movie B ← drag', radius: 7, ring: true },
-  ];
-
-  const lines: PlotLine[] = [
-    { x1: pA.x, y1: pA.y, x2: bx, y2: by, color: '#059669', width: 2 },
-    { x1: pA.x, y1: pA.y, x2: bx, y2: pA.y, color: '#E11D48', dashed: true, width: 1.2 },
-    { x1: bx,   y1: pA.y, x2: bx, y2: by,   color: '#0284C7', dashed: true, width: 1.2 },
-  ];
 
   return (
     <SlideLayout
       title="Euclidean Distance"
-      text="The straight-line distance between two points — just the Pythagorean theorem in disguise. Drag Movie B around to see it update live."
+      text="The straight-line distance between two points — Pythagoras in disguise. Drag Movie B. Every label on the graph updates live."
       sidebarContent={
         <div className="flex flex-col gap-4">
-          <div className="bg-white border border-slate-200 rounded-xl p-4 font-mono text-xs">
-            <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-3">Live Calculation</div>
-            <div className="flex flex-col gap-2 text-slate-700">
-              <div className="flex justify-between">
-                <span className="text-rose-600 font-bold">ΔX (horizontal)</span>
-                <span className="font-black">{dx.toFixed(1)}</span>
+          {/* Live breakdown */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-3">Step-by-step</div>
+            <div className="flex flex-col gap-2 text-sm font-mono">
+              <div className="flex items-center justify-between px-2 py-1.5 bg-rose-50 border border-rose-100 rounded-lg">
+                <span className="text-rose-600 font-bold text-xs">Δx (horizontal gap)</span>
+                <span className="font-black text-rose-700">{dx.toFixed(1)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sky-600 font-bold">ΔY (vertical)</span>
-                <span className="font-black">{dy.toFixed(1)}</span>
+              <div className="flex items-center justify-between px-2 py-1.5 bg-sky-50 border border-sky-100 rounded-lg">
+                <span className="text-sky-600 font-bold text-xs">Δy (vertical gap)</span>
+                <span className="font-black text-sky-700">{dy.toFixed(1)}</span>
               </div>
-              <div className="border-t border-slate-100 pt-2 mt-1 flex justify-center">
-                <KaTeXMath tex={`d = \\sqrt{${dx.toFixed(0)}^2 + ${dy.toFixed(0)}^2}`} />
+              <div className="flex items-center justify-between px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <span className="text-slate-500 text-xs">Δx² + Δy²</span>
+                <span className="font-black text-slate-700">{(dx*dx + dy*dy).toFixed(0)}</span>
               </div>
-              <div className="text-center text-2xl font-black text-emerald-600">= {dist.toFixed(1)}</div>
+              <div className="flex items-center justify-between px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <span className="text-emerald-700 font-bold text-xs">d = √( Δx² + Δy² )</span>
+                <span className="text-2xl font-black text-emerald-600">{dist.toFixed(1)}</span>
+              </div>
             </div>
           </div>
 
-          <div className="p-3 bg-sky-50 border border-sky-100 rounded-xl text-xs text-slate-600 font-medium leading-relaxed">
-            <span className="font-bold text-sky-700 block mb-1">The Pythagorean Theorem</span>
-            The green diagonal is the hypotenuse. The red and blue dashed lines are the two legs. Distance = length of the hypotenuse.
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-medium leading-relaxed">
+            <span className="font-bold block mb-1">💡 What the colors mean</span>
+            <span className="flex items-center gap-2 mb-1"><span className="w-3 h-0.5 bg-rose-500 inline-block" /> Red dashes = horizontal gap (Δx)</span>
+            <span className="flex items-center gap-2 mb-1"><span className="w-3 h-0.5 bg-sky-500 inline-block" /> Blue dashes = vertical gap (Δy)</span>
+            <span className="flex items-center gap-2"><span className="w-3 h-0.5 bg-emerald-500 inline-block" /> Green = straight-line distance</span>
           </div>
 
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-600">
-            <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2">General formula</div>
+            <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2">Scales to n dimensions</div>
             <div className="flex justify-center">
               <KaTeXMath tex={`d = \\sqrt{\\sum_{i=1}^{n}(B_i - A_i)^2}`} />
             </div>
-            <p className="text-[10px] text-slate-400 text-center mt-2 font-medium">Works for any number of dimensions</p>
           </div>
         </div>
       }
     >
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <DraggablePlotCanvas
-          points={points}
-          lines={lines}
-          dragId="B"
-          onDrag={handleDrag}
-          xLabel="Action Rating"
-          yLabel="Comedy Rating"
-        />
+      <div className="w-full h-full flex items-center justify-center p-2">
+        <AnnotatedEuclidCanvas ax={ax} ay={ay} bx={bx} by={by} onDrag={handleDrag} />
       </div>
     </SlideLayout>
   );
@@ -688,93 +869,234 @@ export const Scene2_8_CosineIdea: React.FC = () => (
 );
 
 // ═══════════════════════════════════════════════════════════════
-// SCENE 2.9 — Cosine Similarity (Interactive)
+// SCENE 2.9 — Cosine Similarity (Annotated interactive)
 // ═══════════════════════════════════════════════════════════════
+
+const AnnotatedCosineCanvas: React.FC<{
+  ax: number; ay: number; // unit-scale: -1 to 1, scaled by lenA
+  bx: number; by: number;
+  lenA: number; lenB: number;
+  cosSim: number; thetaDeg: number;
+}> = ({ ax, ay, bx, by, lenA, lenB, cosSim, thetaDeg }) => {
+  const W = 460, H = 460, CX = W / 2, CY = H / 2, SC = 68;
+
+  // Vector tip coords in SVG space
+  const tipAx = CX + ax * SC, tipAy = CY - ay * SC;
+  const tipBx = CX + bx * SC, tipBy = CY - by * SC;
+
+  // Arc: draw from A to B using SVG arc
+  const arcR = SC * 1.4;
+  const angA = Math.atan2(-ay, ax); // SVG y is flipped
+  const angB = Math.atan2(-by, bx);
+  let startAng = angA, endAng = angB;
+  // Ensure we draw the smaller arc
+  let diff = endAng - startAng;
+  while (diff > Math.PI) diff -= 2 * Math.PI;
+  while (diff < -Math.PI) diff += 2 * Math.PI;
+  const arcX1 = CX + arcR * Math.cos(startAng);
+  const arcY1 = CY + arcR * Math.sin(startAng);
+  const arcX2 = CX + arcR * Math.cos(startAng + diff);
+  const arcY2 = CY + arcR * Math.sin(startAng + diff);
+  const largeArc = Math.abs(diff) > Math.PI ? 1 : 0;
+  const sweep = diff > 0 ? 1 : 0;
+
+  // Angle label midpoint
+  const midAng = startAng + diff / 2;
+  const lblR = arcR + 16;
+  const lblX = CX + lblR * Math.cos(midAng);
+  const lblY = CY + lblR * Math.sin(midAng);
+
+  // Cosine badge color
+  const badgeColor = cosSim > 0.5 ? '#059669' : cosSim > 0.1 ? '#D97706' : cosSim > -0.1 ? '#64748B' : '#E11D48';
+
+  const gridTicks = [-2, -1, 0, 1, 2];
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
+      <defs>
+        <marker id="cos-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#E11D48" />
+        </marker>
+        <marker id="cos-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284C7" />
+        </marker>
+      </defs>
+      <rect width={W} height={H} fill="white" rx="16" />
+
+      {/* Grid lines */}
+      {gridTicks.map(t => {
+        const xi = CX + t * SC, yi = CY - t * SC;
+        return (
+          <g key={t}>
+            <line x1={xi} y1={28} x2={xi} y2={H - 28} stroke={t === 0 ? '#cbd5e1' : '#f1f5f9'} strokeWidth={t === 0 ? 1.5 : 1} />
+            <line x1={28} y1={yi} x2={W - 28} y2={yi} stroke={t === 0 ? '#cbd5e1' : '#f1f5f9'} strokeWidth={t === 0 ? 1.5 : 1} />
+            {t !== 0 && <text x={xi} y={CY + 16} textAnchor="middle" fill="#94a3b8" fontSize="10">{t}</text>}
+            {t !== 0 && <text x={CX + 10} y={yi + 4} fill="#94a3b8" fontSize="10">{t}</text>}
+          </g>
+        );
+      })}
+
+      {/* Angle arc */}
+      {Math.abs(diff) > 0.02 && (
+        <path
+          d={`M ${arcX1} ${arcY1} A ${arcR} ${arcR} 0 ${largeArc} ${sweep} ${arcX2} ${arcY2}`}
+          fill="none" stroke="#7C3AED" strokeWidth="2" strokeDasharray="4 2"
+        />
+      )}
+
+      {/* Angle label */}
+      <rect x={lblX - 22} y={lblY - 10} width="44" height="18" fill="#7C3AED" rx="9" opacity="0.9" />
+      <text x={lblX} y={lblY + 4} textAnchor="middle" fill="white" fontSize="11" fontWeight="bold">θ={thetaDeg.toFixed(0)}°</text>
+
+      {/* Vector A */}
+      <line x1={CX} y1={CY} x2={tipAx} y2={tipAy} stroke="#E11D48" strokeWidth="3" markerEnd="url(#cos-red)" />
+      {/* Coordinate label for A */}
+      <rect x={tipAx - 48} y={tipAy - 28} width="96" height="20" fill="white" rx="5" opacity="0.95" stroke="#E11D48" strokeWidth="1.2" />
+      <text x={tipAx} y={tipAy - 13} textAnchor="middle" fill="#E11D48" fontSize="11" fontWeight="bold">A = [{(ax * lenA / 10).toFixed(1)}, {(ay * lenA / 10).toFixed(1)}]</text>
+
+      {/* Vector B */}
+      <line x1={CX} y1={CY} x2={tipBx} y2={tipBy} stroke="#0284C7" strokeWidth="3" markerEnd="url(#cos-blue)" />
+      {/* Coordinate label for B */}
+      <rect x={tipBx - 48} y={tipBy - 28} width="96" height="20" fill="white" rx="5" opacity="0.95" stroke="#0284C7" strokeWidth="1.2" />
+      <text x={tipBx} y={tipBy - 13} textAnchor="middle" fill="#0284C7" fontSize="11" fontWeight="bold">B = [{(bx * lenB / 10).toFixed(1)}, {(by * lenB / 10).toFixed(1)}]</text>
+
+      {/* Origin */}
+      <circle cx={CX} cy={CY} r="5" fill="#0f172a" />
+      <text x={CX + 8} y={CY + 16} fill="#64748B" fontSize="10" fontWeight="bold">origin</text>
+
+      {/* Cosine score badge — top left */}
+      <rect x={32} y={32} width="130" height="48" fill="white" rx="12" stroke={badgeColor} strokeWidth="2" />
+      <text x={97} y={50} textAnchor="middle" fill="#64748B" fontSize="10" fontWeight="bold">cos similarity</text>
+      <text x={97} y={72} textAnchor="middle" fill={badgeColor} fontSize="22" fontWeight="900">{cosSim.toFixed(3)}</text>
+
+      {/* Length labels */}
+      <text x={CX + (ax * SC) / 2 + 8} y={CY - (ay * SC) / 2 + 4} fill="#E11D48" fontSize="10" fontWeight="bold" opacity="0.7">|A|={lenA}</text>
+      <text x={CX + (bx * SC) / 2 - 8} y={CY - (by * SC) / 2 + 16} fill="#0284C7" fontSize="10" fontWeight="bold" opacity="0.7">|B|={lenB}</text>
+    </svg>
+  );
+};
 
 export const Scene2_9_CosineSimilarity: React.FC = () => {
   const [angleA, setAngleA] = useState(55);
   const [angleB, setAngleB] = useState(25);
   const [lenA, setLenA] = useState(65);
-  const [lenB, setLenB] = useState(75);
+  const [lenB, setLenB] = useState(80);
 
-  const toXY = (angleDeg: number, len: number) => ({
-    x: 50 + (len / 2) * Math.cos((angleDeg * Math.PI) / 180),
-    y: 50 + (len / 2) * Math.sin((angleDeg * Math.PI) / 180),
+  const toUnitVec = (angleDeg: number) => ({
+    x: Math.cos((angleDeg * Math.PI) / 180),
+    y: Math.sin((angleDeg * Math.PI) / 180),
   });
 
-  const ptA = toXY(angleA, lenA);
-  const ptB = toXY(angleB, lenB);
+  const uA = toUnitVec(angleA);
+  const uB = toUnitVec(angleB);
 
-  // Real calculation from origin
-  const vAx = ptA.x - 50, vAy = ptA.y - 50;
-  const vBx = ptB.x - 50, vBy = ptB.y - 50;
-  const dotReal = vAx * vBx + vAy * vBy;
-  const magAReal = Math.sqrt(vAx * vAx + vAy * vAy);
-  const magBReal = Math.sqrt(vBx * vBx + vBy * vBy);
-  const cosSim = dotReal / (magAReal * magBReal || 1);
-  const thetaDeg = (Math.acos(Math.min(1, Math.max(-1, cosSim))) * 180) / Math.PI;
+  // Cosine similarity depends only on angle between unit vectors
+  const dot = uA.x * uB.x + uA.y * uB.y;
+  const cosSim = Math.min(1, Math.max(-1, dot)); // unit vectors so mag = 1
+  const thetaDeg = (Math.acos(cosSim) * 180) / Math.PI;
+
+  // Scale for display (unit vectors × scale factor)
+  const scA = lenA / 10, scB = lenB / 10;
 
   const presets = [
-    { label: 'Same Direction', aA: 40, aB: 40, lA: 55, lB: 80 },
-    { label: 'Perpendicular', aA: 90, aB: 0, lA: 65, lB: 65 },
-    { label: 'Opposite', aA: 0, aB: 180, lA: 65, lB: 65 },
-    { label: 'Similar (small angle)', aA: 50, aB: 35, lA: 55, lB: 70 },
+    { label: '🟢 Same direction', aA: 40, aB: 40, lA: 45, lB: 80 },
+    { label: '⬜ Perpendicular', aA: 90, aB: 0, lA: 65, lB: 65 },
+    { label: '🔴 Opposite', aA: 0, aB: 180, lA: 65, lB: 65 },
+    { label: '🔵 Small angle (similar)', aA: 50, aB: 35, lA: 55, lB: 70 },
   ];
+
+  const cosLabel =
+    cosSim > 0.95 ? 'Identical direction' :
+    cosSim > 0.7  ? 'Very similar' :
+    cosSim > 0.3  ? 'Somewhat similar' :
+    cosSim > -0.1 ? 'Unrelated (perpendicular)' :
+    cosSim > -0.7 ? 'Somewhat opposing' : 'Opposite direction';
+
+  const pctA = ((angleA + 0) / 360) * 100;
+  const pctB = ((angleB + 0) / 360) * 100;
 
   return (
     <SlideLayout
       title="Cosine Similarity"
-      text="Measures the angle between two vectors, completely ignoring how long they are. Scale doesn't matter — only direction."
+      text="Only the angle between vectors matters — length is ignored. Change the angles and watch the score. Try Same Direction vs Opposite."
       sidebarContent={
         <div className="flex flex-col gap-4">
-          <div className="bg-white border border-slate-200 rounded-xl p-4 font-mono text-xs">
-            <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-3">Live Result</div>
-            <div className="text-center mb-3">
-              <div className="text-[10px] text-slate-400 font-bold mb-1">Angle θ</div>
-              <div className="text-3xl font-black text-similarity">{thetaDeg.toFixed(0)}°</div>
+          {/* Score + label */}
+          <div className={`rounded-2xl p-4 border flex items-center justify-between transition-all ${
+            cosSim > 0.5 ? 'bg-emerald-50 border-emerald-200' :
+            cosSim > 0.1 ? 'bg-amber-50 border-amber-200' :
+            cosSim > -0.1 ? 'bg-slate-50 border-slate-200' : 'bg-rose-50 border-rose-200'
+          }`}>
+            <div>
+              <div className="text-[10px] uppercase tracking-wider font-bold opacity-50 mb-1">Cosine Score</div>
+              <div className={`text-3xl font-black font-mono ${cosSim > 0.5 ? 'text-emerald-600' : cosSim > -0.1 ? 'text-amber-600' : 'text-rose-600'}`}>
+                {cosSim.toFixed(3)}
+              </div>
+              <div className="text-xs font-semibold mt-1 opacity-70">{cosLabel}</div>
             </div>
-            <div className="flex justify-center py-2 border-y border-slate-100 mb-2">
-              <KaTeXMath tex={`\\cos\\theta = \\frac{A \\cdot B}{\\|A\\|\\|B\\|}`} />
-            </div>
-            <div className={`text-center text-2xl font-black ${cosSim >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-              {cosSim.toFixed(3)}
-            </div>
-            <div className="text-center text-[10px] text-slate-400 mt-1">
-              {cosSim > 0.9 ? 'Nearly identical direction' :
-               cosSim > 0.5 ? 'Similar direction' :
-               cosSim > 0.1 ? 'Loosely related' :
-               cosSim > -0.1 ? 'No relationship' :
-               cosSim > -0.5 ? 'Somewhat opposing' : 'Strongly opposing'}
+            <div className="text-4xl">{cosSim > 0.7 ? '🎯' : cosSim > 0.1 ? '↗' : cosSim > -0.1 ? '↔' : '↙'}</div>
+          </div>
+
+          {/* Angle sliders */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm flex flex-col gap-3">
+            {[
+              { label: 'Angle A', val: angleA, set: setAngleA, max: 360, color: '#E11D48', pct: pctA },
+              { label: 'Angle B', val: angleB, set: setAngleB, max: 360, color: '#0284C7', pct: pctB },
+            ].map(sl => (
+              <div key={sl.label}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold" style={{ color: sl.color }}>{sl.label}</span>
+                  <span className="text-sm font-black font-mono" style={{ color: sl.color }}>{sl.val}°</span>
+                </div>
+                <input type="range" min="0" max="360" step="1" value={sl.val}
+                  onChange={e => sl.set(Number(e.target.value))}
+                  className="w-full appearance-none cursor-pointer rounded-full h-2"
+                  style={{ background: `linear-gradient(to right, ${sl.color} 0%, ${sl.color} ${(sl.val/360)*100}%, #e2e8f0 ${(sl.val/360)*100}%, #e2e8f0 100%)` }}
+                />
+              </div>
+            ))}
+            <div className="border-t border-slate-100 pt-2">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lengths (don't affect score!)</span>
+              </div>
+              {[
+                { label: '|A|', val: lenA, set: setLenA, color: '#E11D48' },
+                { label: '|B|', val: lenB, set: setLenB, color: '#0284C7' },
+              ].map(sl => (
+                <div key={sl.label} className="mt-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold" style={{ color: sl.color }}>{sl.label}</span>
+                    <span className="text-xs font-black font-mono" style={{ color: sl.color }}>{sl.val}</span>
+                  </div>
+                  <input type="range" min="20" max="100" step="2" value={sl.val}
+                    onChange={e => sl.set(Number(e.target.value))}
+                    className="w-full appearance-none cursor-pointer rounded-full h-1.5"
+                    style={{ background: `linear-gradient(to right, ${sl.color} 0%, ${sl.color} ${((sl.val-20)/80)*100}%, #e2e8f0 ${((sl.val-20)/80)*100}%, #e2e8f0 100%)` }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div>
-            <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2">Try These</div>
-            <div className="flex flex-col gap-1.5">
-              {presets.map((p, i) => (
-                <button key={i} onClick={() => { setAngleA(p.aA); setAngleB(p.aB); setLenA(p.lA); setLenB(p.lB); }}
-                  className="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-600 text-left cursor-pointer transition-all">
-                  {p.label}
-                </button>
-              ))}
-            </div>
+          {/* Presets */}
+          <div className="flex flex-col gap-1.5">
+            {presets.map((p, i) => (
+              <button key={i}
+                onClick={() => { setAngleA(p.aA); setAngleB(p.aB); setLenA(p.lA); setLenB(p.lB); }}
+                className="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-600 text-left cursor-pointer transition-all active:scale-95">
+                {p.label}
+              </button>
+            ))}
           </div>
         </div>
       }
     >
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <PlotCanvas
-          points={[
-            { id: 'o', x: 50, y: 50, color: '#0f172a', radius: 5 },
-            { id: 'A', x: ptA.x, y: ptA.y, color: '#E11D48', label: `A  |len=${lenA}|`, radius: 6 },
-            { id: 'B', x: ptB.x, y: ptB.y, color: '#0284C7', label: `B  |len=${lenB}|`, radius: 6 },
-          ]}
-          lines={[
-            { x1: 50, y1: 50, x2: ptA.x, y2: ptA.y, color: '#E11D48', width: 2.5, marker: true },
-            { x1: 50, y1: 50, x2: ptB.x, y2: ptB.y, color: '#0284C7', width: 2.5, marker: true },
-          ]}
-          xLabel="Feature X"
-          yLabel="Feature Y"
+      <div className="w-full h-full flex items-center justify-center p-2">
+        <AnnotatedCosineCanvas
+          ax={uA.x * scA} ay={uA.y * scA}
+          bx={uB.x * scB} by={uB.y * scB}
+          lenA={lenA} lenB={lenB}
+          cosSim={cosSim} thetaDeg={thetaDeg}
         />
       </div>
     </SlideLayout>
@@ -1025,6 +1347,53 @@ export const Scene2_12_ProximitySandbox: React.FC = () => {
         />
       </div>
     </SlideLayout>
+  );
+};
+
+// ==========================================
+// CHAPTER 2 — Grand Summary
+// ==========================================
+export const Scene2_Summary: React.FC = () => {
+  const cards = [
+    { icon: '📏', title: 'Euclidean Distance', body: 'Straight-line gap between two points. Works like a ruler. Pythagorean theorem in any dimension.', color: '#0284C7', formula: 'd = √(Σ(Bᵢ−Aᵢ)²)' },
+    { icon: '🎯', title: 'The Magnitude Trap', body: 'Two vectors can point the same way but sit far apart by Euclidean distance — just because one is scaled up.', color: '#E11D48', formula: null },
+    { icon: '📐', title: 'Cosine Similarity', body: 'Only the angle matters. Perfect for comparing preferences, documents, or embeddings where scale is irrelevant.', color: '#7C3AED', formula: 'cos θ = (A·B) / (|A||B|)' },
+    { icon: '🔢', title: 'Score Range', body: '+1 = identical direction · 0 = perpendicular · −1 = exact opposites. Easy to interpret.', color: '#059669', formula: '-1 ≤ cos θ ≤ +1' },
+    { icon: '🤔', title: 'When to Use Which', body: 'Euclidean: absolute gap matters (GPS, pixel distance). Cosine: only direction matters (text, recommendation, embeddings).', color: '#D97706', formula: null },
+    { icon: '🌐', title: 'Real-World Impact', body: 'Spotify, Netflix, Google Search, and every vector database run on these two formulas. You now understand their core operation.', color: '#10B981', formula: null },
+  ];
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-6 max-w-4xl mx-auto gap-5">
+      <div className="text-center">
+        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          className="text-xs font-mono uppercase tracking-widest text-sky-500 font-extrabold">
+          Chapter 2 · Complete
+        </motion.span>
+        <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          className="text-3xl font-black text-slate-800 mt-1">
+          Two tools to measure proximity.
+        </motion.h1>
+      </div>
+      <div className="w-16 h-1.5 bg-gradient-to-r from-sky-400 to-violet-500 rounded-full" />
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
+        {cards.map((c, i) => (
+          <motion.div key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 + i * 0.07 }}
+            className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-2"
+          >
+            <div className="text-2xl">{c.icon}</div>
+            <div className="font-black text-sm" style={{ color: c.color }}>{c.title}</div>
+            <div className="text-slate-500 text-xs font-medium leading-relaxed">{c.body}</div>
+            {c.formula && (
+              <div className="mt-auto pt-2 border-t border-slate-100 font-mono text-xs font-bold text-slate-400">{c.formula}</div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    </div>
   );
 };
 

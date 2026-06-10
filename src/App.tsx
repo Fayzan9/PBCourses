@@ -14,9 +14,11 @@ import {
 } from './scenes/Scenes';
 import {
   Scene2_1_CuriosityHook, Scene2_2_HowDoWeCompare, Scene2_3_RealWorldProximity,
+  Scene2_3b_WhyFormula,
   Scene2_4_EuclideanDistance, Scene2_5_HigherDimensions, Scene2_6_MagnitudeTrapQuestion,
   Scene2_7_SameDifferent, Scene2_8_CosineIdea, Scene2_9_CosineSimilarity,
   Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox,
+  Scene2_Summary,
   Scene2_13_NextHook
 } from './scenes/Chapter2Scenes';
 import {
@@ -108,6 +110,7 @@ const CHAPTERS = [
       { component: Scene2_1_CuriosityHook,           title: "Near vs Far" },
       { component: Scene2_2_HowDoWeCompare,           title: "Think: How Do We Compare?" },
       { component: Scene2_3_RealWorldProximity,       title: "Proximity Everywhere" },
+      { component: Scene2_3b_WhyFormula,              title: "Why We Need a Formula" },
       { component: Scene2_4_EuclideanDistance,        title: "Euclidean Distance" },
       { component: Scene2_5_HigherDimensions,         title: "Scale to Any Dimension" },
       { component: Scene2_6_MagnitudeTrapQuestion,    title: "Think: The Magnitude Trap" },
@@ -117,6 +120,7 @@ const CHAPTERS = [
       { component: Scene2_10_CosineMath,              title: "The Normalization Trick" },
       { component: Scene2_11_WhenToUseWhich,          title: "Think: Which Metric?" },
       { component: Scene2_12_ProximitySandbox,        title: "Proximity Sandbox" },
+      { component: Scene2_Summary,                    title: "Chapter Summary" },
       { component: Scene2_13_NextHook,                 title: "What's Next" }
     ]
   },
