@@ -52,7 +52,11 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   // SVG Dimension Definitions
   const width = 900;
   const height = 620;
-  const padding = 80;
+  // Asymmetric padding: extra right for point labels, extra bottom for x-axis label
+  const padL = 80;
+  const padR = 40;
+  const padT = 52;
+  const padB = 72;
 
   const xMin = ranges[0][0];
   const xMax = ranges[0][1];
@@ -62,24 +66,23 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   // Helper functions to map mathematical coordinates to SVG pixel values
   const scaleX = (val: number) => {
     const pct = (val - xMin) / (xMax - xMin);
-    return padding + pct * (width - 2 * padding);
+    return padL + pct * (width - padL - padR);
   };
 
   const scaleY = (val: number) => {
     const pct = (val - yMin) / (yMax - yMin);
-    // In SVG, y=0 is at the top, so we invert it
-    return height - padding - pct * (height - 2 * padding);
+    return height - padB - pct * (height - padT - padB);
   };
 
   // Helper functions to map SVG pixel values back to mathematical coordinates
   const invertX = (pixelX: number) => {
-    const pct = (pixelX - padding) / (width - 2 * padding);
+    const pct = (pixelX - padL) / (width - padL - padR);
     const clampedPct = Math.max(0, Math.min(1, pct));
     return xMin + clampedPct * (xMax - xMin);
   };
 
   const invertY = (pixelY: number) => {
-    const pct = (height - padding - pixelY) / (height - 2 * padding);
+    const pct = (height - padB - pixelY) / (height - padT - padB);
     const clampedPct = Math.max(0, Math.min(1, pct));
     return yMin + clampedPct * (yMax - yMin);
   };
@@ -149,10 +152,10 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   };
 
   return (
-    <div className={`relative flex items-center justify-center w-full h-full max-w-[1000px] max-h-[560px] p-4 bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl ${className}`}>
+    <div className={`flex flex-col w-full h-full bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl overflow-hidden ${className}`}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-auto select-none"
+        className="w-full flex-1 min-h-0 select-none"
         onMouseMove={handleSvgMouseMove}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
@@ -188,17 +191,17 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
               <line
                 key={`grid-x-${i}`}
                 x1={scaleX(val)}
-                y1={padding}
+                y1={padT}
                 x2={scaleX(val)}
-                y2={height - padding}
+                y2={height - padB}
               />
             ))}
             {yGridValues.map((val, i) => (
               <line
                 key={`grid-y-${i}`}
-                x1={padding}
+                x1={padL}
                 y1={scaleY(val)}
-                x2={width - padding}
+                x2={width - padR}
                 y2={scaleY(val)}
               />
             ))}
@@ -209,22 +212,22 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
         <g stroke="rgba(71, 85, 105, 0.35)" strokeWidth="2">
           {/* X Axis */}
           <line
-            x1={padding - 10}
+            x1={padL - 10}
             y1={axisX_Pixel}
-            x2={width - padding + 10}
+            x2={width - padR + 10}
             y2={axisX_Pixel}
           />
           {/* Y Axis */}
           <line
             x1={axisY_Pixel}
-            y1={padding - 10}
+            y1={padT - 10}
             x2={axisY_Pixel}
-            y2={height - padding + 10}
+            y2={height - padB + 10}
           />
         </g>
 
         {/* Axis Ticks */}
-        <g fill="rgba(71, 85, 105, 0.7)" fontSize="16" fontFamily="sans-serif">
+        <g fill="rgba(71, 85, 105, 0.7)" fontSize="20" fontFamily="sans-serif">
           {xGridValues.map((val, i) => (
             <g key={`tick-x-${i}`}>
               <line
@@ -272,11 +275,11 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
 
         {/* Axis Labels */}
         <text
-          x={width - padding + 15}
-          y={axisX_Pixel + 36}
-          textAnchor="end"
+          x={(padL + width - padR) / 2}
+          y={height - 8}
+          textAnchor="middle"
           fill="#475569"
-          fontSize="18"
+          fontSize="22"
           fontWeight="800"
           letterSpacing="0.05em"
           className="uppercase tracking-wider"
@@ -284,11 +287,11 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
           {dimensions[0]} →
         </text>
         <text
-          x={axisY_Pixel - 12}
-          y={padding - 15}
+          x={axisY_Pixel + 8}
+          y={padT - 16}
           textAnchor="start"
           fill="#475569"
-          fontSize="18"
+          fontSize="22"
           fontWeight="800"
           letterSpacing="0.05em"
           className="uppercase tracking-wider"
@@ -426,43 +429,53 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
                 x={pointX + 16}
                 y={pointY - 16}
                 fill={isHovered ? '#0F172A' : '#475569'}
-                fontSize="17"
+                fontSize="20"
                 fontWeight={isHovered ? '700' : '500'}
                 className="font-medium"
               >
-                {p.label} <tspan fill={p.color} fontWeight="bold" fontSize="14">[{p.coords[0].toFixed(1)}, {p.coords[1].toFixed(1)}]</tspan>
+                {p.label} <tspan fill={p.color} fontWeight="bold" fontSize="17">[{p.coords[0].toFixed(1)}, {p.coords[1].toFixed(1)}]</tspan>
               </text>
             </g>
           );
         })}
       </svg>
 
-      {/* Floating HTML details overlay card */}
-      <AnimatePresence>
-        {hoveredPoint && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 5, scale: 0.95 }}
-            className="absolute bottom-4 left-4 right-4 bg-white/95 border border-slate-200 shadow-lg rounded-xl px-4 py-3 text-left pointer-events-none flex flex-col gap-0.5 z-30"
-          >
-            <div className="flex justify-between items-center">
+      {/* Details bar below the SVG — never overlaps the graph */}
+      <div className="h-12 shrink-0 px-4 border-t border-slate-100">
+        <AnimatePresence mode="wait">
+          {hoveredPoint ? (
+            <motion.div
+              key={hoveredPoint.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.15 }}
+              className="flex items-center justify-between h-full pointer-events-none"
+            >
               <span className="font-bold text-slate-800 flex items-center gap-1.5 text-sm">
                 {hoveredPoint.icon && <span className="text-slate-500">{hoveredPoint.icon}</span>}
                 {hoveredPoint.label}
+                {hoveredPoint.details && (
+                  <span className="text-xs text-slate-400 font-normal ml-1">{hoveredPoint.details}</span>
+                )}
               </span>
               <span className="font-mono text-xs text-vector bg-vector/10 border border-vector/20 px-2 py-0.5 rounded font-bold">
                 [{hoveredPoint.coords[0].toFixed(1)}, {hoveredPoint.coords[1].toFixed(1)}]
               </span>
-            </div>
-            {hoveredPoint.details && (
-              <p className="text-xs text-slate-500 leading-normal mt-0.5">
-                {hoveredPoint.details}
-              </p>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          ) : (
+            <motion.p
+              key="idle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-xs text-slate-300 font-mono h-full flex items-center"
+            >
+              hover a point
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

@@ -19,9 +19,9 @@ export const Scene10_ChatGPTReveal: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 h-full py-2 max-w-6xl mx-auto px-6 w-full">
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
       {/* Visual representation of chat pipeline */}
-      <div className="w-full max-w-[500px] bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 relative overflow-hidden shadow-md">
+      <div className="flex-[65] min-h-0 min-w-0 bg-white/40 border border-slate-200/50 rounded-3xl p-6 flex flex-col gap-4 relative overflow-hidden shadow-inner">
         <div className="absolute top-2.5 right-3 text-[10px] font-mono text-slate-400 uppercase tracking-widest flex items-center gap-1 font-bold">
           <Brain size={11} className="text-vector" /> AI Inference Engine
         </div>
@@ -52,7 +52,7 @@ export const Scene10_ChatGPTReveal: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col max-w-sm text-left gap-5">
+      <div className="flex-[35] flex flex-col justify-start gap-4 shrink-0 pt-2 pb-2 overflow-y-auto">
         <h2 className="text-4xl md:text-5xl font-black text-slate-800">How LLMs Think</h2>
         <p className="text-slate-600 text-xl md:text-2xl leading-relaxed">
           ChatGPT converts prompt phrases to locations, scans neighboring semantic concepts, and decodes them back to sentences.
