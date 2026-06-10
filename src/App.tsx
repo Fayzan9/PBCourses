@@ -48,9 +48,10 @@ import {
   Scene4_16_OneNeuron,
   Scene4_17_NeuralLayer,
   Scene4_18_StackLinearQuestion,
+  Scene4_18b_WhyNonLinear,
+  Scene4_18c_ActivationBends,
   Scene4_19_NonLinearity,
-  Scene4_20_DeepNetworks,
-  Scene4_21_MatrixSandbox,
+  Scene4_19b_StackedVsActivated,
   Scene4_22_NextHook,
 } from './scenes/chapter_4';
 import {
@@ -189,10 +190,11 @@ const CHAPTERS = [
       { component: Scene4_16_OneNeuron,          title: "One Neuron First" },
       { component: Scene4_17_NeuralLayer,        title: "A Full Layer" },
       { component: Scene4_18_StackLinearQuestion,title: "Think: Stack 100 Layers?" },
-      { component: Scene4_19_NonLinearity,       title: "The Bend" },
-      { component: Scene4_20_DeepNetworks,       title: "Depth = Power" },
-      { component: Scene4_21_MatrixSandbox,      title: "Matrix Sandbox" },
-      { component: Scene4_22_NextHook,            title: "What's Next" }
+      { component: Scene4_18b_WhyNonLinear,      title: "Why Lines Aren't Enough" },
+      { component: Scene4_18c_ActivationBends,   title: "Activation Bends the Space" },
+      { component: Scene4_19_NonLinearity,        title: "The Bend" },
+      { component: Scene4_19b_StackedVsActivated, title: "Stack vs Activate" },
+      { component: Scene4_22_NextHook,            title: "What's Next" },
     ]
   },
   {
