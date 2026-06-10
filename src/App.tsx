@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CourseStateProvider } from './components/CourseStateContext';
 import { 
   ArrowLeft, ArrowRight, BookOpen, HelpCircle, Menu, X,
-  ChevronDown, ChevronRight, ChevronLeft
+  ChevronDown, ChevronRight, ChevronLeft, Edit3
 } from 'lucide-react';
+import { Whiteboard } from './components/Whiteboard';
+
 import { 
   Scene1_Curiosity, Scene2_PersonRep, Scene3_PeoplePoints, 
   Scene4_MovieSpace, Scene4b_ThreeDSpace, Scene4c_HighDimSpace,
@@ -57,9 +59,7 @@ import {
 import {
   Scene5_1_CuriosityHook,
   Scene5_2_RubberSheetThink,
-  Scene5_3_RealWorldAnalogies,
   Scene5_3b_Bridge,
-  Scene5_4_WobbleTest,
   Scene5_5_WhatMakesSpecial,
   Scene5_6_TheEquation,
   Scene5_7_WhatIsLambda,
@@ -204,9 +204,7 @@ const CHAPTERS = [
     scenes: [
       { component: Scene5_1_CuriosityHook,            title: "Special Directions" },
       { component: Scene5_2_RubberSheetThink,          title: "Think: The Rubber Sheet" },
-      { component: Scene5_3_RealWorldAnalogies,        title: "Eigenvectors Everywhere" },
       { component: Scene5_3b_Bridge,                   title: "What Are We Looking For?" },
-      { component: Scene5_4_WobbleTest,                title: "The Wobble Test" },
       { component: Scene5_5_WhatMakesSpecial,          title: "Think: What Makes Special?" },
       { component: Scene5_6_TheEquation,               title: "The Equation Revealed" },
       { component: Scene5_7_WhatIsLambda,              title: "Think: What Is λ?" },
@@ -329,6 +327,7 @@ export const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
 
   const activeChapter = CHAPTERS[activeChapterIdx];
   const activeScene = activeChapter.scenes[currentSceneIdx];
@@ -366,7 +365,8 @@ export const App: React.FC = () => {
       if (
         document.activeElement?.tagName === 'INPUT' || 
         document.activeElement?.tagName === 'TEXTAREA' ||
-        isSidebarOpen
+        isSidebarOpen ||
+        isWhiteboardOpen
       ) {
         return;
       }
@@ -382,7 +382,7 @@ export const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSceneIdx, activeChapterIdx, isSidebarOpen, totalScenes]);
+  }, [currentSceneIdx, activeChapterIdx, isSidebarOpen, isWhiteboardOpen, totalScenes]);
 
   // Touch Swipe Gesture Detectors
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -663,24 +663,35 @@ export const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Progress Tracker dots */}
-            <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
-              {activeChapter.scenes.map((scene, idx) => {
-                const isActive = idx === currentSceneIdx;
-                const theme = CHAPTER_THEMES[activeChapterIdx];
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => jumpToScene(idx)}
-                    title={scene.title}
-                    className={`h-2 rounded-full transition-all cursor-pointer ${
-                      isActive 
-                        ? `w-6 ${theme.dotBg} shadow ${theme.glow}` 
-                        : 'w-2 bg-slate-200 hover:bg-slate-300'
-                    }`}
-                  />
-                );
-              })}
+            {/* Progress Tracker dots & Whiteboard Button */}
+            <div className="flex items-center gap-4 shrink-0">
+              <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+                {activeChapter.scenes.map((scene, idx) => {
+                  const isActive = idx === currentSceneIdx;
+                  const theme = CHAPTER_THEMES[activeChapterIdx];
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => jumpToScene(idx)}
+                      title={scene.title}
+                      className={`h-2 rounded-full transition-all cursor-pointer ${
+                        isActive 
+                          ? `w-6 ${theme.dotBg} shadow ${theme.glow}` 
+                          : 'w-2 bg-slate-200 hover:bg-slate-300'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setIsWhiteboardOpen(true)}
+                className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5"
+                title="Open Whiteboard"
+              >
+                <Edit3 size={16} className={CHAPTER_THEMES[activeChapterIdx].text} />
+                <span className="hidden sm:inline text-xs font-extrabold text-slate-700">Whiteboard</span>
+              </button>
             </div>
           </header>
 
@@ -745,6 +756,24 @@ export const App: React.FC = () => {
           </footer>
         </div>
       </div>
+      
+      {/* Whiteboard Overlay */}
+      <AnimatePresence>
+        {isWhiteboardOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 z-50"
+          >
+            <Whiteboard 
+              onClose={() => setIsWhiteboardOpen(false)} 
+              activeChapterIdx={activeChapterIdx}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </CourseStateProvider>
   );
 };
