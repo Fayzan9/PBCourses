@@ -4,10 +4,10 @@ import { VisualizationSpace, type VisualPoint } from '../../components/Visualiza
 
 export const Scene6_ProductSpace: React.FC = () => {
   const points: VisualPoint[] = [
-    { id: 'phone', label: 'Smartphone', coords: [8, 7.5], color: '#0284C7', details: 'Portable, lightweight, high daily usage', icon: <Smartphone size={12} /> },
-    { id: 'laptop', label: 'Laptop', coords: [15, 9.5], color: '#7C3AED', details: 'Workhorse computer, moderate weight, top performance', icon: <Laptop size={12} /> },
-    { id: 'camera', label: 'Pro Camera', coords: [18, 8.0], color: '#E11D48', details: 'Dedicated optics device', icon: <Camera size={12} /> },
-    { id: 'headphones', label: 'Headphones', coords: [3, 6.0], color: '#D97706', details: 'Compact personal audio device', icon: <Headphones size={12} /> }
+    { id: 'phone',      label: 'Smartphone', coords: [8,  7.5], color: '#0284C7', details: 'Portable, lightweight, high daily usage',          icon: <Smartphone size={12} /> },
+    { id: 'laptop',     label: 'Laptop',     coords: [15, 9.5], color: '#7C3AED', details: 'Workhorse computer, moderate weight, top performance', icon: <Laptop     size={12} /> },
+    { id: 'camera',     label: 'Pro Camera', coords: [18, 8.0], color: '#E11D48', details: 'Dedicated optics device',                              icon: <Camera     size={12} /> },
+    { id: 'headphones', label: 'Headphones', coords: [3,  5.5], color: '#D97706', details: 'Compact personal audio device',                         icon: <Headphones size={12} /> }
   ];
 
   return (
@@ -16,7 +16,7 @@ export const Scene6_ProductSpace: React.FC = () => {
         <VisualizationSpace
           points={points}
           dimensions={['Price ($ x100)', 'Performance Score']}
-          ranges={[[0, 25], [0, 12]]}
+          ranges={[[0, 22], [4, 11]]}
           showGrid
         />
       </div>

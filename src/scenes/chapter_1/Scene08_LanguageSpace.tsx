@@ -3,12 +3,12 @@ import { VisualizationSpace, type VisualPoint } from '../../components/Visualiza
 
 export const Scene8_LanguageSpace: React.FC = () => {
   const points: VisualPoint[] = [
-    { id: 'cat', label: 'Cat', coords: [2.5, 8.0], color: '#0284C7', details: 'Feline companion' },
-    { id: 'dog', label: 'Dog', coords: [3.0, 7.8], color: '#0284C7', details: 'Canine companion' },
-    { id: 'tiger', label: 'Tiger', coords: [2.2, 9.2], color: '#0284C7', details: 'Large wild feline' },
-    { id: 'car', label: 'Car', coords: [8.5, 2.5], color: '#E11D48', details: '4-wheeled commuter vehicle' },
-    { id: 'truck', label: 'Truck', coords: [9.0, 2.2], color: '#E11D48', details: 'Heavy cargo transporter' },
-    { id: 'bus', label: 'Bus', coords: [8.2, 3.2], color: '#E11D48', details: 'Mass passenger transit' }
+    { id: 'cat',   label: 'Cat',   coords: [2.5, 8.0], color: '#0284C7', details: 'Feline companion' },
+    { id: 'dog',   label: 'Dog',   coords: [3.2, 7.4], color: '#0284C7', details: 'Canine companion' },
+    { id: 'tiger', label: 'Tiger', coords: [1.8, 9.0], color: '#0284C7', details: 'Large wild feline' },
+    { id: 'car',   label: 'Car',   coords: [8.5, 2.5], color: '#E11D48', details: '4-wheeled commuter vehicle' },
+    { id: 'truck', label: 'Truck', coords: [9.2, 1.8], color: '#E11D48', details: 'Heavy cargo transporter' },
+    { id: 'bus',   label: 'Bus',   coords: [7.8, 3.2], color: '#E11D48', details: 'Mass passenger transit' }
   ];
 
   return (
@@ -17,7 +17,7 @@ export const Scene8_LanguageSpace: React.FC = () => {
         <VisualizationSpace
           points={points}
           dimensions={['Semantic Dimension A', 'Semantic Dimension B']}
-          ranges={[[0, 12], [0, 12]]}
+          ranges={[[1, 11], [1, 11]]}
           showGrid
         />
       </div>

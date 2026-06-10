@@ -19,9 +19,6 @@ export const PixelGrid: React.FC = () => {
   const [viewMode, setViewMode] = useState<'image' | 'numbers' | 'vector'>('image');
   const [hoveredCell, setHoveredCell] = useState<{ r: number; c: number } | null>(null);
 
-  // Flatten cells for vector representation
-  const flattenedCells = catGrid.flat();
-
   // Unified Visual points representing image vectors
   const imagePoints: VisualPoint[] = [
     { id: 'cat-img', label: 'Cat Image Point', coords: [4.5, 7.5], color: '#0284C7', details: 'Coordinates mapped from 64-dim flattened pixel array.', icon: <Smartphone size={12} /> },
@@ -57,37 +54,41 @@ export const PixelGrid: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
-              className="grid grid-cols-8 gap-1.5 p-5 bg-slate-50/80 rounded-xl border border-slate-200 shadow-inner w-[320px] h-[320px]"
+              className="relative w-[320px] h-[320px] rounded-xl overflow-hidden border border-slate-200 shadow-inner"
             >
-              {catGrid.map((row, rIdx) =>
-                row.map((val, cIdx) => {
-                  const isHovered = hoveredCell?.r === rIdx && hoveredCell?.c === cIdx;
-                  
-                  return (
-                    <div
-                      key={`cell-${rIdx}-${cIdx}`}
-                      onMouseEnter={() => setHoveredCell({ r: rIdx, c: cIdx })}
-                      onMouseLeave={() => setHoveredCell(null)}
-                      className="relative flex items-center justify-center rounded-sm transition-all border border-slate-100/60"
-                      style={{
-                        background: viewMode === 'image' 
-                          ? `rgba(2, 132, 199, ${val})` // Light mode vector color alpha mapping
-                          : '#F1F5F9',
-                      }}
-                    >
-                      {viewMode === 'numbers' && (
-                        <span className="font-mono text-[10px] text-vector font-bold">
-                          {val.toFixed(1)}
-                        </span>
-                      )}
-                      {isHovered && (
-                        <div className="absolute -top-8 bg-slate-900 border border-slate-850 rounded px-2 py-0.5 text-[10px] text-white whitespace-nowrap z-10 pointer-events-none shadow-md">
-                          Val: {val.toFixed(2)}
+              {/* Real cat photo */}
+              <img
+                src="/cat_image.png"
+                alt="Cat"
+                className={`w-full h-full object-cover transition-all duration-300 ${viewMode === 'numbers' ? 'opacity-20' : 'opacity-100'}`}
+              />
+
+              {/* Numbers overlay on top of photo */}
+              {viewMode === 'numbers' && (
+                <div className="absolute inset-0 grid grid-cols-8 gap-0 p-1">
+                  {catGrid.map((row, rIdx) =>
+                    row.map((val, cIdx) => {
+                      const isHovered = hoveredCell?.r === rIdx && hoveredCell?.c === cIdx;
+                      return (
+                        <div
+                          key={`cell-${rIdx}-${cIdx}`}
+                          onMouseEnter={() => setHoveredCell({ r: rIdx, c: cIdx })}
+                          onMouseLeave={() => setHoveredCell(null)}
+                          className="relative flex items-center justify-center"
+                        >
+                          <span className="font-mono text-[9px] text-vector font-black drop-shadow-sm">
+                            {val.toFixed(1)}
+                          </span>
+                          {isHovered && (
+                            <div className="absolute -top-6 bg-slate-900 rounded px-1.5 py-0.5 text-[9px] text-white whitespace-nowrap z-10 pointer-events-none shadow">
+                              {val.toFixed(2)}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  );
-                })
+                      );
+                    })
+                  )}
+                </div>
               )}
             </motion.div>
           ) : (
@@ -97,38 +98,14 @@ export const PixelGrid: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.4 }}
-              className="flex flex-col items-center justify-center w-full gap-5"
+              className="w-full h-full"
             >
-              {/* Flattened Array Visualizer collapsing into a coordinate point */}
-              <div className="flex flex-wrap justify-center max-w-[500px] gap-1 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                {flattenedCells.slice(0, 32).map((val, idx) => (
-                  <motion.div
-                    key={`flat-cell-${idx}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: idx * 0.005 }}
-                    className="w-5 h-5 rounded-sm flex items-center justify-center border border-slate-100"
-                    style={{ background: `rgba(2, 132, 199, ${val})` }}
-                  />
-                ))}
-                <span className="text-slate-400 font-mono text-xs flex items-center px-1">...</span>
-              </div>
-
-              {/* Arrow transformation path */}
-              <div className="text-center flex flex-col items-center">
-                <span className="text-slate-500 text-xs font-mono uppercase tracking-wider font-semibold">Flattened 64-Dimensional Array</span>
-                <span className="text-transformations font-bold text-lg">↓ collapsed via projection</span>
-              </div>
-
-              {/* Standard coordinate space */}
-              <div className="w-full max-w-[550px]">
-                <VisualizationSpace
-                  points={imagePoints}
-                  dimensions={['Semantic Dimension 1', 'Semantic Dimension 2']}
-                  ranges={[[0, 10], [0, 10]]}
-                  showGrid
-                />
-              </div>
+              <VisualizationSpace
+                points={imagePoints}
+                dimensions={['Semantic Dimension 1', 'Semantic Dimension 2']}
+                ranges={[[3, 10], [1, 9]]}
+                showGrid
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -136,4 +113,3 @@ export const PixelGrid: React.FC = () => {
     </div>
   );
 };
-export default PixelGrid;

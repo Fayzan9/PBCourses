@@ -125,7 +125,7 @@ export const GalaxyPlot: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full max-w-[900px] border border-slate-200 bg-white/70 rounded-2xl overflow-hidden glass-panel relative shadow-md">
+    <div className="flex flex-col w-full h-full border border-slate-200 bg-white/70 rounded-2xl overflow-hidden glass-panel relative shadow-md">
       {/* Top Header controls panel */}
       <div className="absolute top-4 left-4 right-4 z-10 flex flex-wrap gap-3 items-center justify-between pointer-events-none">
         {/* Search */}
