@@ -3,10 +3,6 @@ import { motion } from 'framer-motion';
 import { type Vec2, type Mat2, mulMV, mag2 as mag, norm, fmt } from '../../components/mathHelpers';
 import { LAYOUT_CONFIG } from '../../components/layoutConfig';
 import { MARKER_DEFS, SvgGridLines } from '../../components/TransformGrid';
-import { useSlideState } from '../../components/CourseStateContext';
-
-
-
 export const Scene5_4_WobbleTest: React.FC = () => {
   const [matRaw, setMatRaw] = useState(['3', '1', '0', '2']);
   const matNum = matRaw.map(v => parseFloat(v) || 0);

@@ -78,6 +78,16 @@ import {
   Scene5_21_GrandSummary,
   Scene5_22_NextHook,
 } from './scenes/chapter_5';
+import {
+  Scene6_1_CuriosityHook, Scene6_2_TheSquareProblem, Scene6_3_RealWorldNonSquare,
+  Scene6_4_ThreeMoveIdea, Scene6_5_RotateStretchRotate, Scene6_6_WhatIsU,
+  Scene6_7_WhatIsSigma, Scene6_8_WhatIsVt, Scene6_9_SingularValuesVsEigenvalues,
+  Scene6_10_RankAndSingularValues, Scene6_11_LowRankIdea, Scene6_12_ImageCompression,
+  Scene6_13_RecommenderIntuition, Scene6_14_LatentFactors, Scene6_15_SVDAndPCABridge,
+  Scene6_16_WhyNotEigen, Scene6_17_AttentionPreview, Scene6_18_NumericalStability,
+  Scene6_19_SVDInteractiveSandbox, Scene6_20_RecapTheThreeSteps, Scene6_21_GrandSummary,
+  Scene6_22_NextHook,
+} from './scenes/chapter_6';
 
 const CHAPTERS = [
   {
@@ -205,6 +215,35 @@ const CHAPTERS = [
       { component: Scene5_21_GrandSummary,             title: "Everything You Now Know" },
       { component: Scene5_22_NextHook,                 title: "What's Next" },
     ]
+  },
+  {
+    id: 6,
+    title: "Singular Value Decomposition",
+    subtitle: "Chapter 6: Rotate · Stretch · Rotate",
+    scenes: [
+      { component: Scene6_1_CuriosityHook, title: "Rotate. Stretch. Rotate." },
+      { component: Scene6_2_TheSquareProblem, title: "The Square Problem" },
+      { component: Scene6_3_RealWorldNonSquare, title: "Non-Square Is Everywhere" },
+      { component: Scene6_4_ThreeMoveIdea, title: "The 3-Move Idea" },
+      { component: Scene6_5_RotateStretchRotate, title: "Three Steps, One Matrix" },
+      { component: Scene6_6_WhatIsU, title: "What Is U?" },
+      { component: Scene6_7_WhatIsSigma, title: "What Is Σ?" },
+      { component: Scene6_8_WhatIsVt, title: "What Is Vᵀ?" },
+      { component: Scene6_9_SingularValuesVsEigenvalues, title: "Eigenvalues vs Singular Values" },
+      { component: Scene6_10_RankAndSingularValues, title: "Rank = Non-Zero σ's" },
+      { component: Scene6_11_LowRankIdea, title: "Keep Only What Matters" },
+      { component: Scene6_12_ImageCompression, title: "Image Compression Live" },
+      { component: Scene6_13_RecommenderIntuition, title: "Filling in the Blanks" },
+      { component: Scene6_14_LatentFactors, title: "Hidden Taste Dimensions" },
+      { component: Scene6_15_SVDAndPCABridge, title: "PCA = SVD in Disguise" },
+      { component: Scene6_16_WhyNotEigen, title: "Why Eigenvalues Break" },
+      { component: Scene6_17_AttentionPreview, title: "SVD in Transformers" },
+      { component: Scene6_18_NumericalStability, title: "The Safe Solver" },
+      { component: Scene6_19_SVDInteractiveSandbox, title: "SVD Sandbox" },
+      { component: Scene6_20_RecapTheThreeSteps, title: "The Full Picture" },
+      { component: Scene6_21_GrandSummary, title: "Everything You Now Know" },
+      { component: Scene6_22_NextHook, title: "What's Next" },
+    ]
   }
 ];
 
@@ -263,6 +302,17 @@ const CHAPTER_THEMES = [
     dotBg: 'bg-loss',
     bgActive: 'bg-loss hover:bg-rose-600',
     hover: 'hover:bg-loss/5 hover:text-loss'
+  },
+  {
+    id: 6,
+    primary: 'svd',
+    text: 'text-svd',
+    bg: 'bg-svd/10',
+    border: 'border-svd/20',
+    glow: 'glow-svd',
+    dotBg: 'bg-svd',
+    bgActive: 'bg-svd hover:bg-cyan-700',
+    hover: 'hover:bg-svd/5 hover:text-svd'
   }
 ];
 
