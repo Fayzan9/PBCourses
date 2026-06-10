@@ -2,23 +2,64 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { SlideLayout } from '../../components/SlideLayout';
 
+type Cell = { val: string; active: boolean };
+
+const MatrixGrid: React.FC<{ cells: Cell[]; accent: string }> = ({ cells, accent }) => (
+  <div className="grid grid-cols-2 gap-1.5">
+    {cells.map((c, i) => (
+      <div
+        key={i}
+        className={`w-14 h-10 rounded-lg flex items-center justify-center font-mono text-xs font-bold border transition-all ${
+          c.active
+            ? `border-current text-white`
+            : 'border-slate-200 bg-slate-50 text-slate-400'
+        }`}
+        style={c.active ? { backgroundColor: accent, borderColor: accent } : undefined}
+      >
+        {c.val}
+      </div>
+    ))}
+  </div>
+);
+
+const insights = [
+  {
+    name: 'Scaling',
+    accent: '#E11D48',
+    cells: [
+      { val: 's', active: true },
+      { val: '0', active: false },
+      { val: '0', active: false },
+      { val: 's', active: true },
+    ],
+    tagline: 'Diagonal carries the scale factor',
+  },
+  {
+    name: 'Rotation',
+    accent: '#7C3AED',
+    cells: [
+      { val: 'cos θ', active: true },
+      { val: '−sin θ', active: true },
+      { val: 'sin θ',  active: true },
+      { val: 'cos θ',  active: true },
+    ],
+    tagline: 'All four slots drive the circular sweep',
+  },
+  {
+    name: 'Shear',
+    accent: '#D97706',
+    cells: [
+      { val: '1', active: false },
+      { val: 'k', active: true },
+      { val: '0', active: false },
+      { val: '1', active: false },
+    ],
+    tagline: 'One off-diagonal slot tilts the grid',
+  },
+];
+
 export const Scene4_8_FourNumbers: React.FC = () => {
   const [revealed, setRevealed] = useState(0);
-
-  const insights = [
-    {
-      label: 'Scaling used: [s, 0, 0, s]',
-      desc: 'Two equal numbers on the diagonal. The off-diagonal slots stay zero.',
-    },
-    {
-      label: 'Rotation used: [cos θ, −sin θ, sin θ, cos θ]',
-      desc: 'All four slots work together to create the circular sweep.',
-    },
-    {
-      label: 'Shear used: [1, k, 0, 1]',
-      desc: 'One off-diagonal slot controls the tilt. The rest stay at identity values.',
-    },
-  ];
 
   return (
     <SlideLayout
@@ -30,14 +71,24 @@ export const Scene4_8_FourNumbers: React.FC = () => {
             <button
               key={i}
               onClick={() => setRevealed(Math.max(revealed, i + 1))}
-              className={`px-3 py-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+              className={`px-3 py-3 rounded-xl border text-left transition-all cursor-pointer ${
                 revealed > i
-                  ? 'bg-violet-50 border-violet-300 text-violet-800'
-                  : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
+                  ? 'bg-white border-slate-200 shadow-sm'
+                  : 'bg-white border-slate-100 text-slate-300 hover:border-slate-200'
               }`}
             >
-              <span className="block font-bold mb-0.5">{s.label}</span>
-              {revealed > i && <span className="text-slate-500 font-medium">{s.desc}</span>}
+              <span
+                className="block text-xs font-black mb-2 uppercase tracking-wide"
+                style={{ color: revealed > i ? s.accent : '#cbd5e1' }}
+              >
+                {s.name}
+              </span>
+              <div className={`transition-opacity ${revealed > i ? 'opacity-100' : 'opacity-30'}`}>
+                <MatrixGrid cells={s.cells} accent={s.accent} />
+              </div>
+              {revealed > i && (
+                <p className="text-[11px] text-slate-500 font-medium mt-2">{s.tagline}</p>
+              )}
             </button>
           ))}
           {revealed === 0 && (
