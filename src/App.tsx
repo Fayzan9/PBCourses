@@ -15,8 +15,10 @@ import {
   Scene2_5_ProximitySandbox
 } from './scenes/Chapter2Scenes';
 import {
-  Scene3_1_AlignmentQuestion, Scene3_2_ElementwiseAlignment, Scene3_3_SummingArea,
-  Scene3_4_GeometricProjection, Scene3_5_SignalAmplification
+  Scene3_1_AlignmentQuestion, Scene3_2_ParallelVectors, Scene3_3_OrthogonalVectors,
+  Scene3_4_ShadowProjection, Scene3_5_TrigCosineConnection, Scene3_6_ScalingShadow,
+  Scene3_7_CoordinateShortcut, Scene3_8_HorizontalAgreement, Scene3_9_VerticalAgreement,
+  Scene3_10_SummingUp, Scene3_11_SignalAmplification
 } from './scenes/Chapter3Scenes';
 
 const CHAPTERS = [
@@ -63,10 +65,16 @@ const CHAPTERS = [
     subtitle: "Chapter 3: Projection & Feature Alignment",
     scenes: [
       { component: Scene3_1_AlignmentQuestion, title: "Force Alignment" },
-      { component: Scene3_2_ElementwiseAlignment, title: "Feature Multiplying" },
-      { component: Scene3_3_SummingArea, title: "Summing Alignment" },
-      { component: Scene3_4_GeometricProjection, title: "Vector Shadow Projection" },
-      { component: Scene3_5_SignalAmplification, title: "Signal Amplification" }
+      { component: Scene3_2_ParallelVectors, title: "Perfect Alignment" },
+      { component: Scene3_3_OrthogonalVectors, title: "Zero Alignment" },
+      { component: Scene3_4_ShadowProjection, title: "Vector Shadow Projection" },
+      { component: Scene3_5_TrigCosineConnection, title: "The Trig Shadow" },
+      { component: Scene3_6_ScalingShadow, title: "Scaling the Shadow" },
+      { component: Scene3_7_CoordinateShortcut, title: "Coordinate Shortcut" },
+      { component: Scene3_8_HorizontalAgreement, title: "Horizontal Agreement" },
+      { component: Scene3_9_VerticalAgreement, title: "Vertical Agreement" },
+      { component: Scene3_10_SummingUp, title: "The Grand Equivalence" },
+      { component: Scene3_11_SignalAmplification, title: "Signal Strength" }
     ]
   }
 ];
