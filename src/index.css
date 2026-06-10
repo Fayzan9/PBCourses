@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vector: #0284C7; /* sky-600 for high-contrast light mode */
+  --color-similarity: #D97706; /* amber-600 */
+  --color-transformations: #7C3AED; /* violet-600 */
+  --color-probability: #059669; /* emerald-600 */
+  --color-loss: #E11D48; /* rose-600 */
+  --color-bg-dark: #F8FAFC; /* Slate-50 light background */
+  --color-text-light: #0F172A; /* Slate-900 text */
+  --color-muted-light: #64748B; /* Slate-500 muted text */
+
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;
+}
+
+:root {
+  background-color: #F8FAFC;
+  color: #0F172A;
+  font-family: var(--font-sans);
+  font-size: 20px; /* even larger base size */
+  line-height: 1.6;
+  overflow: hidden;
+
+  @media (min-width: 1024px) {
+    font-size: 22px; /* larger scale on big screens */
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #F8FAFC;
+  color: #0F172A;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom styles and animations */
+.premium-gradient-text {
+  background: linear-gradient(135deg, #0F172A 30%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vector-gradient-text {
+  background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.similarity-gradient-text {
+  background: linear-gradient(135deg, #D97706 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* KaTeX custom sizing and overrides */
+.katex-display {
+  margin: 1rem 0 !important;
+}
+
+.katex {
+  font-size: 1.15em;
+  color: #0284C7;
+}
+
+/* Custom scrollbars for details or sidebars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.4);
+}
+
+/* Grid overlay styling (light mode) */
+.space-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(100, 116, 139, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(100, 116, 139, 0.08) 1px, transparent 1px);
+}
+
+.space-grid-pattern-fine {
+  background-size: 10px 10px;
+  background-image: 
+    linear-gradient(to right, rgba(100, 116, 139, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(100, 116, 139, 0.04) 1px, transparent 1px);
+}
+
+/* Glassmorphism panel styling (light mode) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.glow-vector {
+  filter: drop-shadow(0 0 10px rgba(2, 132, 199, 0.2));
+}
+
+.glow-similarity {
+  filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.2));
+}
+
+.glow-transformations {
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.2));
+}
+
+.glow-probability {
+  filter: drop-shadow(0 0 10px rgba(5, 150, 105, 0.2));
+}
