@@ -15,7 +15,7 @@ import {
 } from './scenes/chapter_1';
 import {
   Scene2_1_CuriosityHook, Scene2_2_HowDoWeCompare, Scene2_3_RealWorldProximity,
-  Scene2_3b_WhyFormula,
+  Scene2_3b_Proximity3DSpace,
   Scene2_4_EuclideanDistance, Scene2_5_HigherDimensions, Scene2_6_MagnitudeTrapQuestion,
   Scene2_7_SameDifferent, Scene2_8_CosineIdea, Scene2_9_CosineSimilarity,
   Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox,
@@ -131,7 +131,7 @@ const CHAPTERS = [
       { component: Scene2_1_CuriosityHook,           title: "Near vs Far" },
       { component: Scene2_2_HowDoWeCompare,           title: "Think: How Do We Compare?" },
       { component: Scene2_3_RealWorldProximity,       title: "Proximity Everywhere" },
-      { component: Scene2_3b_WhyFormula,              title: "Why We Need a Formula" },
+      { component: Scene2_3b_Proximity3DSpace,              title: "Proximity in 3D Space" },
       { component: Scene2_4_EuclideanDistance,        title: "Euclidean Distance" },
       { component: Scene2_5_HigherDimensions,         title: "Scale to Any Dimension" },
       { component: Scene2_6_MagnitudeTrapQuestion,    title: "Think: The Magnitude Trap" },
