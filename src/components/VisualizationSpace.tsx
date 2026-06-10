@@ -90,7 +90,7 @@ export const VisualizationSpace: React.FC<VisualizationSpaceProps> = ({
   };
 
   return (
-    <div className={`relative flex items-center justify-center w-full h-full max-w-[880px] max-h-[640px] p-6 bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl ${className}`}>
+    <div className={`relative flex items-center justify-center w-full h-full max-w-[800px] max-h-[460px] p-4 bg-white/70 rounded-2xl border border-slate-200/80 shadow-md backdrop-blur-xl ${className}`}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto select-none"
