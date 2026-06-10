@@ -1,23 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { type Vec2, type Mat2, mulMV, norm, fmt } from '../../components/mathHelpers';
-import { useAnimatedMatrix } from '../../components/TransformGrid';
+import { useAnimatedMatrix, MARKER_DEFS, SvgGridLines } from '../../components/TransformGrid';
 import { LAYOUT_CONFIG } from '../../components/layoutConfig';
 
-const MARKER_DEFS = (
-  <defs>
-    {([
-      ['red', '#E11D48'], ['blue', '#0284C7'], ['green', '#059669'],
-      ['slate', '#64748B'], ['violet', '#7C3AED'], ['amber', '#D97706'],
-      ['emerald', '#10B981'], ['rose', '#FB7185'],
-    ] as [string, string][]).map(([n, c]) => (
-      <marker key={n} id={`c5-${n}`} viewBox="0 0 10 10" refX="8" refY="5"
-        markerWidth="4" markerHeight="4" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill={c} />
-      </marker>
-    ))}
-  </defs>
-);
+
 
 export const Scene5_9_GeometricPicture: React.FC = () => {
   const presets: {
@@ -97,21 +84,7 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
           {MARKER_DEFS}
           <rect width={W} height={H} fill="white" rx="16" />
-          {([-3,-2,-1,0,1,2,3] as number[]).map(i => {
-            const ax = i === 0;
-            return (
-              <g key={i}>
-                <line x1={CX+i*SC} y1={18} x2={CX+i*SC} y2={H-18}
-                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
-                <line x1={18} y1={CY-i*SC} x2={W-18} y2={CY-i*SC}
-                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
-                {i !== 0 && <>
-                  <text x={CX+i*SC} y={CY+15} textAnchor="middle" fill="#e2e8f0" fontSize="9">{i}</text>
-                  <text x={CX+7}    y={CY-i*SC+4} fill="#e2e8f0" fontSize="9">{i}</text>
-                </>}
-              </g>
-            );
-          })}
+          <SvgGridLines cx={CX} cy={CY} scale={SC} range={3} width={W} height={H} showTicks={true} tickColor="#e2e8f0" />
 
           {p.evecs.map((ev, i) => {
             if (!shown.includes(i)) return null;
@@ -126,7 +99,7 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
                   stroke={ev.color} strokeWidth="0.8" strokeDasharray="5 4" opacity="0.15" />
                 <line x1={CX} y1={CY} x2={beforeTip[0]} y2={beforeTip[1]}
                   stroke={ev.color} strokeWidth="3" strokeDasharray="8 4"
-                  markerEnd={`url(#c5-${ev.marker})`} />
+                  markerEnd={`url(#g4-${ev.marker})`} />
                 <text x={beforeTip[0] + (ev.vec[0] >= 0 ? 8 : -8)} y={beforeTip[1] - 14}
                   fill={ev.color} fontSize="10" fontWeight="bold"
                   textAnchor={ev.vec[0] >= 0 ? 'start' : 'end'}>
@@ -137,7 +110,7 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                     <line x1={CX} y1={CY} x2={afterTip[0]} y2={afterTip[1]}
                       stroke={ev.color} strokeWidth="5"
-                      markerEnd={`url(#c5-${ev.marker})`} />
+                      markerEnd={`url(#g4-${ev.marker})`} />
                     {(() => {
                       const bx = afterTip[0] + (scaled[0] >= 0 ? 10 : -10);
                       const by = afterTip[1] + (scaled[1] <= 0 ? -16 : 10);
@@ -181,14 +154,14 @@ export const Scene5_9_GeometricPicture: React.FC = () => {
                 return (
                   <>
                     <line x1={CX} y1={CY} x2={bTip[0]} y2={bTip[1]}
-                      stroke="#94a3b8" strokeWidth="3" strokeDasharray="8 4" markerEnd="url(#c5-slate)" />
+                      stroke="#94a3b8" strokeWidth="3" strokeDasharray="8 4" markerEnd="url(#g4-slate)" />
                     <text x={bTip[0] + 8} y={bTip[1] - 14} fill="#94a3b8" fontSize="10" fontWeight="bold">
                       [{fmt(testVec[0])},{fmt(testVec[1])}]
                     </text>
                     {showOutput && (
                       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <line x1={CX} y1={CY} x2={aTip[0]} y2={aTip[1]}
-                          stroke="#E11D48" strokeWidth="5" markerEnd="url(#c5-red)" />
+                          stroke="#E11D48" strokeWidth="5" markerEnd="url(#g4-red)" />
                         <text x={aTip[0] + 8} y={aTip[1] - 14} fill="#E11D48" fontSize="10" fontWeight="bold">
                           [{fmt(outV[0])},{fmt(outV[1])}]
                         </text>

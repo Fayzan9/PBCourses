@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { type Vec2 } from '../../components/mathHelpers';
 import { SlideLayout } from '../../components/SlideLayout';
+import { useSlideState } from '../../components/CourseStateContext';
 
 const makeCloudPoints = (n: number, θ: number): Vec2[] => {
   const cos = Math.cos(θ), sin = Math.sin(θ);
@@ -27,8 +28,8 @@ const MARKER_DEFS = (
 );
 
 export const Scene5_15_PCAIntuition: React.FC = () => {
-  const [angle, setAngle] = useState(30);
-  const [pts] = useState(() => makeCloudPoints(60, (30 * Math.PI) / 180));
+  const [angle, setAngle] = useSlideState('ch5_pca_angle', 30);
+  const [pts] = useSlideState<Vec2[]>('ch5_pca_pts', () => makeCloudPoints(60, (30 * Math.PI) / 180));
   const θ = (angle * Math.PI) / 180;
   const eigDir: Vec2 = [Math.cos(θ), Math.sin(θ)];
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Math as KaTeXMath } from '../../components/Math';
 
 export const Scene5_6_TheEquation: React.FC = () => {
   const [step, setStep] = useState(0);
@@ -66,17 +67,17 @@ export const Scene5_6_TheEquation: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">The Matrix & Vector</div>
           <div className="font-mono text-xs flex flex-col gap-1">
-            <div className="flex gap-2">
-              <span className="text-slate-400">M =</span>
-              <span className="text-rose-600 font-bold">[[3, 1], [0, 2]]</span>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400 font-bold">M =</span>
+              <KaTeXMath tex="\begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}" />
             </div>
-            <div className="flex gap-2">
-              <span className="text-slate-400">v =</span>
-              <span className="text-violet-600 font-bold">[1, 0]</span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-slate-400 font-bold">v =</span>
+              <KaTeXMath tex="\begin{pmatrix} 1 \\ 0 \end{pmatrix}" />
             </div>
-            <div className="flex gap-2">
-              <span className="text-slate-400">λ =</span>
-              <span className="text-emerald-600 font-bold">3</span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-slate-400 font-bold">\lambda =</span>
+              <KaTeXMath tex="3" />
             </div>
           </div>
         </div>
@@ -87,10 +88,8 @@ export const Scene5_6_TheEquation: React.FC = () => {
               className="bg-rose-50 border border-rose-200 rounded-2xl p-4 shadow-sm">
               <div className="text-[10px] font-mono uppercase tracking-wider text-rose-500 font-bold mb-2">Left side: M·v</div>
               <div className="font-mono text-xs text-slate-600 flex flex-col gap-1">
-                <div>row 1: 3×1 + 1×0 = <span className="font-black text-rose-600">3</span></div>
-                <div>row 2: 0×1 + 2×0 = <span className="font-black text-rose-600">0</span></div>
+                <KaTeXMath tex="\begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3 \times 1 + 1 \times 0 \\ 0 \times 1 + 2 \times 0 \end{pmatrix} = \begin{pmatrix} 3 \\ 0 \end{pmatrix}" />
               </div>
-              <div className="mt-2 text-lg font-black text-rose-600 font-mono">M·v = [3, 0]</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -100,7 +99,9 @@ export const Scene5_6_TheEquation: React.FC = () => {
             <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
               className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 shadow-sm">
               <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-600 font-bold mb-2">Right side: λ·v</div>
-              <div className="font-mono text-xs text-slate-600">3 × [1, 0] = <span className="font-black text-emerald-600">[3, 0]</span></div>
+              <div className="font-mono text-xs text-slate-600">
+                <KaTeXMath tex="3 \times \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3 \\ 0 \end{pmatrix}" />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -109,7 +110,9 @@ export const Scene5_6_TheEquation: React.FC = () => {
           {step >= 3 && (
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
               className="bg-slate-800 rounded-2xl p-4 text-center">
-              <div className="text-white font-black text-base mb-1">✓ Both sides = [3, 0]</div>
+              <div className="text-white font-black text-base mb-1">
+                <KaTeXMath tex="M\mathbf{v} = \lambda\mathbf{v} = \begin{pmatrix} 3 \\ 0 \end{pmatrix}" />
+              </div>
               <div className="text-slate-400 text-xs font-medium">v = [1, 0] is an eigenvector of M with λ = 3</div>
             </motion.div>
           )}

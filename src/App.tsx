@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CourseStateProvider } from './components/CourseStateContext';
 import { 
   ArrowLeft, ArrowRight, BookOpen, HelpCircle, Menu, X,
   ChevronDown, ChevronRight, ChevronLeft
@@ -528,166 +529,168 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div 
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      className="relative flex flex-row w-full h-screen max-h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans space-grid-pattern-fine"
-    >
-      {/* Background soft atmosphere */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-vector/5 opacity-30 filter blur-[120px] pointer-events-none" />
-
-      {/* DESKTOP SIDEBAR - DOCKED (hidden on mobile) */}
-      <motion.aside
-        animate={{ width: isSidebarCollapsed ? 88 : 320 }}
-        transition={{ type: 'spring', damping: 22, stiffness: 150 }}
-        className="hidden md:flex flex-col h-full bg-white border-r border-slate-200/80 shadow-md select-none shrink-0 overflow-hidden p-4 z-30"
+    <CourseStateProvider>
+      <div 
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        className="relative flex flex-row w-full h-screen max-h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans space-grid-pattern-fine"
       >
-        {renderSidebar(isSidebarCollapsed, false)}
-      </motion.aside>
+        {/* Background soft atmosphere */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-vector/5 opacity-30 filter blur-[120px] pointer-events-none" />
 
-      {/* MOBILE SIDEBAR - DRAWER (hidden on desktop) */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <>
-            {/* Sidebar backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsSidebarOpen(false)}
-              className="absolute inset-0 bg-slate-900 z-40 cursor-pointer md:hidden"
-            />
+        {/* DESKTOP SIDEBAR - DOCKED (hidden on mobile) */}
+        <motion.aside
+          animate={{ width: isSidebarCollapsed ? 88 : 320 }}
+          transition={{ type: 'spring', damping: 22, stiffness: 150 }}
+          className="hidden md:flex flex-col h-full bg-white border-r border-slate-200/80 shadow-md select-none shrink-0 overflow-hidden p-4 z-30"
+        >
+          {renderSidebar(isSidebarCollapsed, false)}
+        </motion.aside>
 
-            {/* Sidebar drawer content */}
-            <motion.aside
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute top-0 bottom-0 left-0 w-80 bg-white/95 backdrop-blur border-r border-slate-200 z-50 shadow-2xl flex flex-col p-5 overflow-hidden md:hidden"
-            >
-              {renderSidebar(false, true)}
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
+        {/* MOBILE SIDEBAR - DRAWER (hidden on desktop) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <>
+              {/* Sidebar backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.4 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsSidebarOpen(false)}
+                className="absolute inset-0 bg-slate-900 z-40 cursor-pointer md:hidden"
+              />
 
-      {/* MAIN CONTAINER (spans rest of screen) */}
-      <div className="flex-1 flex flex-col justify-between h-full overflow-hidden min-w-0">
-        {/* HEADER SECTION */}
-        <header className="w-full px-6 py-4 flex flex-row items-center justify-between gap-4 border-b border-slate-200/80 z-20 shrink-0">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => {
-                if (window.innerWidth < 768) {
-                  setIsSidebarOpen(true);
-                } else {
-                  setIsSidebarCollapsed(prev => !prev);
-                }
-              }}
-              className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
-              title="Toggle sidebar"
-            >
-              <Menu size={20} />
-            </button>
-            
+              {/* Sidebar drawer content */}
+              <motion.aside
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="absolute top-0 bottom-0 left-0 w-80 bg-white/95 backdrop-blur border-r border-slate-200 z-50 shadow-2xl flex flex-col p-5 overflow-hidden md:hidden"
+              >
+                {renderSidebar(false, true)}
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* MAIN CONTAINER (spans rest of screen) */}
+        <div className="flex-1 flex flex-col justify-between h-full overflow-hidden min-w-0">
+          {/* HEADER SECTION */}
+          <header className="w-full px-6 py-4 flex flex-row items-center justify-between gap-4 border-b border-slate-200/80 z-20 shrink-0">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-xl border transition-all ${CHAPTER_THEMES[activeChapterIdx].bg} ${CHAPTER_THEMES[activeChapterIdx].border} ${CHAPTER_THEMES[activeChapterIdx].text} ${CHAPTER_THEMES[activeChapterIdx].glow}`}>
-                <BookOpen size={20} />
-              </div>
-              <div>
-                <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-                  {activeChapter.title}
-                </h1>
-                <p className="text-xs text-slate-500 font-bold">
-                  {activeChapter.subtitle}
-                </p>
+              <button
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setIsSidebarOpen(true);
+                  } else {
+                    setIsSidebarCollapsed(prev => !prev);
+                  }
+                }}
+                className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
+                title="Toggle sidebar"
+              >
+                <Menu size={20} />
+              </button>
+              
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-xl border transition-all ${CHAPTER_THEMES[activeChapterIdx].bg} ${CHAPTER_THEMES[activeChapterIdx].border} ${CHAPTER_THEMES[activeChapterIdx].text} ${CHAPTER_THEMES[activeChapterIdx].glow}`}>
+                  <BookOpen size={20} />
+                </div>
+                <div>
+                  <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
+                    {activeChapter.title}
+                  </h1>
+                  <p className="text-xs text-slate-500 font-bold">
+                    {activeChapter.subtitle}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Progress Tracker dots */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
-            {activeChapter.scenes.map((scene, idx) => {
-              const isActive = idx === currentSceneIdx;
-              const theme = CHAPTER_THEMES[activeChapterIdx];
-              return (
-                <button
-                  key={idx}
-                  onClick={() => jumpToScene(idx)}
-                  title={scene.title}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${
-                    isActive 
-                      ? `w-6 ${theme.dotBg} shadow ${theme.glow}` 
-                      : 'w-2 bg-slate-200 hover:bg-slate-300'
-                  }`}
-                />
-              );
-            })}
-          </div>
-        </header>
+            {/* Progress Tracker dots */}
+            <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+              {activeChapter.scenes.map((scene, idx) => {
+                const isActive = idx === currentSceneIdx;
+                const theme = CHAPTER_THEMES[activeChapterIdx];
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => jumpToScene(idx)}
+                    title={scene.title}
+                    className={`h-2 rounded-full transition-all cursor-pointer ${
+                      isActive 
+                        ? `w-6 ${theme.dotBg} shadow ${theme.glow}` 
+                        : 'w-2 bg-slate-200 hover:bg-slate-300'
+                    }`}
+                  />
+                );
+              })}
+            </div>
+          </header>
 
-        {/* CORE STAGE */}
-        <main className="flex-1 min-h-0 w-full px-6 py-2 flex items-center justify-center z-10 overflow-hidden">
-          <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.div
-                key={`${activeChapterIdx}-${currentSceneIdx}`}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="w-full h-full flex items-center justify-center"
+          {/* CORE STAGE */}
+          <main className="flex-1 min-h-0 w-full px-6 py-2 flex items-center justify-center z-10 overflow-hidden">
+            <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
+              <AnimatePresence custom={direction} mode="wait">
+                <motion.div
+                  key={`${activeChapterIdx}-${currentSceneIdx}`}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="w-full h-full flex items-center justify-center"
+                >
+                  <ActiveComponent />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </main>
+
+          {/* FOOTER CONTROLS BAR */}
+          <footer className="w-full px-6 py-4 flex items-center justify-between border-t border-slate-200/80 bg-white/70 backdrop-blur z-20 shadow-sm shrink-0">
+            {/* Navigation Tips */}
+            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-mono font-semibold">
+              <HelpCircle size={14} className="text-slate-400" />
+              <span>Use</span>
+              <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Left</span>
+              <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Right</span>
+              <span>or</span>
+              <span className="px-3 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Space</span>
+              <span>to explore</span>
+            </div>
+
+            {/* Numeric progress indicator */}
+            <div className="text-xs font-mono text-slate-500 flex items-center gap-1 font-bold">
+              <span className={CHAPTER_THEMES[activeChapterIdx].text}>{(currentSceneIdx + 1).toString().padStart(2, '0')}</span>
+              <span>/</span>
+              <span>{totalScenes.toString().padStart(2, '0')}</span>
+            </div>
+
+            {/* Buttons navigation */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={navigatePrev}
+                disabled={activeChapterIdx === 0 && currentSceneIdx === 0}
+                className="flex items-center justify-center p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
               >
-                <ActiveComponent />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </main>
-
-        {/* FOOTER CONTROLS BAR */}
-        <footer className="w-full px-6 py-4 flex items-center justify-between border-t border-slate-200/80 bg-white/70 backdrop-blur z-20 shadow-sm shrink-0">
-          {/* Navigation Tips */}
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-mono font-semibold">
-            <HelpCircle size={14} className="text-slate-400" />
-            <span>Use</span>
-            <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Left</span>
-            <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Right</span>
-            <span>or</span>
-            <span className="px-3 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Space</span>
-            <span>to explore</span>
-          </div>
-
-          {/* Numeric progress indicator */}
-          <div className="text-xs font-mono text-slate-500 flex items-center gap-1 font-bold">
-            <span className={CHAPTER_THEMES[activeChapterIdx].text}>{(currentSceneIdx + 1).toString().padStart(2, '0')}</span>
-            <span>/</span>
-            <span>{totalScenes.toString().padStart(2, '0')}</span>
-          </div>
-
-          {/* Buttons navigation */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={navigatePrev}
-              disabled={activeChapterIdx === 0 && currentSceneIdx === 0}
-              className="flex items-center justify-center p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            
-            <button
-              onClick={navigateNext}
-              disabled={activeChapterIdx === CHAPTERS.length - 1 && currentSceneIdx === totalScenes - 1}
-              className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all font-bold disabled:opacity-30 disabled:pointer-events-none shadow cursor-pointer ${CHAPTER_THEMES[activeChapterIdx].bgActive} ${CHAPTER_THEMES[activeChapterIdx].glow}`}
-            >
-              <span>Continue</span>
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </footer>
+                <ArrowLeft size={16} />
+              </button>
+              
+              <button
+                onClick={navigateNext}
+                disabled={activeChapterIdx === CHAPTERS.length - 1 && currentSceneIdx === totalScenes - 1}
+                className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all font-bold disabled:opacity-30 disabled:pointer-events-none shadow cursor-pointer ${CHAPTER_THEMES[activeChapterIdx].bgActive} ${CHAPTER_THEMES[activeChapterIdx].glow}`}
+              >
+                <span>Continue</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          </footer>
+        </div>
       </div>
-    </div>
+    </CourseStateProvider>
   );
 };
 

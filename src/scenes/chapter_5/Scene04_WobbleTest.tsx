@@ -2,21 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { type Vec2, type Mat2, mulMV, mag2 as mag, norm, fmt } from '../../components/mathHelpers';
 import { LAYOUT_CONFIG } from '../../components/layoutConfig';
+import { MARKER_DEFS, SvgGridLines } from '../../components/TransformGrid';
+import { useSlideState } from '../../components/CourseStateContext';
 
-const MARKER_DEFS = (
-  <defs>
-    {([
-      ['red', '#E11D48'], ['blue', '#0284C7'], ['green', '#059669'],
-      ['slate', '#64748B'], ['violet', '#7C3AED'], ['amber', '#D97706'],
-      ['emerald', '#10B981'], ['rose', '#FB7185'],
-    ] as [string, string][]).map(([n, c]) => (
-      <marker key={n} id={`c5-${n}`} viewBox="0 0 10 10" refX="8" refY="5"
-        markerWidth="4" markerHeight="4" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill={c} />
-      </marker>
-    ))}
-  </defs>
-);
+
 
 export const Scene5_4_WobbleTest: React.FC = () => {
   const [matRaw, setMatRaw] = useState(['3', '1', '0', '2']);
@@ -98,26 +87,12 @@ export const Scene5_4_WobbleTest: React.FC = () => {
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
           {MARKER_DEFS}
           <rect width={W} height={H} fill="white" rx="16" />
-          {([-3,-2,-1,0,1,2,3] as number[]).map(i => {
-            const ax = i === 0;
-            return (
-              <g key={i}>
-                <line x1={CX+i*SC} y1={18} x2={CX+i*SC} y2={H-18}
-                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
-                <line x1={18} y1={CY-i*SC} x2={W-18} y2={CY-i*SC}
-                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
-                {i !== 0 && <>
-                  <text x={CX+i*SC} y={CY+15} textAnchor="middle" fill="#cbd5e1" fontSize="9">{i}</text>
-                  <text x={CX+7}    y={CY-i*SC+4} fill="#cbd5e1" fontSize="9">{i}</text>
-                </>}
-              </g>
-            );
-          })}
+          <SvgGridLines cx={CX} cy={CY} scale={SC} range={3} width={W} height={H} showTicks={true} />
           <line x1={CX} y1={CY} x2={rayIn[0]} y2={rayIn[1]}
             stroke={vecColor} strokeWidth="0.8" strokeDasharray="5 4" opacity="0.2" />
           <line x1={CX} y1={CY} x2={inTip[0]} y2={inTip[1]}
             stroke={vecColor} strokeWidth="3.5" strokeDasharray="9 5"
-            markerEnd={`url(#c5-${vecMarker})`} />
+            markerEnd={`url(#g4-${vecMarker})`} />
           {(() => {
             const [ox, oy] = lOff(inTip);
             const lx = inTip[0] + ox, ly = inTip[1] + oy - 14;
@@ -141,7 +116,7 @@ export const Scene5_4_WobbleTest: React.FC = () => {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
               <line x1={CX} y1={CY} x2={outTip[0]} y2={outTip[1]}
                 stroke={result.isEigen ? '#059669' : '#E11D48'} strokeWidth="5"
-                markerEnd={`url(#c5-${result.isEigen ? 'green' : 'red'})`} />
+                markerEnd={`url(#g4-${result.isEigen ? 'green' : 'red'})`} />
               {(() => {
                 const [ox, oy] = lOff(outTip, 4);
                 const lx = outTip[0] + ox, ly = outTip[1] + oy - 14;

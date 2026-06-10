@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { type Mat2, eigenvalues, det, trace, fmt } from '../../components/mathHelpers';
 import { SlideLayout } from '../../components/SlideLayout';
 import { EigenGrid, useAnimatedMatrix } from '../../components/TransformGrid';
+import { useSlideState } from '../../components/CourseStateContext';
 
 export const Scene5_20_EigenSandbox: React.FC = () => {
-  const [a, setA] = useState(2.0);
-  const [b, setB] = useState(0.5);
-  const [c, setC] = useState(0.5);
-  const [d, setD] = useState(1.0);
+  const [a, setA] = useSlideState('ch5_sandbox_a', 2.0);
+  const [b, setB] = useSlideState('ch5_sandbox_b', 0.5);
+  const [c, setC] = useSlideState('ch5_sandbox_c', 0.5);
+  const [d, setD] = useSlideState('ch5_sandbox_d', 1.0);
 
   const M: Mat2 = [[a, b], [c, d]];
   const animated = useAnimatedMatrix(M, 80);

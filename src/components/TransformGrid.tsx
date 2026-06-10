@@ -29,6 +29,54 @@ export function useAnimatedMatrix(target: Mat2, duration = 650): Mat2 {
   return mat;
 }
 
+export const SvgGridLines: React.FC<{
+  cx: number;
+  cy: number;
+  scale: number;
+  range: number;
+  width: number;
+  height: number;
+  showTicks?: boolean;
+  tickColor?: string;
+  gridColor?: string;
+  axisColor?: string;
+}> = ({
+  cx, cy, scale, range, width, height,
+  showTicks = true,
+  tickColor = '#cbd5e1',
+  gridColor = '#f1f5f9',
+  axisColor = '#94a3b8'
+}) => {
+  const lines: React.ReactNode[] = [];
+  const ticks: React.ReactNode[] = [];
+
+  for (let i = -range; i <= range; i++) {
+    const ax = i === 0;
+    lines.push(
+      <line key={`h${i}`} x1={cx + i * scale} y1={18} x2={cx + i * scale} y2={height - 18}
+        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.5 : 0.8} />,
+      <line key={`v${i}`} x1={18} y1={cy - i * scale} x2={width - 18} y2={cy - i * scale}
+        stroke={ax ? axisColor : gridColor} strokeWidth={ax ? 1.5 : 0.8} />
+    );
+
+    if (i !== 0 && showTicks) {
+      ticks.push(
+        <g key={`t-${i}`}>
+          <text x={cx + i * scale} y={cy + 15} textAnchor="middle" fill={tickColor} fontSize="9">{i}</text>
+          <text x={cx + 7} y={cy - i * scale + 4} fill={tickColor} fontSize="9">{i}</text>
+        </g>
+      );
+    }
+  }
+
+  return (
+    <>
+      {lines}
+      {ticks}
+    </>
+  );
+};
+
 export const MARKER_DEFS = (
   <defs>
     {([
