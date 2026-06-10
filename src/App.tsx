@@ -14,6 +14,10 @@ import {
   Scene2_3_MagnitudeTrap, Scene2_4_CosineSimilarity, Scene2_4b_CosineMath,
   Scene2_5_ProximitySandbox
 } from './scenes/Chapter2Scenes';
+import {
+  Scene3_1_AlignmentQuestion, Scene3_2_ElementwiseAlignment, Scene3_3_SummingArea,
+  Scene3_4_GeometricProjection, Scene3_5_SignalAmplification
+} from './scenes/Chapter3Scenes';
 
 const CHAPTERS = [
   {
@@ -51,6 +55,18 @@ const CHAPTERS = [
       { component: Scene2_4_CosineSimilarity, title: "Cosine Similarity" },
       { component: Scene2_4b_CosineMath, title: "Inside Cosine Math" },
       { component: Scene2_5_ProximitySandbox, title: "Proximity Sandbox" }
+    ]
+  },
+  {
+    id: 3,
+    title: "The Dot Product",
+    subtitle: "Chapter 3: Projection & Feature Alignment",
+    scenes: [
+      { component: Scene3_1_AlignmentQuestion, title: "Force Alignment" },
+      { component: Scene3_2_ElementwiseAlignment, title: "Feature Multiplying" },
+      { component: Scene3_3_SummingArea, title: "Summing Alignment" },
+      { component: Scene3_4_GeometricProjection, title: "Vector Shadow Projection" },
+      { component: Scene3_5_SignalAmplification, title: "Signal Amplification" }
     ]
   }
 ];
@@ -297,6 +313,18 @@ export const App: React.FC = () => {
                     }`}
                   >
                     Chapter 2: Measuring Proximity
+                  </button>
+
+                  {/* Chapter 3 Button */}
+                  <button
+                    onClick={() => selectChapter(2)}
+                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                      activeChapterIdx === 2
+                        ? 'bg-vector/10 text-vector border border-vector/20'
+                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
+                    }`}
+                  >
+                    Chapter 3: The Dot Product
                   </button>
                 </div>
               </div>
