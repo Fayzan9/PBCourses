@@ -195,6 +195,19 @@ interface EigenGridProps {
   range?: number;
 }
 
+// Helper: draw a labelled badge near a point
+const VecLabel: React.FC<{ x: number; y: number; text: string; color: string; offsetX?: number; offsetY?: number }> =
+  ({ x, y, text, color, offsetX = 8, offsetY = -10 }) => {
+    const w = text.length * 6.5 + 10;
+    const lx = x + offsetX, ly = y + offsetY;
+    return (
+      <g>
+        <rect x={lx - 2} y={ly - 12} width={w} height={16} rx="4" fill="white" opacity="0.92" stroke={color} strokeWidth="1" />
+        <text x={lx + w / 2 - 2} y={ly} textAnchor="middle" fill={color} fontSize="10" fontWeight="bold">{text}</text>
+      </g>
+    );
+  };
+
 const EigenGrid: React.FC<EigenGridProps> = ({
   M, showEigen = false, showBasisOnly = false,
   highlightVecs = [],
@@ -223,16 +236,32 @@ const EigenGrid: React.FC<EigenGridProps> = ({
       );
     }
   } else {
-    // Clean axes only
     gridLines.push(
       <line key="hax" x1={cx - range * scale} y1={cy} x2={cx + range * scale} y2={cy} stroke="#e2e8f0" strokeWidth={1.5} />,
       <line key="vax" x1={cx} y1={cy - range * scale} x2={cx} y2={cy + range * scale} stroke="#e2e8f0" strokeWidth={1.5} />,
     );
   }
 
+  // Axis tick numbers on the raw (pre-transform) grid
+  const ticks = [-2, -1, 1, 2];
+  const tickLabels = ticks.map(t => {
+    const [rx] = raw(t, 0);
+    const [, ry] = raw(0, t);
+    return (
+      <g key={`tick${t}`}>
+        <text x={rx} y={cy + 16} textAnchor="middle" fill="#cbd5e1" fontSize="9">{t}</text>
+        <text x={cx + 6} y={ry + 4} fill="#cbd5e1" fontSize="9">{t}</text>
+      </g>
+    );
+  });
+
   const e1 = showBasisOnly ? raw(1, 0) : pt(1, 0);
   const e2 = showBasisOnly ? raw(0, 1) : pt(0, 1);
   const orgPt = origin;
+
+  // Basis vector destination labels — show where [1,0] and [0,1] land
+  const e1CoordX = fmt(M[0][0]), e1CoordY = fmt(M[1][0]);
+  const e2CoordX = fmt(M[0][1]), e2CoordY = fmt(M[1][1]);
 
   const evals = showEigen ? eigenvalues(M) : null;
   const eigenArrows: React.ReactNode[] = [];
@@ -244,14 +273,13 @@ const EigenGrid: React.FC<EigenGridProps> = ({
       const tipN = pt(-ev[0] * len, -ev[1] * len);
       const col = i === 0 ? '#10B981' : '#D97706';
       const mk = i === 0 ? 'emerald' : 'amber';
+      const evLabel = `v=[${fmt(ev[0])},${fmt(ev[1])}] λ=${fmt(λ)}`;
       eigenArrows.push(
         <line key={`ev${i}pos`} x1={orgPt[0]} y1={orgPt[1]} x2={tip[0]} y2={tip[1]}
           stroke={col} strokeWidth="2.5" markerEnd={`url(#c5-${mk})`} strokeDasharray="6 3" />,
         <line key={`ev${i}neg`} x1={orgPt[0]} y1={orgPt[1]} x2={tipN[0]} y2={tipN[1]}
           stroke={col} strokeWidth="2.5" markerEnd={`url(#c5-${mk})`} strokeDasharray="6 3" />,
-        <text key={`evlbl${i}`} x={tip[0] + 8} y={tip[1] - 6} fill={col} fontSize="12" fontWeight="bold">
-          λ={fmt(λ)}
-        </text>
+        <VecLabel key={`evlbl${i}`} x={tip[0]} y={tip[1]} text={evLabel} color={col} offsetX={8} offsetY={-12} />,
       );
     });
   }
@@ -261,23 +289,27 @@ const EigenGrid: React.FC<EigenGridProps> = ({
       {MARKER_DEFS}
       <rect width={width} height={height} fill="white" rx="16" />
       {gridLines}
+      {tickLabels}
       {!showBasisOnly && (
         <>
           <line x1={orgPt[0]} y1={orgPt[1]} x2={e1[0]} y2={e1[1]} stroke="#E11D48" strokeWidth="2.5" markerEnd="url(#c5-red)" />
+          <VecLabel x={e1[0]} y={e1[1]} text={`ê₁→[${e1CoordX},${e1CoordY}]`} color="#E11D48" />
           <line x1={orgPt[0]} y1={orgPt[1]} x2={e2[0]} y2={e2[1]} stroke="#0284C7" strokeWidth="2.5" markerEnd="url(#c5-blue)" />
+          <VecLabel x={e2[0]} y={e2[1]} text={`ê₂→[${e2CoordX},${e2CoordY}]`} color="#0284C7" />
         </>
       )}
       {highlightVecs.map((hv, i) => {
         const tip = showBasisOnly ? raw(hv.vec[0], hv.vec[1]) : pt(hv.vec[0], hv.vec[1]);
+        const coordLabel = hv.label
+          ? `${hv.label} [${fmt(hv.vec[0])},${fmt(hv.vec[1])}]`
+          : `[${fmt(hv.vec[0])},${fmt(hv.vec[1])}]`;
         return (
           <g key={i}>
             <line x1={orgPt[0]} y1={orgPt[1]} x2={tip[0]} y2={tip[1]}
               stroke={hv.color} strokeWidth="3"
               markerEnd={`url(#c5-${hv.marker})`}
               strokeDasharray={hv.dashed ? '6 3' : undefined} />
-            {hv.label && (
-              <text x={tip[0] + 8} y={tip[1] - 6} fill={hv.color} fontSize="13" fontWeight="bold">{hv.label}</text>
-            )}
+            <VecLabel x={tip[0]} y={tip[1]} text={coordLabel} color={hv.color} offsetX={8} offsetY={hv.dashed ? -22 : -10} />
           </g>
         );
       })}
@@ -487,81 +519,413 @@ export const Scene5_3_RealWorldAnalogies: React.FC = () => {
 };
 
 // ══════════════════════════════════════════════════════════
+// SCENE 5.3b — Bridge: What Should We Look For?
+// ══════════════════════════════════════════════════════════
+
+export const Scene5_3b_Bridge: React.FC = () => {
+  const [unlocked, setUnlocked] = useState<number[]>([]);
+  const cards = [
+    {
+      icon: '🔍',
+      q: 'We know matrices transform vectors. So what makes a vector "special"?',
+      a: 'A vector is special if the matrix doesn\'t change its direction — only its length. Most vectors wobble and tilt. We\'re hunting for the ones that stay true.',
+    },
+    {
+      icon: '📐',
+      q: 'How would you test if a vector keeps its direction?',
+      a: 'Apply the matrix to the vector. Then check: did the resulting vector point the same way? If M·v = k·v for some number k, direction is preserved — k just scales it.',
+    },
+    {
+      icon: '🎯',
+      q: 'Why does this matter — what\'s the payoff?',
+      a: 'If M·v = λ·v, then applying the entire matrix is the same as multiplying by one number λ. That\'s extraordinary — a huge simplification. This is the whole point of eigenvectors.',
+    },
+  ];
+
+  return (
+    <SlideLayout
+      title="Before We Test — What Are We Looking For?"
+      text="We've seen the intuition. Before we run experiments, let's sharpen the question. Tap each card when you're ready."
+    >
+      <div className="flex flex-col gap-4 w-full max-w-xl mx-auto py-4">
+        {cards.map((c, i) => {
+          const open = unlocked.includes(i);
+          return (
+            <motion.button key={i} onClick={() => setUnlocked(u => open ? u.filter(x => x !== i) : [...u, i])}
+              className="w-full text-left rounded-2xl border overflow-hidden transition-all cursor-pointer"
+              style={{ borderColor: open ? '#7C3AED' : '#e2e8f0' }}>
+              <div className={`px-5 py-4 flex items-center gap-3 ${open ? 'bg-violet-50' : 'bg-white'}`}>
+                <span className="text-2xl">{c.icon}</span>
+                <div className="flex-1 text-sm font-bold text-slate-700 leading-snug">{c.q}</div>
+                <span className="text-slate-400 text-lg">{open ? '▲' : '▼'}</span>
+              </div>
+              <AnimatePresence>
+                {open && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                    <div className="px-5 py-4 bg-violet-50 border-t border-violet-200 text-sm text-slate-600 leading-relaxed">
+                      {c.a}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          );
+        })}
+        {unlocked.length === 3 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-800 text-white rounded-2xl px-5 py-4 text-sm font-semibold text-center">
+            ✓ Now we know exactly what to look for. Let's run the test.
+          </motion.div>
+        )}
+      </div>
+    </SlideLayout>
+  );
+};
+
+// ══════════════════════════════════════════════════════════
 // SCENE 5.4 — The Wobble Test: Watch Vectors Transform
 // ══════════════════════════════════════════════════════════
 
 export const Scene5_4_WobbleTest: React.FC = () => {
-  const M: Mat2 = [[3, 1], [0, 2]];
-  const animated = useAnimatedMatrix(M);
+  // ── Editable matrix (defaults to [[3,1],[0,2]])
+  const [matRaw, setMatRaw] = useState(['3', '1', '0', '2']);
+  const matNum = matRaw.map(v => parseFloat(v) || 0);
+  const M: Mat2 = [[matNum[0], matNum[1]], [matNum[2], matNum[3]]];
 
-  const testVecs: { vec: Vec2; label: string; color: string; marker: string }[] = [
-    { vec: [1, 0], label: 'v₁', color: '#E11D48', marker: 'red' },
-    { vec: [0, 1], label: 'v₂', color: '#0284C7', marker: 'blue' },
-    { vec: [1, 1], label: 'v₃', color: '#7C3AED', marker: 'violet' },
+  // ── Vector input: preset or custom
+  const [vecMode, setVecMode] = useState<'preset' | 'custom'>('preset');
+  const [presetIdx, setPresetIdx] = useState(0);
+  const [vecRaw, setVecRaw] = useState(['1', '0']);
+
+  const presets: { label: string; vec: Vec2; color: string; marker: string }[] = [
+    { label: '[1, 0]  →', vec: [1, 0],  color: '#E11D48', marker: 'red'    },
+    { label: '[0, 1]  ↑', vec: [0, 1],  color: '#0284C7', marker: 'blue'   },
+    { label: '[1, 1]  ↗', vec: [1, 1],  color: '#7C3AED', marker: 'violet' },
+    { label: '[2, 1]',    vec: [2, 1],  color: '#D97706', marker: 'amber'  },
   ];
 
-  const [selected, setSelected] = useState(0);
-  const sv = testVecs[selected];
-  const original = sv.vec;
-  const transformed = mulMV(M, original);
+  const inputVec: Vec2 = vecMode === 'preset'
+    ? presets[presetIdx].vec
+    : [(parseFloat(vecRaw[0]) || 0), (parseFloat(vecRaw[1]) || 0)];
+  const vecColor  = vecMode === 'preset' ? presets[presetIdx].color  : '#64748b';
+  const vecMarker = vecMode === 'preset' ? presets[presetIdx].marker : 'slate';
 
-  const sameDir = () => {
-    const n1 = norm(original);
-    const n2 = norm(transformed);
-    return Math.abs(n1[0] * n2[0] + n1[1] * n2[1]) > 0.99;
+  // ── Calculated result (only set after clicking "Calculate")
+  const [result, setResult] = useState<{
+    input: Vec2; output: Vec2; scale: number; rotDeg: number; isEigen: boolean;
+  } | null>(null);
+
+  const calculate = () => {
+    const v = inputVec;
+    if (mag(v) < 0.001) return; // zero vector — skip
+    const out  = mulMV(M, v);
+    const nI   = norm(v);
+    const nO   = norm(out);
+    const dot  = Math.min(1, Math.max(-1, nI[0]*nO[0] + nI[1]*nO[1]));
+    const rot  = Math.acos(dot) * 180 / Math.PI;
+    setResult({ input: v, output: out, scale: mag(out) / mag(v), rotDeg: rot, isEigen: rot < 1.5 });
   };
 
+  // Reset result when inputs change
+  const resetResult = () => setResult(null);
+
+  // ── SVG geometry
+  const W = 520, H = 520, CX = W / 2, CY = H / 2, SC = 82;
+  const tp = (v: Vec2): [number, number] => [CX + v[0] * SC, CY - v[1] * SC];
+
+  const inTip  = tp(inputVec);
+  const outTip = result ? tp(result.output) : null;
+
+  const nIn  = mag(inputVec) > 0.001 ? norm(inputVec) : [1, 0] as Vec2;
+  const nOut = result ? norm(result.output) : nIn;
+
+  // Arc for rotation
+  const arcR    = 65;
+  const aStart  = Math.atan2(-nIn[1], nIn[0]);
+  const aEnd    = Math.atan2(-nOut[1], nOut[0]);
+  let   arcSwp  = aEnd - aStart;
+  if (arcSwp >  Math.PI) arcSwp -= 2 * Math.PI;
+  if (arcSwp < -Math.PI) arcSwp += 2 * Math.PI;
+  const arcLarge = Math.abs(arcSwp) > Math.PI ? 1 : 0;
+  const arcFlag  = arcSwp > 0 ? 1 : 0;
+  const ax1 = CX + arcR * Math.cos(aStart), ay1 = CY + arcR * Math.sin(aStart);
+  const ax2 = CX + arcR * Math.cos(aEnd),   ay2 = CY + arcR * Math.sin(aEnd);
+  const midA  = aStart + arcSwp / 2;
+  const arcLX = CX + (arcR + 24) * Math.cos(midA);
+  const arcLY = CY + (arcR + 24) * Math.sin(midA);
+
+  // Faint direction rays
+  const ray = 3.2;
+  const rayIn:  [number, number] = [CX + nIn[0]  * SC * ray, CY - nIn[1]  * SC * ray];
+  const rayOut: [number, number] = result ? [CX + nOut[0] * SC * ray, CY - nOut[1] * SC * ray] : rayIn;
+
+  // ── Label helper: nudge label so it doesn't overlap origin or go off canvas
+  const lOff = (tip: [number, number], extra = 0): [number, number] => {
+    const dx = tip[0] - CX, dy = tip[1] - CY;
+    return [dx >= 0 ? 10 + extra : -10 - extra, dy >= 0 ? 16 : -18];
+  };
+
+  // ── M·v step-by-step strings
+  const [[a, b], [c, d]] = M;
+  const [vx, vy] = inputVec;
+
   return (
-    <SlideLayout
-      title="The Wobble Test"
-      text="Pick a vector. Apply the matrix. Did it keep pointing the same way — or did it rotate? Most vectors wobble. A few stay true."
-      sidebarContent={
-        <div className="flex flex-col gap-4">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Test vectors</div>
-          <div className="flex flex-col gap-2">
-            {testVecs.map((tv, i) => {
-              const orig = tv.vec;
-              const tx = mulMV(M, orig);
-              const keeps = (() => {
-                const n1 = norm(orig);
-                const n2 = norm(tx);
-                return Math.abs(n1[0] * n2[0] + n1[1] * n2[1]) > 0.99;
-              })();
-              return (
-                <button
-                  key={i}
-                  onClick={() => setSelected(i)}
-                  className={`w-full text-left px-3 py-3 rounded-xl border transition-all cursor-pointer ${
-                    i === selected ? 'bg-white border-slate-300 shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm" style={{ color: tv.color }}>{tv.label} = [{orig[0]}, {orig[1]}]</span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${keeps ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-600'}`}>
-                      {keeps ? '✓ eigen' : '✗ rotates'}
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono text-slate-500">→ [{fmt(tx[0])}, {fmt(tx[1])}]</div>
-                </button>
-              );
-            })}
+    <div className="flex flex-col lg:flex-row items-stretch gap-5 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+
+      {/* ════ CANVAS  65% ════ */}
+      <div className="flex-[65] min-h-0 min-w-0 flex items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl shadow-inner overflow-hidden p-2">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
+          {MARKER_DEFS}
+          <rect width={W} height={H} fill="white" rx="16" />
+
+          {/* Grid */}
+          {([-3,-2,-1,0,1,2,3] as number[]).map(i => {
+            const ax = i === 0;
+            return (
+              <g key={i}>
+                <line x1={CX+i*SC} y1={18} x2={CX+i*SC} y2={H-18}
+                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
+                <line x1={18} y1={CY-i*SC} x2={W-18} y2={CY-i*SC}
+                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
+                {i !== 0 && <>
+                  <text x={CX+i*SC} y={CY+15} textAnchor="middle" fill="#cbd5e1" fontSize="9">{i}</text>
+                  <text x={CX+7}    y={CY-i*SC+4} fill="#cbd5e1" fontSize="9">{i}</text>
+                </>}
+              </g>
+            );
+          })}
+
+          {/* Input direction ray (faint) */}
+          <line x1={CX} y1={CY} x2={rayIn[0]} y2={rayIn[1]}
+            stroke={vecColor} strokeWidth="0.8" strokeDasharray="5 4" opacity="0.2" />
+
+          {/* Input arrow — always visible */}
+          <line x1={CX} y1={CY} x2={inTip[0]} y2={inTip[1]}
+            stroke={vecColor} strokeWidth="3.5" strokeDasharray="9 5"
+            markerEnd={`url(#c5-${vecMarker})`} />
+          {/* Input label */}
+          {(() => {
+            const [ox, oy] = lOff(inTip);
+            const lx = inTip[0] + ox, ly = inTip[1] + oy - 14;
+            const txt = `v = [${fmt(vx)}, ${fmt(vy)}]`;
+            const w = txt.length * 6.2 + 10;
+            return (
+              <g>
+                <rect x={lx - 2} y={ly - 13} width={w} height={17} rx="4" fill={vecColor} opacity="0.88" />
+                <text x={lx + w/2 - 2} y={ly + 1} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{txt}</text>
+                <text x={lx} y={inTip[1] + oy + 2} fill={vecColor} fontSize="9" fontWeight="bold" opacity="0.65">INPUT</text>
+              </g>
+            );
+          })()}
+
+          {/* Output direction ray */}
+          {result && (
+            <line x1={CX} y1={CY} x2={rayOut[0]} y2={rayOut[1]}
+              stroke={result.isEigen ? '#059669' : '#E11D48'} strokeWidth="0.8"
+              strokeDasharray="5 4" opacity="0.2" />
+          )}
+
+          {/* Output arrow */}
+          {result && outTip && (
+            <motion.g key={`out-${result.input[0]}-${result.input[1]}-${M[0][0]}`}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+              <line x1={CX} y1={CY} x2={outTip[0]} y2={outTip[1]}
+                stroke={result.isEigen ? '#059669' : '#E11D48'} strokeWidth="5"
+                markerEnd={`url(#c5-${result.isEigen ? 'green' : 'red'})`} />
+              {(() => {
+                const [ox, oy] = lOff(outTip, 4);
+                const lx = outTip[0] + ox, ly = outTip[1] + oy - 14;
+                const txt = `M·v = [${fmt(result.output[0])}, ${fmt(result.output[1])}]`;
+                const w = txt.length * 6.2 + 10;
+                const col = result.isEigen ? '#059669' : '#E11D48';
+                return (
+                  <g>
+                    <rect x={lx - 2} y={ly - 13} width={w} height={17} rx="4" fill={col} opacity="0.9" />
+                    <text x={lx + w/2 - 2} y={ly + 1} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{txt}</text>
+                    <text x={lx} y={outTip[1] + oy + 2} fill={col} fontSize="9" fontWeight="bold" opacity="0.65">OUTPUT</text>
+                  </g>
+                );
+              })()}
+            </motion.g>
+          )}
+
+          {/* Rotation arc */}
+          {result && !result.isEigen && (
+            <motion.g key={`arc-${result.input[0]}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <path d={`M ${ax1} ${ay1} A ${arcR} ${arcR} 0 ${arcLarge} ${arcFlag} ${ax2} ${ay2}`}
+                fill="none" stroke="#E11D48" strokeWidth="2.5" />
+              <circle cx={ax2} cy={ay2} r="4" fill="#E11D48" />
+              <rect x={arcLX - 26} y={arcLY - 12} width="52" height="17" rx="5" fill="#E11D48" />
+              <text x={arcLX} y={arcLY + 1} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
+                {result.rotDeg.toFixed(1)}° tilt
+              </text>
+            </motion.g>
+          )}
+
+          {/* Eigen confirmation */}
+          {result?.isEigen && (
+            <motion.g key="eigen-ok" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}>
+              <circle cx={ax1} cy={ay1} r="11" fill="none" stroke="#059669" strokeWidth="2.5" />
+              <rect x={CX - 84} y={32} width="168" height="40" rx="10" fill="#059669" />
+              <text x={CX} y={49} textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">
+                ✓ Same direction — just scaled
+              </text>
+              <text x={CX} y={64} textAnchor="middle" fill="white" fontSize="10" opacity="0.9">
+                eigenvalue λ = {fmt(result.scale)}
+              </text>
+            </motion.g>
+          )}
+
+          {/* "Calculate first" prompt */}
+          {!result && (
+            <g>
+              <rect x={CX - 100} y={32} width="200" height="30" rx="8" fill="#f1f5f9" />
+              <text x={CX} y={52} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="bold">
+                Set inputs → click Calculate
+              </text>
+            </g>
+          )}
+
+          {/* Origin dot */}
+          <circle cx={CX} cy={CY} r="5.5" fill="#0f172a" />
+        </svg>
+      </div>
+
+      {/* ════ SIDEBAR  35% ════ */}
+      <div className="flex-[35] min-w-0 flex flex-col gap-3 shrink-0 pt-2 pb-2 overflow-y-auto">
+        <div>
+          <h2 className="text-xl font-black text-slate-800 leading-tight mb-1">The Wobble Test</h2>
+          <p className="text-slate-400 text-xs leading-relaxed">
+            Define a matrix and a vector. Calculate M·v. Did the direction change? That's the entire test.
+          </p>
+        </div>
+
+        {/* ── Matrix editor */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">Matrix M</div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {[
+              { idx: 0, label: 'a', sub: 'row1·col1' },
+              { idx: 1, label: 'b', sub: 'row1·col2' },
+              { idx: 2, label: 'c', sub: 'row2·col1' },
+              { idx: 3, label: 'd', sub: 'row2·col2' },
+            ].map(({ idx, label }) => (
+              <div key={idx} className="flex flex-col gap-0.5">
+                <span className="text-[9px] font-mono text-slate-400 font-bold pl-1">{label}</span>
+                <input
+                  type="number" step="0.5" value={matRaw[idx]}
+                  onChange={e => { const v = [...matRaw]; v[idx] = e.target.value; setMatRaw(v); resetResult(); }}
+                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-slate-800 text-center bg-slate-50 focus:outline-none focus:border-violet-400 focus:bg-white transition-all"
+                />
+              </div>
+            ))}
           </div>
-          <div className={`rounded-xl p-3 text-sm font-semibold border ${sameDir() ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-600'}`}>
-            {sameDir()
-              ? `✓ ${sv.label} only scaled — it's an eigenvector!`
-              : `✗ ${sv.label} changed direction — not an eigenvector.`}
+          <div className="mt-2 text-[10px] font-mono text-slate-400 text-center">
+            [[{fmt(matNum[0])}, {fmt(matNum[1])}], [{fmt(matNum[2])}, {fmt(matNum[3])}]]
           </div>
         </div>
-      }
-    >
-      <EigenGrid
-        M={animated}
-        highlightVecs={[
-          { vec: original, color: sv.color, marker: sv.marker, label: `${sv.label} (before)`, dashed: true },
-          { vec: transformed, color: sv.color, marker: sv.marker, label: `M·${sv.label}` },
-        ]}
-      />
-    </SlideLayout>
+
+        {/* ── Vector input */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">Input Vector v</div>
+
+          {/* Tab: presets vs custom */}
+          <div className="flex rounded-lg overflow-hidden border border-slate-200 text-[11px] font-bold mb-2">
+            {(['preset', 'custom'] as const).map(m => (
+              <button key={m} onClick={() => { setVecMode(m); resetResult(); }}
+                className={`flex-1 py-1.5 cursor-pointer transition-all ${vecMode === m ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-50'}`}>
+                {m === 'preset' ? 'Presets' : 'Custom'}
+              </button>
+            ))}
+          </div>
+
+          {vecMode === 'preset' ? (
+            <div className="grid grid-cols-2 gap-1.5">
+              {presets.map((p, i) => (
+                <button key={i} onClick={() => { setPresetIdx(i); resetResult(); }}
+                  className={`py-2 px-1 rounded-lg border text-[11px] font-bold transition-all cursor-pointer text-center ${
+                    i === presetIdx ? 'border-slate-400 bg-white shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-white'
+                  }`} style={{ color: p.color }}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {['x', 'y'].map((axis, ai) => (
+                <div key={axis} className="flex flex-col gap-0.5">
+                  <span className="text-[9px] font-mono text-slate-400 font-bold pl-1">v.{axis}</span>
+                  <input type="number" step="0.5" value={vecRaw[ai]}
+                    onChange={e => { const v = [...vecRaw]; v[ai] = e.target.value; setVecRaw(v); resetResult(); }}
+                    className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-slate-800 text-center bg-slate-50 focus:outline-none focus:border-sky-400 focus:bg-white transition-all"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="mt-2 text-[10px] font-mono text-slate-400 text-center">
+            v = [{fmt(vx)}, {fmt(vy)}]
+          </div>
+        </div>
+
+        {/* ── Calculate button */}
+        <button onClick={calculate}
+          className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-sm cursor-pointer transition-all shadow-sm active:scale-95">
+          Calculate M·v →
+        </button>
+
+        {/* ── Step-by-step calculation */}
+        {result && (
+          <motion.div key={`calc-${result.input[0]}-${result.output[0]}`}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-50 border border-slate-200 rounded-2xl p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">M·v step-by-step</div>
+            <div className="font-mono text-[11px] flex flex-col gap-1.5 text-slate-700">
+              <div>
+                <span className="text-rose-500 font-bold">{fmt(a)}</span>×{fmt(vx)} + <span className="text-rose-500 font-bold">{fmt(b)}</span>×{fmt(vy)}
+                <span className="text-slate-400"> = </span>
+                <span className="font-black text-slate-900">{fmt(result.output[0])}</span>
+              </div>
+              <div>
+                <span className="text-rose-500 font-bold">{fmt(c)}</span>×{fmt(vx)} + <span className="text-rose-500 font-bold">{fmt(d)}</span>×{fmt(vy)}
+                <span className="text-slate-400"> = </span>
+                <span className="font-black text-slate-900">{fmt(result.output[1])}</span>
+              </div>
+              <div className="pt-1 border-t border-slate-200 text-slate-500">
+                [{fmt(vx)}, {fmt(vy)}] → [{fmt(result.output[0])}, {fmt(result.output[1])}]
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── Verdict */}
+        {result && (
+          <motion.div key={`verdict-${result.input[0]}-${result.isEigen}`}
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+            className={`rounded-2xl p-3 border ${result.isEigen ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+            <div className={`font-black text-sm mb-1.5 ${result.isEigen ? 'text-emerald-700' : 'text-rose-600'}`}>
+              {result.isEigen ? '✓ Eigenvector!' : '✗ Not an eigenvector'}
+            </div>
+            <div className="text-[11px] font-mono text-slate-600 flex flex-col gap-1">
+              {result.isEigen ? (
+                <>
+                  <div>Direction: unchanged ✓</div>
+                  <div>Scaled by <span className="font-black text-emerald-700">{fmt(result.scale)}×</span></div>
+                  <div className="text-emerald-700 font-bold mt-0.5">λ = {fmt(result.scale)}</div>
+                </>
+              ) : (
+                <>
+                  <div>Direction tilted <span className="font-black text-rose-600">{result.rotDeg.toFixed(1)}°</span></div>
+                  <div>Length scaled {fmt(result.scale)}×</div>
+                  <div className="text-rose-500 mt-0.5">Not an eigenvector — try a different v</div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -579,7 +943,7 @@ export const Scene5_5_WhatMakesSpecial: React.FC = () => (
 );
 
 // ══════════════════════════════════════════════════════════
-// SCENE 5.6 — The Big Equation Revealed
+// SCENE 5.6 — The Big Equation Revealed (with live proof)
 // ══════════════════════════════════════════════════════════
 
 export const Scene5_6_TheEquation: React.FC = () => {
@@ -594,92 +958,125 @@ export const Scene5_6_TheEquation: React.FC = () => {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  return (
-    <div className="flex flex-col items-center justify-center h-full text-center max-w-3xl mx-auto px-6 gap-8">
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-slate-400 text-xs font-mono uppercase tracking-widest font-bold"
-      >
-        The Eigenvector Equation
-      </motion.p>
 
-      {/* The equation, revealed piece-by-piece */}
-      <div className="flex items-center justify-center gap-4 flex-wrap">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring' }}
-          className="px-6 py-3 bg-rose-50 border-2 border-rose-200 rounded-2xl text-4xl font-black text-rose-600 font-mono"
-        >
-          M·v
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: step >= 1 ? 1 : 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-black text-slate-400"
-        >=
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: step >= 1 ? 1 : 0, scale: step >= 1 ? 1 : 0.7 }}
-          transition={{ duration: 0.5 }}
-          className="px-6 py-3 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-4xl font-black text-emerald-600 font-mono"
-        >
-          λ·v
-        </motion.div>
+  return (
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+      {/* Left: equation reveal */}
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl p-6 shadow-inner gap-8">
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          className="text-slate-400 text-xs font-mono uppercase tracking-widest font-bold">
+          The Eigenvector Equation
+        </motion.p>
+
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <motion.div initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, type: 'spring' }}
+            className="px-6 py-3 bg-rose-50 border-2 border-rose-200 rounded-2xl text-4xl font-black text-rose-600 font-mono">
+            M·v
+          </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: step >= 1 ? 1 : 0 }}
+            className="text-4xl font-black text-slate-400">=
+          </motion.div>
+          <motion.div initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: step >= 1 ? 1 : 0, scale: step >= 1 ? 1 : 0.7 }}
+            className="px-6 py-3 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-4xl font-black text-emerald-600 font-mono">
+            λ·v
+          </motion.div>
+        </div>
+
+        <AnimatePresence>
+          {step >= 2 && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-2 gap-3 max-w-md w-full">
+              {[
+                { label: 'M', desc: 'The matrix (a transformation)', color: '#E11D48', bg: 'bg-rose-50', border: 'border-rose-200' },
+                { label: 'v', desc: 'The eigenvector (special direction)', color: '#7C3AED', bg: 'bg-violet-50', border: 'border-violet-200' },
+                { label: 'λ', desc: 'The eigenvalue (how much it scales)', color: '#059669', bg: 'bg-emerald-50', border: 'border-emerald-200' },
+                { label: 'M·v = λ·v', desc: 'Matrix = just a number ×', color: '#0284C7', bg: 'bg-sky-50', border: 'border-sky-200' },
+              ].map(item => (
+                <div key={item.label} className={`${item.bg} border ${item.border} rounded-xl p-3`}>
+                  <div className="font-mono font-black text-base mb-1" style={{ color: item.color }}>{item.label}</div>
+                  <div className="text-slate-600 text-xs font-medium">{item.desc}</div>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {step >= 2 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 gap-4 max-w-xl w-full"
-          >
-            {[
-              { label: 'M', desc: 'The matrix (a transformation)', color: '#E11D48', bg: 'bg-rose-50', border: 'border-rose-200' },
-              { label: 'v', desc: 'The eigenvector (special direction)', color: '#7C3AED', bg: 'bg-violet-50', border: 'border-violet-200' },
-              { label: 'λ', desc: 'The eigenvalue (how much it scales)', color: '#059669', bg: 'bg-emerald-50', border: 'border-emerald-200' },
-              { label: 'M·v = λ·v', desc: 'Applying M is the same as just scaling v', color: '#0284C7', bg: 'bg-sky-50', border: 'border-sky-200' },
-            ].map(item => (
-              <div key={item.label} className={`${item.bg} border ${item.border} rounded-xl p-3 text-left`}>
-                <div className="font-mono font-black text-lg mb-1" style={{ color: item.color }}>{item.label}</div>
-                <div className="text-slate-600 text-xs font-medium">{item.desc}</div>
-              </div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Right: live numerical proof */}
+      <div className="w-full lg:w-[280px] flex flex-col justify-start gap-4 shrink-0 pt-2 pb-2 overflow-y-auto">
+        <div>
+          <h2 className="text-2xl font-black text-slate-800 leading-tight mb-2">Prove It With Numbers</h2>
+          <p className="text-slate-600 text-sm leading-relaxed">Watch both sides equal the same result — that's what makes v an eigenvector.</p>
+        </div>
 
-      <AnimatePresence>
-        {step >= 3 && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-slate-500 text-base font-medium italic max-w-md"
-          >
-            "Applying the whole matrix is exactly the same as multiplying by one number."
-            <br />
-            <span className="text-slate-400 text-sm not-italic">That's the power of eigenvectors.</span>
-          </motion.p>
-        )}
-      </AnimatePresence>
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">The Matrix & Vector</div>
+          <div className="font-mono text-xs flex flex-col gap-1">
+            <div className="flex gap-2">
+              <span className="text-slate-400">M =</span>
+              <span className="text-rose-600 font-bold">[[3, 1], [0, 2]]</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-slate-400">v =</span>
+              <span className="text-violet-600 font-bold">[1, 0]</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-slate-400">λ =</span>
+              <span className="text-emerald-600 font-bold">3</span>
+            </div>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {step >= 1 && (
+            <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
+              className="bg-rose-50 border border-rose-200 rounded-2xl p-4 shadow-sm">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-rose-500 font-bold mb-2">Left side: M·v</div>
+              <div className="font-mono text-xs text-slate-600 flex flex-col gap-1">
+                <div>row 1: 3×1 + 1×0 = <span className="font-black text-rose-600">3</span></div>
+                <div>row 2: 0×1 + 2×0 = <span className="font-black text-rose-600">0</span></div>
+              </div>
+              <div className="mt-2 text-lg font-black text-rose-600 font-mono">M·v = [3, 0]</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {step >= 2 && (
+            <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
+              className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 shadow-sm">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-600 font-bold mb-2">Right side: λ·v</div>
+              <div className="font-mono text-xs text-slate-600">3 × [1, 0] = <span className="font-black text-emerald-600">[3, 0]</span></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {step >= 3 && (
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="bg-slate-800 rounded-2xl p-4 text-center">
+              <div className="text-white font-black text-base mb-1">✓ Both sides = [3, 0]</div>
+              <div className="text-slate-400 text-xs font-medium">v = [1, 0] is an eigenvector of M with λ = 3</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
 
 // ══════════════════════════════════════════════════════════
-// SCENE 5.7 — Think: What Does λ Tell You?
+// SCENE 5.7 — Think: What Does λ Tell You? (merged with 5.5)
 // ══════════════════════════════════════════════════════════
 
 export const Scene5_7_WhatIsLambda: React.FC = () => (
   <QuestionSlide
     emoji="🔢"
-    question="If λ = 3, what does that mean for the eigenvector?"
-    hint="The eigenvector gets 3× longer. Direction stays the same — only the length changes."
-    subHint="λ = 1 means no change. λ = 0.5 means half the length. λ = −1 means it flips direction but stays the same length. λ = 0 means it collapses to zero — the matrix destroys that direction!"
+    question="You found that v = [1, 0] is an eigenvector with λ = 3. What does that mean visually, numerically, and physically?"
+    hint="Visually: the arrow just gets 3× longer, never tilts. Numerically: M·v = 3·v = [3,0]. The whole matrix collapsed to one multiplication."
+    subHint="Now think: what if λ = −1? The vector flips direction but stays the same length — like a mirror. What if λ = 0? The vector shrinks to the origin — that direction is destroyed forever."
   />
 );
 
@@ -689,21 +1086,24 @@ export const Scene5_7_WhatIsLambda: React.FC = () => (
 
 export const Scene5_8_EigenvalueExplorer: React.FC = () => {
   const [λ, setLambda] = useState(2.0);
-  // Matrix: diagonal with eigenvalues λ and 1 (for clarity)
   const M: Mat2 = [[λ, 0], [0, 1]];
-  const animated = useAnimatedMatrix(M);
-  const ev: Vec2 = [1, 0]; // eigenvector is always [1,0] for this diagonal matrix
+  const ev: Vec2 = [1, 0];
   const transformed = mulMV(M, ev);
 
   const description = λ > 1 ? 'stretched' : λ > 0 ? 'squished' : λ === 0 ? 'collapsed to zero' : 'flipped & scaled';
   const descColor = λ > 1 ? 'text-emerald-700' : λ > 0 ? 'text-amber-700' : λ === 0 ? 'text-rose-700' : 'text-violet-700';
-
   const pct = ((λ + 3) / 6) * 100;
+
+  // Before / after SVG
+  const W = 440, H = 440, CX = W / 2, CY = H / 2, SC = 80;
+  const beforeTip: [number, number] = [CX + ev[0] * SC, CY - ev[1] * SC];
+  const afterTip: [number, number] = [CX + transformed[0] * SC, CY - transformed[1] * SC];
+  const badgeColor = λ > 1 ? '#059669' : λ > 0 ? '#D97706' : λ === 0 ? '#E11D48' : '#7C3AED';
 
   return (
     <SlideLayout
       title="Feel the Eigenvalue"
-      text="Drag λ and watch the red eigenvector. Notice: the grid warps with the matrix, but the eigenvector direction never tilts — it just scales."
+      text="Drag λ and watch what happens to v = [1,0]. The dashed arrow is the 'before'. The solid arrow is 'after' M is applied. Same direction — just scaled by λ."
       sidebarContent={
         <div className="flex flex-col gap-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
@@ -711,12 +1111,10 @@ export const Scene5_8_EigenvalueExplorer: React.FC = () => {
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Eigenvalue λ</span>
               <span className="text-2xl font-black font-mono text-emerald-600">{λ.toFixed(1)}</span>
             </div>
-            <input
-              type="range" min="-3" max="3" step="0.1" value={λ}
+            <input type="range" min="-3" max="3" step="0.1" value={λ}
               onChange={e => setLambda(Number(e.target.value))}
               className="w-full appearance-none cursor-pointer rounded-full h-2"
-              style={{ background: `linear-gradient(to right, #10B981 0%, #10B981 ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%)` }}
-            />
+              style={{ background: `linear-gradient(to right, #10B981 0%, #10B981 ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%)` }} />
             <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
               <span>−3</span><span>0</span><span>+3</span>
             </div>
@@ -725,14 +1123,13 @@ export const Scene5_8_EigenvalueExplorer: React.FC = () => {
           <div className={`rounded-xl p-3 border text-sm font-bold transition-all ${descColor} ${
             λ > 1 ? 'bg-emerald-50 border-emerald-200' :
             λ > 0 ? 'bg-amber-50 border-amber-200' :
-            λ === 0 ? 'bg-rose-50 border-rose-200' : 'bg-violet-50 border-violet-200'
-          }`}>
+            λ === 0 ? 'bg-rose-50 border-rose-200' : 'bg-violet-50 border-violet-200'}`}>
             eigenvector is <span className="underline">{description}</span>
           </div>
 
           {[
-            { label: 'eigenvector v', val: `[${ev[0]}, ${ev[1]}]`, color: '#E11D48' },
-            { label: 'M · v', val: `[${fmt(transformed[0])}, ${fmt(transformed[1])}]`, color: '#059669' },
+            { label: 'v (before)', val: `[${ev[0]}, ${ev[1]}]`, color: '#94a3b8' },
+            { label: 'M · v (after)', val: `[${fmt(transformed[0])}, ${fmt(transformed[1])}]`, color: '#059669' },
             { label: 'λ · v', val: `[${fmt(λ * ev[0])}, ${fmt(λ * ev[1])}]`, color: '#7C3AED' },
           ].map(row => (
             <div key={row.label} className="flex justify-between items-center px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold">
@@ -740,20 +1137,54 @@ export const Scene5_8_EigenvalueExplorer: React.FC = () => {
               <span style={{ color: row.color }}>{row.val}</span>
             </div>
           ))}
-
-          <div className="text-[11px] text-slate-400 font-medium text-center">
-            M·v and λ·v are always identical — that's the whole point!
-          </div>
+          <div className="text-[11px] text-slate-400 font-medium text-center">M·v and λ·v are always identical — that's the whole point!</div>
         </div>
       }
     >
-      <EigenGrid
-        M={animated}
-        highlightVecs={[
-          { vec: [1, 0], color: '#E11D48', marker: 'red', label: `v = [1,0]`, dashed: true },
-          { vec: transformed, color: '#059669', marker: 'green', label: `M·v = [${fmt(transformed[0])},${fmt(transformed[1])}]` },
-        ]}
-      />
+      {/* Custom before/after SVG */}
+      <div className="w-full h-full flex items-center justify-center p-2">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
+          {MARKER_DEFS}
+          <rect width={W} height={H} fill="white" rx="16" />
+          {[-3,-2,-1,0,1,2,3].map(i => {
+            const isAxis = i === 0;
+            return (
+              <g key={i}>
+                <line x1={CX + i*SC} y1={CY - 3*SC} x2={CX + i*SC} y2={CY + 3*SC}
+                  stroke={isAxis ? '#94a3b8' : '#f1f5f9'} strokeWidth={isAxis ? 1.5 : 0.8} />
+                <line x1={CX - 3*SC} y1={CY - i*SC} x2={CX + 3*SC} y2={CY - i*SC}
+                  stroke={isAxis ? '#94a3b8' : '#f1f5f9'} strokeWidth={isAxis ? 1.5 : 0.8} />
+                {i !== 0 && <text x={CX + i*SC} y={CY + 16} textAnchor="middle" fill="#cbd5e1" fontSize="9">{i}</text>}
+                {i !== 0 && <text x={CX + 6} y={CY - i*SC + 4} fill="#cbd5e1" fontSize="9">{i}</text>}
+              </g>
+            );
+          })}
+          {/* Before arrow — dashed grey */}
+          <line x1={CX} y1={CY} x2={beforeTip[0]} y2={beforeTip[1]}
+            stroke="#94a3b8" strokeWidth="2.5" strokeDasharray="6 3" markerEnd="url(#c5-slate)" />
+          <VecLabel x={beforeTip[0]} y={beforeTip[1]} text={`v = [${ev[0]},${ev[1]}]`}
+            color="#94a3b8" offsetX={8} offsetY={-24} />
+          {/* After arrow — solid colored */}
+          {λ !== 0 && (
+            <>
+              <line x1={CX} y1={CY} x2={afterTip[0]} y2={afterTip[1]}
+                stroke={badgeColor} strokeWidth="3.5" markerEnd={`url(#c5-${λ > 0 ? 'green' : 'violet'})`} />
+              <VecLabel x={afterTip[0]} y={afterTip[1]}
+                text={`M·v = [${fmt(transformed[0])},${fmt(transformed[1])}]`}
+                color={badgeColor} offsetX={8} offsetY={-10} />
+            </>
+          )}
+          {/* Badge: λ·v equation */}
+          <rect x={8} y={8} width={165} height={38} rx="8" fill={badgeColor} opacity="0.9" />
+          <text x={90} y={23} textAnchor="middle" fill="white" fontSize="11" fontWeight="bold">
+            M·v = λ·v
+          </text>
+          <text x={90} y={37} textAnchor="middle" fill="white" fontSize="10" opacity="0.85">
+            = {λ.toFixed(1)} × [1,0] = [{fmt(transformed[0])},{fmt(transformed[1])}]
+          </text>
+          <circle cx={CX} cy={CY} r="5" fill="#0f172a" />
+        </svg>
+      </div>
     </SlideLayout>
   );
 };
@@ -763,48 +1194,331 @@ export const Scene5_8_EigenvalueExplorer: React.FC = () => {
 // ══════════════════════════════════════════════════════════
 
 export const Scene5_9_GeometricPicture: React.FC = () => {
-  const presets: { name: string; M: Mat2; label: string }[] = [
-    { name: 'Stretch X', M: [[3, 0], [0, 1]], label: 'λ₁=3 (→), λ₂=1 (↑)' },
-    { name: 'Scale Both', M: [[2, 0], [0, 2]], label: 'λ=2 (every direction!)' },
-    { name: 'Shear', M: [[1, 1], [0, 1]], label: 'λ=1 (repeated, axis-aligned)' },
-    { name: 'Rotation 45°', M: [[0.7, -0.7], [0.7, 0.7]], label: 'No real eigenvectors!' },
+  const presets: {
+    name: string; desc: string; M: Mat2;
+    evecs: { vec: Vec2; label: string; color: string; marker: string; λ: number }[];
+    hasReal: boolean; noEigenNote?: string;
+  }[] = [
+    {
+      name: 'Stretch X',
+      desc: 'Stretches rightward by 3×, leaves upward unchanged.',
+      M: [[3, 0], [0, 1]],
+      hasReal: true,
+      evecs: [
+        { vec: [1, 0], label: '→ [1,0]', color: '#E11D48', marker: 'red',   λ: 3 },
+        { vec: [0, 1], label: '↑ [0,1]', color: '#0284C7', marker: 'blue',  λ: 1 },
+      ],
+    },
+    {
+      name: 'Scale Both',
+      desc: 'Scales every direction equally by 2×. Every vector is an eigenvector!',
+      M: [[2, 0], [0, 2]],
+      hasReal: true,
+      evecs: [
+        { vec: [1, 0], label: '→',        color: '#E11D48', marker: 'red',    λ: 2 },
+        { vec: [0, 1], label: '↑',        color: '#0284C7', marker: 'blue',   λ: 2 },
+        { vec: [1, 1], label: '↗',        color: '#7C3AED', marker: 'violet', λ: 2 },
+      ],
+    },
+    {
+      name: 'Shear',
+      desc: 'Shoves everything rightward. Only the horizontal direction survives unchanged.',
+      M: [[1, 1], [0, 1]],
+      hasReal: true,
+      evecs: [
+        { vec: [1, 0], label: '→ [1,0]', color: '#E11D48', marker: 'red', λ: 1 },
+      ],
+    },
+    {
+      name: 'Rotation 45°',
+      desc: 'Spins everything 45°. No real direction survives — every vector tilts.',
+      M: [[0.71, -0.71], [0.71, 0.71]],
+      hasReal: false,
+      noEigenNote: 'Pure rotation spins all vectors. No real eigenvectors exist.',
+      evecs: [],
+    },
   ];
-  const [active, setActive] = useState(0);
-  const target = presets[active].M;
-  const animated = useAnimatedMatrix(target, 700);
-  const evals = eigenvalues(target);
+
+  const [active, setActive]     = useState(0);
+  const [shown, setShown]       = useState<number[]>([]);  // which eigenvectors to show
+  const [showOutput, setShowOutput] = useState(false);
+
+  const p = presets[active];
+  const animated = useAnimatedMatrix(p.M, 600);
+
+  // Reset when switching preset
+  const switchPreset = (i: number) => { setActive(i); setShown([]); setShowOutput(false); };
+  const toggleVec = (i: number) => {
+    setShown(s => s.includes(i) ? s.filter(x => x !== i) : [...s, i]);
+    setShowOutput(false);
+  };
+
+  // SVG geometry
+  const W = 500, H = 500, CX = W / 2, CY = H / 2, SC = 82;
+  const tp  = (v: Vec2): [number, number] => [CX + v[0] * SC, CY - v[1] * SC];
+  const tpM = (v: Vec2): [number, number] => {
+    const out = mulMV(animated, v);
+    return [CX + out[0] * SC, CY - out[1] * SC];
+  };
+
+  // Non-eigen test vector
+  const testVec: Vec2 = [0.6, 0.8]; // unit-ish vector that's clearly not an eigenvector for most presets
+  const testOut  = mulMV(p.M, testVec);
+  const testNI   = norm(testVec), testNO = norm(testOut);
+  const testDot  = Math.min(1, Math.max(-1, testNI[0]*testNO[0] + testNI[1]*testNO[1]));
+  const testRot  = Math.acos(testDot) * 180 / Math.PI;
 
   return (
-    <SlideLayout
-      title="Eigenvectors Live in the Grid"
-      text="The dashed lines show eigenvector directions. Toggle presets — notice how rotation has no real eigenvectors (they'd be imaginary)."
-      sidebarContent={
-        <div className="flex flex-col gap-3">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Presets</div>
-          {presets.map((p, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm font-bold transition-all cursor-pointer ${
+    <div className="flex flex-col lg:flex-row items-stretch gap-5 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+
+      {/* ════ CANVAS  65% ════ */}
+      <div className="flex-[65] min-h-0 min-w-0 flex items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl shadow-inner overflow-hidden p-2">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
+          {MARKER_DEFS}
+          <rect width={W} height={H} fill="white" rx="16" />
+
+          {/* Grid */}
+          {([-3,-2,-1,0,1,2,3] as number[]).map(i => {
+            const ax = i === 0;
+            return (
+              <g key={i}>
+                <line x1={CX+i*SC} y1={18} x2={CX+i*SC} y2={H-18}
+                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
+                <line x1={18} y1={CY-i*SC} x2={W-18} y2={CY-i*SC}
+                  stroke={ax ? '#94a3b8' : '#f1f5f9'} strokeWidth={ax ? 1.5 : 0.8} />
+                {i !== 0 && <>
+                  <text x={CX+i*SC} y={CY+15} textAnchor="middle" fill="#e2e8f0" fontSize="9">{i}</text>
+                  <text x={CX+7}    y={CY-i*SC+4} fill="#e2e8f0" fontSize="9">{i}</text>
+                </>}
+              </g>
+            );
+          })}
+
+          {/* ─ For each toggled eigenvector: show before (dashed) + after (solid) ─ */}
+          {p.evecs.map((ev, i) => {
+            if (!shown.includes(i)) return null;
+            const beforeTip = tp(ev.vec);
+            const afterTip  = showOutput ? tpM(ev.vec) : beforeTip;
+            const scaled    = mulMV(p.M, ev.vec);
+            const nx = CX + ev.vec[0] * SC * 3.2, ny = CY - ev.vec[1] * SC * 3.2; // direction ray
+
+            return (
+              <g key={i}>
+                {/* Direction ray */}
+                <line x1={CX} y1={CY} x2={nx} y2={ny}
+                  stroke={ev.color} strokeWidth="0.8" strokeDasharray="5 4" opacity="0.15" />
+                {/* Before arrow — dashed */}
+                <line x1={CX} y1={CY} x2={beforeTip[0]} y2={beforeTip[1]}
+                  stroke={ev.color} strokeWidth="3" strokeDasharray="8 4"
+                  markerEnd={`url(#c5-${ev.marker})`} />
+                <text x={beforeTip[0] + (ev.vec[0] >= 0 ? 8 : -8)} y={beforeTip[1] - 14}
+                  fill={ev.color} fontSize="10" fontWeight="bold"
+                  textAnchor={ev.vec[0] >= 0 ? 'start' : 'end'}>
+                  [{fmt(ev.vec[0])},{fmt(ev.vec[1])}]
+                </text>
+                {/* After arrow — solid, animates to scaled position */}
+                {showOutput && (
+                  <motion.g key={`after-${i}-${active}`}
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <line x1={CX} y1={CY} x2={afterTip[0]} y2={afterTip[1]}
+                      stroke={ev.color} strokeWidth="5"
+                      markerEnd={`url(#c5-${ev.marker})`} />
+                    {/* "× λ" badge on after tip */}
+                    {(() => {
+                      const bx = afterTip[0] + (scaled[0] >= 0 ? 10 : -10);
+                      const by = afterTip[1] + (scaled[1] <= 0 ? -16 : 10);
+                      const txt = `×${fmt(ev.λ)} = [${fmt(scaled[0])},${fmt(scaled[1])}]`;
+                      const w = txt.length * 5.8 + 10;
+                      return (
+                        <g>
+                          <rect x={bx - 2} y={by - 13} width={w} height={17} rx="4"
+                            fill={ev.color} opacity="0.9" />
+                          <text x={bx + w/2 - 2} y={by + 1} textAnchor="middle"
+                            fill="white" fontSize="10" fontWeight="bold">{txt}</text>
+                        </g>
+                      );
+                    })()}
+                    {/* "✓ same direction" whisper */}
+                    <text x={CX + ev.vec[0] * SC * 1.5 + 6}
+                          y={CY - ev.vec[1] * SC * 1.5 + 4}
+                      fill={ev.color} fontSize="9" opacity="0.6" fontWeight="bold">✓ same dir</text>
+                  </motion.g>
+                )}
+              </g>
+            );
+          })}
+
+          {/* ─ Rotation case: show a test vector wobbling ─ */}
+          {!p.hasReal && shown.includes(99) && (
+            <g>
+              {(() => {
+                const bTip = tp(testVec);
+                const aTip = showOutput ? tpM(testVec) : bTip;
+                const outV = mulMV(p.M, testVec);
+
+                // Rotation arc
+                const arcR = 55;
+                const aS = Math.atan2(-testVec[1], testVec[0]);
+                const aE = Math.atan2(-outV[1], outV[0]);
+                let sw = aE - aS; if (sw > Math.PI) sw -= 2*Math.PI; if (sw < -Math.PI) sw += 2*Math.PI;
+                const ax1r = CX + arcR * Math.cos(aS), ay1r = CY + arcR * Math.sin(aS);
+                const ax2r = CX + arcR * Math.cos(aE), ay2r = CY + arcR * Math.sin(aE);
+                const midA = aS + sw / 2;
+                const arcLX2 = CX + (arcR + 22) * Math.cos(midA);
+                const arcLY2 = CY + (arcR + 22) * Math.sin(midA);
+
+                return (
+                  <>
+                    <line x1={CX} y1={CY} x2={bTip[0]} y2={bTip[1]}
+                      stroke="#94a3b8" strokeWidth="3" strokeDasharray="8 4" markerEnd="url(#c5-slate)" />
+                    <text x={bTip[0] + 8} y={bTip[1] - 14} fill="#94a3b8" fontSize="10" fontWeight="bold">
+                      [{fmt(testVec[0])},{fmt(testVec[1])}]
+                    </text>
+                    {showOutput && (
+                      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <line x1={CX} y1={CY} x2={aTip[0]} y2={aTip[1]}
+                          stroke="#E11D48" strokeWidth="5" markerEnd="url(#c5-red)" />
+                        <text x={aTip[0] + 8} y={aTip[1] - 14} fill="#E11D48" fontSize="10" fontWeight="bold">
+                          [{fmt(outV[0])},{fmt(outV[1])}]
+                        </text>
+                        <path d={`M ${ax1r} ${ay1r} A ${arcR} ${arcR} 0 0 ${sw > 0 ? 1 : 0} ${ax2r} ${ay2r}`}
+                          fill="none" stroke="#E11D48" strokeWidth="2.5" />
+                        <circle cx={ax2r} cy={ay2r} r="4" fill="#E11D48" />
+                        <rect x={arcLX2 - 26} y={arcLY2 - 12} width="52" height="17" rx="5" fill="#E11D48" />
+                        <text x={arcLX2} y={arcLY2 + 1} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
+                          {testRot.toFixed(0)}° tilt
+                        </text>
+                      </motion.g>
+                    )}
+                  </>
+                );
+              })()}
+            </g>
+          )}
+
+          {/* No-eigen overlay for rotation */}
+          {!p.hasReal && shown.length === 0 && (
+            <g>
+              <rect x={CX - 120} y={CY - 22} width="240" height="44" rx="10" fill="#FEF3C7" />
+              <text x={CX} y={CY - 5} textAnchor="middle" fill="#D97706" fontSize="11" fontWeight="bold">
+                Every vector rotates 45°
+              </text>
+              <text x={CX} y={CY + 12} textAnchor="middle" fill="#D97706" fontSize="10">
+                No direction survives unchanged
+              </text>
+            </g>
+          )}
+
+          {/* Origin dot */}
+          <circle cx={CX} cy={CY} r="5.5" fill="#0f172a" />
+        </svg>
+      </div>
+
+      {/* ════ SIDEBAR  35% ════ */}
+      <div className="flex-[35] min-w-0 flex flex-col gap-3 shrink-0 pt-2 pb-2 overflow-y-auto">
+        <div>
+          <h2 className="text-xl font-black text-slate-800 leading-tight mb-1">Seeing Eigenvectors</h2>
+          <p className="text-slate-400 text-xs leading-relaxed">
+            Pick a matrix, select a direction to test, then apply M to see if it keeps pointing the same way.
+          </p>
+        </div>
+
+        {/* Preset picker */}
+        <div className="flex flex-col gap-1.5">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Choose a matrix</div>
+          {presets.map((pr, i) => (
+            <button key={i} onClick={() => switchPreset(i)}
+              className={`w-full text-left px-3 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                 i === active
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                  ? 'bg-slate-800 border-slate-800 text-white'
                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-              }`}
-            >
-              <div>{p.name}</div>
-              <div className="text-[10px] font-mono font-normal text-slate-400 mt-0.5">{p.label}</div>
+              }`}>
+              <div className="font-black text-sm">{pr.name}</div>
+              <div className={`text-[10px] font-normal mt-0.5 ${i === active ? 'text-slate-300' : 'text-slate-400'}`}>{pr.desc}</div>
             </button>
           ))}
-          <div className={`rounded-xl p-3 text-xs font-semibold border mt-1 ${evals ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
-            {evals
-              ? `Real eigenvalues: λ₁ = ${fmt(evals[0])}, λ₂ = ${fmt(evals[1])}`
-              : 'Complex eigenvalues — no real eigenvectors exist for pure rotations.'}
-          </div>
         </div>
-      }
-    >
-      <EigenGrid M={animated} showEigen={!!evals} />
-    </SlideLayout>
+
+        {/* Vector selection */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">
+            {p.hasReal ? 'Select a direction to test' : 'Test any direction'}
+          </div>
+
+          {p.hasReal ? (
+            <div className="flex flex-col gap-1.5">
+              {p.evecs.map((ev, i) => (
+                <button key={i} onClick={() => toggleVec(i)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                    shown.includes(i) ? 'bg-white border-slate-300 shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-white'
+                  }`}>
+                  <span className="w-3 h-3 rounded-full shrink-0" style={{ background: ev.color }} />
+                  <span style={{ color: ev.color }}>{ev.label}</span>
+                  <span className="ml-auto text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full">eigen  λ={fmt(ev.λ)}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <button onClick={() => { setShown([99]); setShowOutput(false); }}
+              className="w-full px-3 py-2 rounded-xl border bg-slate-50 border-slate-200 hover:bg-white text-xs font-bold text-slate-600 cursor-pointer transition-all">
+              Show a test vector →
+            </button>
+          )}
+        </div>
+
+        {/* Apply / reset */}
+        {shown.length > 0 && (
+          <div className="flex gap-2">
+            <button onClick={() => setShowOutput(true)}
+              className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs cursor-pointer transition-all">
+              Apply M →
+            </button>
+            <button onClick={() => { setShown([]); setShowOutput(false); }}
+              className="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs cursor-pointer transition-all">
+              Reset
+            </button>
+          </div>
+        )}
+
+        {/* Result explanation */}
+        {showOutput && shown.length > 0 && (
+          <motion.div key={`result-${active}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+            {p.hasReal ? (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3">
+                <div className="font-black text-sm text-emerald-700 mb-1.5">✓ Direction preserved!</div>
+                <div className="text-[11px] text-slate-600 flex flex-col gap-1">
+                  {shown.map(i => {
+                    const ev = p.evecs[i];
+                    const out = mulMV(p.M, ev.vec);
+                    return (
+                      <div key={i} className="font-mono">
+                        <span style={{ color: ev.color }}>[{fmt(ev.vec[0])},{fmt(ev.vec[1])}]</span>
+                        <span className="text-slate-400"> → </span>
+                        <span className="font-bold">[{fmt(out[0])},{fmt(out[1])}]</span>
+                        <span className="text-emerald-600 font-bold"> = {fmt(ev.λ)}×</span>
+                      </div>
+                    );
+                  })}
+                  <div className="text-emerald-700 font-bold mt-1 text-[10px]">
+                    Same direction, just scaled by λ. That's the definition of an eigenvector.
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-rose-50 border border-rose-200 rounded-2xl p-3">
+                <div className="font-black text-sm text-rose-700 mb-1.5">✗ Direction changed by {testRot.toFixed(0)}°</div>
+                <div className="text-[11px] text-slate-600">
+                  For a pure rotation, every vector gets spun. There's no real direction that can survive — no real eigenvectors.
+                </div>
+                <div className="text-rose-600 font-bold text-[11px] mt-1.5">
+                  Eigenvectors exist only in the complex numbers for rotations.
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 };
 
