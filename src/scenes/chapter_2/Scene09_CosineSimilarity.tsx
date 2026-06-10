@@ -93,8 +93,8 @@ const AnnotatedCosineCanvas: React.FC<{
 export const Scene2_9_CosineSimilarity: React.FC = () => {
   const [angleA, setAngleA] = useState(55);
   const [angleB, setAngleB] = useState(25);
-  const [lenA, setLenA] = useState(65);
-  const [lenB, setLenB] = useState(80);
+  const [lenA, setLenA] = useState(25);
+  const [lenB, setLenB] = useState(30);
 
   const toUnitVec = (angleDeg: number) => ({
     x: Math.cos((angleDeg * Math.PI) / 180),
