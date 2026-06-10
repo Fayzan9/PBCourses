@@ -20,6 +20,12 @@ import {
   Scene3_7_CoordinateShortcut, Scene3_8_HorizontalAgreement, Scene3_9_VerticalAgreement,
   Scene3_10_SummingUp, Scene3_11_SignalAmplification
 } from './scenes/Chapter3Scenes';
+import {
+  Scene4_1_WarpCuriosity, Scene4_2_MeetMatrix, Scene4_3_MatrixVectorMath,
+  Scene4_4_GridTransform, Scene4_5_BasisVectors, Scene4_6_ComposingTransforms,
+  Scene4_7_NeuralLayer, Scene4_8_ActivationFunctions, Scene4_9_DeepNetwork,
+  Scene4_10_MatrixSandbox
+} from './scenes/Chapter4Scenes';
 
 const CHAPTERS = [
   {
@@ -75,6 +81,23 @@ const CHAPTERS = [
       { component: Scene3_9_VerticalAgreement, title: "Vertical Agreement" },
       { component: Scene3_10_SummingUp, title: "The Grand Equivalence" },
       { component: Scene3_11_SignalAmplification, title: "Signal Strength" }
+    ]
+  },
+  {
+    id: 4,
+    title: "Matrix Transformations",
+    subtitle: "Chapter 4: How AI Reshapes Space",
+    scenes: [
+      { component: Scene4_1_WarpCuriosity, title: "Warping Space" },
+      { component: Scene4_2_MeetMatrix, title: "Meet the Matrix" },
+      { component: Scene4_3_MatrixVectorMath, title: "Matrix × Vector" },
+      { component: Scene4_4_GridTransform, title: "Grid Transformation" },
+      { component: Scene4_5_BasisVectors, title: "Reading the Columns" },
+      { component: Scene4_6_ComposingTransforms, title: "Stacking Transforms" },
+      { component: Scene4_7_NeuralLayer, title: "The Neural Layer" },
+      { component: Scene4_8_ActivationFunctions, title: "Non-Linearity" },
+      { component: Scene4_9_DeepNetwork, title: "Deep Networks" },
+      { component: Scene4_10_MatrixSandbox, title: "Matrix Sandbox" }
     ]
   }
 ];
@@ -291,50 +314,64 @@ export const App: React.FC = () => {
                 </button>
               </div>
 
-              {/* Navigation tree */}
-              <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-6 scrollbar-thin">
-                {/* Module: Fundamentals */}
-                <div className="flex flex-col gap-3">
-                  <div className="text-[10px] font-mono font-extrabold text-slate-400 uppercase tracking-widest pl-2">
-                    Fundamentals
-                  </div>
+              {/* Navigation tree — dynamic over CHAPTERS */}
+              <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-2 scrollbar-thin">
+                {CHAPTERS.map((chapter, chIdx) => {
+                  const isActiveChapter = chIdx === activeChapterIdx;
+                  return (
+                    <div key={chIdx} className="flex flex-col">
+                      {/* Chapter row */}
+                      <button
+                        onClick={() => selectChapter(chIdx)}
+                        className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                          isActiveChapter
+                            ? 'bg-vector/10 text-vector border border-vector/20'
+                            : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
+                        }`}
+                      >
+                        <span>Ch {chapter.id}: {chapter.title}</span>
+                        <span className={`text-[9px] font-mono shrink-0 ${isActiveChapter ? 'text-vector/60' : 'text-slate-300'}`}>
+                          {chapter.scenes.length} scenes
+                        </span>
+                      </button>
 
-                  {/* Chapter 1 Button */}
-                  <button
-                    onClick={() => selectChapter(0)}
-                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
-                      activeChapterIdx === 0
-                        ? 'bg-vector/10 text-vector border border-vector/20'
-                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
-                    }`}
-                  >
-                    Chapter 1: Everything is a Point
-                  </button>
-
-                  {/* Chapter 2 Button */}
-                  <button
-                    onClick={() => selectChapter(1)}
-                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
-                      activeChapterIdx === 1
-                        ? 'bg-vector/10 text-vector border border-vector/20'
-                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
-                    }`}
-                  >
-                    Chapter 2: Measuring Proximity
-                  </button>
-
-                  {/* Chapter 3 Button */}
-                  <button
-                    onClick={() => selectChapter(2)}
-                    className={`w-full text-left py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
-                      activeChapterIdx === 2
-                        ? 'bg-vector/10 text-vector border border-vector/20'
-                        : 'text-slate-600 hover:bg-slate-50 border border-transparent hover:text-slate-900'
-                    }`}
-                  >
-                    Chapter 3: The Dot Product
-                  </button>
-                </div>
+                      {/* Scene list — only shown for active chapter */}
+                      <AnimatePresence>
+                        {isActiveChapter && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="flex flex-col gap-0.5 pl-4 pr-1 py-1 ml-2 border-l border-slate-200">
+                              {chapter.scenes.map((scene, scIdx) => {
+                                const isActive = scIdx === currentSceneIdx;
+                                return (
+                                  <button
+                                    key={scIdx}
+                                    onClick={() => jumpToScene(scIdx)}
+                                    className={`w-full text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                                      isActive
+                                        ? 'bg-vector text-white shadow-sm'
+                                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                                    }`}
+                                  >
+                                    <span className={`text-[9px] font-mono shrink-0 ${isActive ? 'text-white/60' : 'text-slate-300'}`}>
+                                      {String(scIdx + 1).padStart(2, '0')}
+                                    </span>
+                                    {scene.title}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </motion.aside>
           </>
