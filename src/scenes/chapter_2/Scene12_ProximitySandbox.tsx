@@ -46,12 +46,25 @@ export const Scene2_12_ProximitySandbox: React.FC = () => {
     })),
   ];
 
-  const lines: PlotLine[] = candidates.map(c => ({
+  // Target-to-candidate distance lines (prominent in Euclidean, faded in Cosine)
+  const distanceLines: PlotLine[] = candidates.map(c => ({
     x1: targetX, y1: targetY, x2: c.x, y2: c.y,
-    color: topIds.includes(c.id) ? '#10B981' : 'rgba(203,213,225,0.4)',
-    dashed: !topIds.includes(c.id),
-    width: topIds.includes(c.id) ? 2 : 1,
+    color: metric === 'euclidean' && topIds.includes(c.id) ? '#10B981' : 'rgba(203,213,225,0.35)',
+    dashed: metric === 'cosine' || !topIds.includes(c.id),
+    width: metric === 'euclidean' && topIds.includes(c.id) ? 2 : 1,
   }));
+
+  // Origin rays — shown only in Cosine mode to make the angle intuitive
+  const originLines: PlotLine[] = metric === 'cosine' ? [
+    { x1: 0, y1: 0, x2: targetX, y2: targetY, color: '#10B981', width: 2.5 },
+    ...candidates.map(c => ({
+      x1: 0, y1: 0, x2: c.x, y2: c.y,
+      color: topIds.includes(c.id) ? c.color : '#e2e8f0',
+      width: topIds.includes(c.id) ? 2 : 1,
+    })),
+  ] : [];
+
+  const lines: PlotLine[] = [...distanceLines, ...originLines];
 
   return (
     <SlideLayout
