@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, BookOpen, HelpCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, HelpCircle, Menu, X } from 'lucide-react';
 import { 
   Scene1_Curiosity, Scene2_PersonRep, Scene3_PeoplePoints, 
   Scene4_MovieSpace, Scene4b_ThreeDSpace, Scene4c_HighDimSpace,
@@ -14,8 +14,8 @@ const SCENES = [
   { component: Scene1_Curiosity, title: "Curiosity" },
   { component: Scene2_PersonRep, title: "Measurements to Numbers" },
   { component: Scene3_PeoplePoints, title: "People Become Locations" },
-  { component: Scene4_MovieSpace, title: "Movie Space" },
-  { component: Scene4b_ThreeDSpace, title: "Adding a 3rd Dimension" },
+  { component: Scene4_MovieSpace, title: "Movie Space (2D)" },
+  { component: Scene4b_ThreeDSpace, title: "Adding a 3rd Dimension (3D)" },
   { component: Scene4c_HighDimSpace, title: "Hyper-Dimensions" },
   { component: Scene5_MusicSpace, title: "Music Clustering" },
   { component: Scene6_ProductSpace, title: "Product Space" },
@@ -33,6 +33,7 @@ export const App: React.FC = () => {
   const [currentScene, setCurrentScene] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const totalScenes = SCENES.length;
 
@@ -53,10 +54,10 @@ export const App: React.FC = () => {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept typing in search box or inputs
       if (
         document.activeElement?.tagName === 'INPUT' || 
-        document.activeElement?.tagName === 'TEXTAREA'
+        document.activeElement?.tagName === 'TEXTAREA' ||
+        isSidebarOpen
       ) {
         return;
       }
@@ -72,19 +73,19 @@ export const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentScene]);
+  }, [currentScene, isSidebarOpen]);
 
   // Touch Swipe Gesture Detectors
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isSidebarOpen) return;
     setTouchStart(e.targetTouches[0].clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (touchStart === null) return;
+    if (touchStart === null || isSidebarOpen) return;
     const currentTouch = e.targetTouches[0].clientX;
     const diff = touchStart - currentTouch;
 
-    // Minimum swipe threshold (50px)
     if (diff > 50) {
       navigateNext();
       setTouchStart(null);
@@ -97,6 +98,7 @@ export const App: React.FC = () => {
   const jumpToScene = (idx: number) => {
     setDirection(idx > currentScene ? 1 : -1);
     setCurrentScene(idx);
+    setIsSidebarOpen(false);
   };
 
   const ActiveComponent = SCENES[currentScene].component;
@@ -140,16 +142,26 @@ export const App: React.FC = () => {
       {/* HEADER SECTION */}
       <header className="w-full max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 z-20">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-vector/10 border border-vector/20 rounded-xl text-vector glow-vector">
-            <BookOpen size={20} />
-          </div>
-          <div>
-            <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-              Everything Can Become a Point
-            </h1>
-            <p className="text-xs text-slate-500 font-bold">
-              Chapter 1: The Secret Language of Modern AI
-            </p>
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
+            title="Open navigation menu"
+          >
+            <Menu size={20} />
+          </button>
+          
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-vector/10 border border-vector/20 rounded-xl text-vector glow-vector">
+              <BookOpen size={20} />
+            </div>
+            <div>
+              <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
+                Everything Can Become a Point
+              </h1>
+              <p className="text-xs text-slate-500 font-bold">
+                Chapter 1: The Secret Language of Modern AI
+              </p>
+            </div>
           </div>
         </div>
 
@@ -172,6 +184,65 @@ export const App: React.FC = () => {
           })}
         </div>
       </header>
+
+      {/* SIDEBAR NAVIGATION DRAWER */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            {/* Sidebar backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="absolute inset-0 bg-slate-900 z-40 cursor-pointer"
+            />
+
+            {/* Sidebar drawer content */}
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="absolute top-0 bottom-0 left-0 w-80 bg-white/95 backdrop-blur border-r border-slate-200 z-50 shadow-2xl flex flex-col p-6 overflow-hidden"
+            >
+              {/* Sidebar Header */}
+              <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-vector/10 text-vector rounded-lg">
+                    <BookOpen size={16} />
+                  </div>
+                  <span className="font-extrabold text-sm text-slate-800 tracking-tight">AI Intuition Course</span>
+                </div>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Navigation tree */}
+              <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-6 scrollbar-thin">
+                {/* Module: Fundamentals */}
+                <div className="flex flex-col gap-3">
+                  <div className="text-[10px] font-mono font-extrabold text-slate-400 uppercase tracking-widest pl-2">
+                    Fundamentals
+                  </div>
+
+                  {/* Chapter 1 */}
+                  <button
+                    onClick={() => jumpToScene(0)}
+                    className="w-full text-left py-2 px-3 rounded-xl text-sm font-extrabold transition-all cursor-pointer bg-vector/10 text-vector border border-vector/20"
+                  >
+                    Chapter 1: Everything is a Point
+                  </button>
+                </div>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* CORE STAGE */}
       <main className="flex-1 min-h-0 w-full max-w-7xl mx-auto px-6 py-2 flex items-center justify-center z-10 overflow-hidden">

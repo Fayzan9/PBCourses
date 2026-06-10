@@ -1,0 +1,27 @@
+# AI Intuition Curriculum: AI Developer Instructions
+
+You must strictly follow the standards defined in the project design guidelines when creating, editing, or refactoring code for this curriculum.
+
+## Mandatory Rules for subsequent lectures:
+
+1. **Design System & Styling**:
+   - Maintain the premium, minimalist off-white (`#F8FAFC`) background and slate-dark (`#0F172A`) typography.
+   - Use HSL-tailored custom color codes (Red for Loss, Blue for Vectors, Violet for Transformations/Similarity, Emerald for Coordinates/Points).
+   - Use rounded panels (`rounded-2xl`) and glassmorphism borders (`border-slate-200`) with subtle drop shadows.
+
+2. **Copywriting & Text**:
+   - Explain topics using **1 to 2 sentences maximum** per screen. Avoid long paragraphs.
+   - Use larger body sizes (`text-xl md:text-2xl` for paragraph texts) to match the premium educational look.
+
+3. **Coordinate Spaces & Plotting**:
+   - Graphs must always show X and Y axes starting from origin `(0, 0)` or clamping to boundaries.
+   - Coordinate numbers/vectors must be displayed **directly next to the point** (no hover-only coordinate value reveals).
+   - Plotted points in 3D spaces must use an SVG radial gradient representing a 3D sphere, complete with axis ticks, arrowhead markers, and XZ/XY/YZ perspective grid lines.
+   - Enable bidirectional controls: allow coordinate points to be edited by dragging directly on the graph or adjusting sliders.
+
+4. **Codebase Structure**:
+   - Save reusable visualization mechanisms in `src/components/`.
+   - Store lesson-specific logic in isolated files within `src/scenes/` (or equivalent scene routing modules).
+   - Keep screen dimensions fully contained (`h-screen max-h-screen overflow-hidden`) with zero viewport breaking.
+
+Refer to the full [design_guidelines.md](file:///Users/faizanpopatiya/Desktop/AI Series/design_guidelines.md) for more details.
