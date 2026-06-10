@@ -1,85 +1,108 @@
 import React, { useState } from 'react';
-import { SlideLayout } from '../../components/SlideLayout';
-import { VectorCanvas } from '../../components/VectorCanvas';
-import { fromAngle } from '../../components/mathHelpers';
+import { VisualizationSpace, type VisualPoint } from '../../components/VisualizationSpace';
 
-type Vec2 = [number, number];
+// Same movies from Chapter 2 — same space, new question
+const MOVIES = [
+  { id: 'indie',   label: 'Indie Action', coords: [18, 24], color: '#E11D48' },
+  { id: 'block',   label: 'Blockbuster',  coords: [72, 96], color: '#7C3AED' },
+  { id: 'scifi',   label: 'Sci-Fi',       coords: [85, 15], color: '#D97706' },
+  { id: 'main',    label: 'Mainstream',   coords: [48, 52], color: '#0284C7' },
+  { id: 'comedy',  label: 'Indie Comedy', coords: [12, 55], color: '#059669' },
+];
+
+const PRESETS = [
+  { label: 'Action Fan',   icon: '🔥', coords: [85, 15] },
+  { label: 'Comedy Lover', icon: '😂', coords: [10, 80] },
+  { label: 'Balanced',     icon: '⚖️', coords: [55, 55] },
+];
+
+const dot = (a: number[], b: number[]) => a[0] * b[0] + a[1] * b[1];
 
 export const Scene3_3_RealWorldAnalogies: React.FC = () => {
-  const [active, setActive] = useState(0);
+  const [taste, setTaste] = useState([55, 55]);
 
-  const examples = [
-    {
-      icon: '🚣',
-      label: 'Rowing with the Current',
-      analogy: 'Row directly WITH the current and you get maximum boost. Row perpendicular and the current does nothing for you. Row against it and you slow down.',
-      tagColor: 'bg-sky-50 border-sky-200 text-sky-700',
-      tag: 'Parallel = max',
-      vecA: fromAngle(20, 3.5) as Vec2,
-      vecB: fromAngle(20, 3.5) as Vec2,
-    },
-    {
-      icon: '☀️',
-      label: 'Solar Panel Angle',
-      analogy: "A solar panel facing directly at the sun captures maximum energy. Tilt it sideways and it captures less. The dot product measures this efficiency exactly.",
-      tagColor: 'bg-amber-50 border-amber-200 text-amber-700',
-      tag: 'Angle = efficiency',
-      vecA: fromAngle(90, 3.5) as Vec2,
-      vecB: fromAngle(60, 3) as Vec2,
-    },
-    {
-      icon: '🎬',
-      label: 'Movie Recommendations',
-      analogy: 'Your taste is a vector [action: 8, comedy: 2]. A movie is [action: 9, comedy: 1]. Their dot product is 8×9 + 2×1 = 74 — a strong match!',
-      tagColor: 'bg-violet-50 border-violet-200 text-violet-700',
-      tag: 'Taste × Movie',
-      vecA: fromAngle(15, 4) as Vec2,
-      vecB: fromAngle(10, 3.8) as Vec2,
-    },
+  const ranked = [...MOVIES]
+    .map(m => ({ ...m, score: dot(taste, m.coords) }))
+    .sort((a, b) => b.score - a.score);
+
+  const maxScore = ranked[0]?.score || 1;
+  const top = ranked[0];
+
+  const points: VisualPoint[] = [
+    { id: 'taste', label: 'Your Taste', coords: taste, color: '#10B981', details: `[${taste[0]}, ${taste[1]}]` },
+    ...MOVIES.map(m => ({ ...m, details: `dot = ${dot(taste, m.coords).toFixed(0)}` })),
   ];
 
-  const ex = examples[active];
-
   return (
-    <SlideLayout
-      title="You Already Use This"
-      text="The dot product shows up everywhere in the real world. It measures how much two things point in the same direction."
-      sidebarContent={
-        <div className="flex flex-col gap-2">
-          {examples.map((e, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`px-3 py-3 rounded-xl border text-left transition-all cursor-pointer ${
-                active === i
-                  ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-              }`}
-            >
-              <span className="mr-2">{e.icon}</span>
-              <span className="font-bold text-sm">{e.label}</span>
-              <span className={`ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                active === i ? 'bg-white/20 border-white/20 text-white' : e.tagColor
-              }`}>
-                {e.tag}
-              </span>
-            </button>
-          ))}
-          <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 leading-relaxed">
-            {ex.analogy}
-          </div>
-        </div>
-      }
-    >
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <VectorCanvas
-          vectors={[
-            { id: 'A', vec: ex.vecA, color: '#E11D48', marker: 'red',  label: 'A' },
-            { id: 'B', vec: ex.vecB, color: '#0284C7', marker: 'blue', label: 'B' },
-          ]}
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+      {/* Visualization — same movie space as Chapter 2 */}
+      <div className="flex-[60] min-h-0 min-w-0 flex items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl p-3 shadow-inner overflow-hidden">
+        <VisualizationSpace
+          points={points}
+          dimensions={['Action Score', 'Comedy Score']}
+          ranges={[[0, 100], [0, 100]]}
+          showVectors
+          draggablePointId="taste"
+          onDragPoint={c => setTaste([Math.round(c[0]), Math.round(c[1])])}
         />
       </div>
-    </SlideLayout>
+
+      {/* Sidebar */}
+      <div className="flex-[40] flex flex-col justify-center gap-4 shrink-0 py-2">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 leading-tight mb-1">
+            Same space.<br />New question.
+          </h2>
+          <p className="text-slate-500 text-sm">
+            Ch. 2 asked <em>how far?</em> — now ask <em>how aligned?</em> Drag <span className="font-bold text-emerald-600">Your Taste</span> and watch the match scores update.
+          </p>
+        </div>
+
+        {/* Preset personas */}
+        <div className="flex gap-2">
+          {PRESETS.map(p => (
+            <button key={p.label} onClick={() => setTaste(p.coords)}
+              className="flex-1 px-2 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:border-slate-300 cursor-pointer transition-all active:scale-95 text-center">
+              {p.icon} {p.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Live rankings */}
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Dot Product Rankings</span>
+          {ranked.map((m, i) => (
+            <div key={m.id} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all ${
+              i === 0 ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-50/50 border-slate-100'
+            }`}>
+              <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-black shrink-0"
+                style={{ backgroundColor: i < 2 ? m.color : '#cbd5e1' }}>
+                {i + 1}
+              </span>
+              <span className={`text-xs font-bold flex-1 ${i < 2 ? 'text-slate-700' : 'text-slate-400'}`}>{m.label}</span>
+              <div className="w-14 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-300"
+                  style={{ width: `${(m.score / maxScore) * 100}%`, backgroundColor: m.color }} />
+              </div>
+              <span className="font-mono text-xs font-black w-9 text-right tabular-nums"
+                style={{ color: i < 2 ? m.color : '#94a3b8' }}>
+                {m.score.toFixed(0)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Live formula for top match */}
+        {top && (
+          <div className="bg-violet-50 border border-violet-200 rounded-xl p-3 text-xs text-slate-600 font-mono leading-relaxed">
+            <span className="font-black text-violet-700 not-italic">Top match → </span>
+            [{taste[0]}, {taste[1]}] · [{top.coords[0]}, {top.coords[1]}]{' '}
+            = {taste[0]}×{top.coords[0]} + {taste[1]}×{top.coords[1]}{' '}
+            = <span className="font-black text-violet-700">{top.score.toFixed(0)}</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 export default Scene3_3_RealWorldAnalogies;
