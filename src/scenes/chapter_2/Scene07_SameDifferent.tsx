@@ -1,61 +1,70 @@
 import React from 'react';
-import { SlideLayout } from '../../components/SlideLayout';
-import { PlotCanvas } from '../../components/PlotCanvas';
+import { VisualizationSpace, type VisualPoint, type CustomLine } from '../../components/VisualizationSpace';
+
+// Indie & Blockbuster share the same 3:4 genre ratio — same direction, different scale
+const INDIE      = [18, 24];
+const BLOCKBUSTER = [72, 96];
+const SCIFI      = [85, 15];
+
+const eucDist = (a: number[], b: number[]) =>
+  Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
 
 export const Scene2_7_SameDifferent: React.FC = () => {
-  const indieX = 18, indieY = 24;
-  const blockX = 72, blockY = 96;
-  const eucDist = Math.sqrt(Math.pow(blockX - indieX, 2) + Math.pow(blockY - indieY, 2));
+  const dBad  = eucDist(INDIE, BLOCKBUSTER);
+  const dGood = eucDist(INDIE, SCIFI);
+
+  const points: VisualPoint[] = [
+    { id: 'indie',       label: 'Indie',       coords: INDIE,       color: '#E11D48', details: '10 reviews · ratio 3:4' },
+    { id: 'blockbuster', label: 'Blockbuster', coords: BLOCKBUSTER, color: '#7C3AED', details: '10k reviews · ratio 3:4' },
+    { id: 'scifi',       label: 'Sci-Fi',      coords: SCIFI,       color: '#D97706', details: '5k reviews · action-heavy' },
+  ];
+
+  const customLines: CustomLine[] = [
+    // Shared direction guide — both Indie & Blockbuster lie on this line
+    { from: [0, 0], to: [75, 100], color: '#cbd5e1', dashed: true },
+    // The misleading gap: same direction, huge Euclidean distance
+    { from: INDIE, to: BLOCKBUSTER, color: '#E11D48', dashed: true },
+  ];
 
   return (
-    <SlideLayout
-      title="Same Direction, Different Scale"
-      text="Both movies point in the same direction from the origin — same genre ratio. But Euclidean distance says they're far apart, just because one is bigger."
-      sidebarContent={
-        <div className="flex flex-col gap-4">
-          <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex flex-col gap-2">
-            <span className="text-[10px] uppercase tracking-wider font-black text-rose-700">The Problem</span>
-            <p className="text-xs text-slate-700 font-medium leading-relaxed">
-              Euclidean distance between them is <span className="font-black text-rose-600">{eucDist.toFixed(0)}</span> — suggesting they're very different. But they have the exact same genre ratio!
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-2 font-mono text-xs text-slate-700">
-            <div className="text-[10px] uppercase tracking-wider font-black text-slate-400 mb-1">Genre Ratio</div>
-            <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
-              <span>Indie: [{indieX}, {indieY}] → ratio 3:4</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full bg-violet-500 inline-block" />
-              <span>Block: [{blockX}, {blockY}] → ratio 3:4</span>
-            </div>
-          </div>
-
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-slate-600 font-medium leading-relaxed">
-            <span className="font-bold text-emerald-700 block mb-1">The Fix</span>
-            We need a metric that measures the <em>angle</em> between vectors, ignoring their length. That's cosine similarity.
-          </div>
-        </div>
-      }
-    >
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <PlotCanvas
-          points={[
-            { id: 'o',  x: 0,       y: 0,       color: '#0f172a', radius: 5, label: 'Origin' },
-            { id: 'in', x: indieX,  y: indieY,  color: '#E11D48', label: 'Indie (10 reviews)', radius: 7 },
-            { id: 'bl', x: blockX,  y: blockY,  color: '#7C3AED', label: 'Blockbuster (10k)', radius: 7 },
-          ]}
-          lines={[
-            { x1: 0, y1: 0, x2: blockX + 5, y2: (blockX + 5) * (blockY / blockX), color: '#94a3b8', dashed: true, width: 1 },
-            { x1: 0, y1: 0, x2: indieX, y2: indieY, color: '#E11D48', width: 2, marker: true },
-            { x1: 0, y1: 0, x2: blockX, y2: blockY, color: '#7C3AED', width: 2, marker: true },
-            { x1: indieX, y1: indieY, x2: blockX, y2: blockY, color: '#059669', dashed: true, width: 1.5 },
-          ]}
-          xLabel="Action Score"
-          yLabel="Comedy Score"
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+      {/* Visualization */}
+      <div className="flex-[65] min-h-0 min-w-0 flex items-center justify-center bg-white/40 border border-slate-200/50 rounded-3xl p-3 shadow-inner overflow-hidden">
+        <VisualizationSpace
+          points={points}
+          dimensions={['Action Score', 'Comedy Score']}
+          ranges={[[0, 100], [0, 100]]}
+          showVectors
+          customLines={customLines}
         />
       </div>
-    </SlideLayout>
+
+      {/* Sidebar */}
+      <div className="flex-[35] flex flex-col justify-center gap-4 shrink-0 py-2">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 leading-tight mb-1">
+            Same Direction,<br />Different Scale
+          </h2>
+          <p className="text-slate-500 text-sm">Both vectors point the same way — but Euclidean sees a huge gap.</p>
+        </div>
+
+        {/* Bad case */}
+        <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center justify-between">
+          <span className="text-sm font-black text-rose-600">❌ Same ratio 3:4</span>
+          <span className="font-mono font-black text-rose-600 text-xl">d = {dBad.toFixed(0)}</span>
+        </div>
+
+        {/* Good case */}
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
+          <span className="text-sm font-black text-emerald-600">✓ Different direction</span>
+          <span className="font-mono font-black text-emerald-600 text-xl">d = {dGood.toFixed(0)}</span>
+        </div>
+
+        {/* Fix */}
+        <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 text-sm text-slate-600">
+          <span className="font-black text-violet-700">The Fix → </span>Measure the <em>angle</em>, not the gap.
+        </div>
+      </div>
+    </div>
   );
 };
