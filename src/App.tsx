@@ -11,7 +11,7 @@ import {
   Scene7_ImageSpace, Scene8_LanguageSpace, Scene9_SemanticGalaxy, 
   Scene10_ChatGPTReveal, Scene11_Unification, Scene12_MathReveal, 
   Scene13_InteractivePlayground, Scene14_FinalModel, Scene15_NextHook
-} from './scenes/Scenes';
+} from './scenes/chapter_1';
 import {
   Scene2_1_CuriosityHook, Scene2_2_HowDoWeCompare, Scene2_3_RealWorldProximity,
   Scene2_3b_WhyFormula,
@@ -20,14 +20,14 @@ import {
   Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox,
   Scene2_Summary,
   Scene2_13_NextHook
-} from './scenes/Chapter2Scenes';
+} from './scenes/chapter_2';
 import {
   Scene3_1_CuriosityHook, Scene3_2_HowToMeasure, Scene3_3_RealWorldAnalogies,
   Scene3_4_AngleExplorer, Scene3_5_WhatAboutPerpendicular, Scene3_6_ZeroAlignment,
   Scene3_7_OppositeNegative, Scene3_8_ShadowProjection, Scene3_9_CanWeSkipAngle,
   Scene3_10_CoordinateShortcut, Scene3_11_GrandEquivalence, Scene3_12_WhySignalMatters,
   Scene3_13_SignalStrength, Scene3_14_NextHook
-} from './scenes/Chapter3Scenes';
+} from './scenes/chapter_3';
 import {
   Scene4_1_WarpCuriosity,
   Scene4_2_WhatHappens,
@@ -51,7 +51,7 @@ import {
   Scene4_20_DeepNetworks,
   Scene4_21_MatrixSandbox,
   Scene4_22_NextHook,
-} from './scenes/Chapter4Scenes';
+} from './scenes/chapter_4';
 import {
   Scene5_1_CuriosityHook,
   Scene5_2_RubberSheetThink,
@@ -76,7 +76,7 @@ import {
   Scene5_20_EigenSandbox,
   Scene5_21_GrandSummary,
   Scene5_22_NextHook,
-} from './scenes/Chapter5Scenes';
+} from './scenes/chapter_5';
 
 const CHAPTERS = [
   {
