@@ -21,10 +21,27 @@ import {
   Scene3_10_SummingUp, Scene3_11_SignalAmplification
 } from './scenes/Chapter3Scenes';
 import {
-  Scene4_1_WarpCuriosity, Scene4_2_MeetMatrix, Scene4_3_MatrixVectorMath,
-  Scene4_4_GridTransform, Scene4_5_BasisVectors, Scene4_6_ComposingTransforms,
-  Scene4_7_NeuralLayer, Scene4_8_ActivationFunctions, Scene4_9_DeepNetwork,
-  Scene4_10_MatrixSandbox
+  Scene4_1_WarpCuriosity,
+  Scene4_2_WhatHappens,
+  Scene4_3_RealWorldTransforms,
+  Scene4_4_ScaleTransform,
+  Scene4_5_HowToRotate,
+  Scene4_6_RotationTransform,
+  Scene4_7_ShearTransform,
+  Scene4_8_FourNumbers,
+  Scene4_9_WhatDoesEachDo,
+  Scene4_10_ColumnDestinations,
+  Scene4_11_MatrixVectorRecipe,
+  Scene4_12_GridWarpPresets,
+  Scene4_13_WhatIfStack,
+  Scene4_14_ComposingTransforms,
+  Scene4_15_DotProductBridge,
+  Scene4_16_OneNeuron,
+  Scene4_17_NeuralLayer,
+  Scene4_18_StackLinearQuestion,
+  Scene4_19_NonLinearity,
+  Scene4_20_DeepNetworks,
+  Scene4_21_MatrixSandbox,
 } from './scenes/Chapter4Scenes';
 
 const CHAPTERS = [
@@ -88,16 +105,27 @@ const CHAPTERS = [
     title: "Matrix Transformations",
     subtitle: "Chapter 4: How AI Reshapes Space",
     scenes: [
-      { component: Scene4_1_WarpCuriosity, title: "Warping Space" },
-      { component: Scene4_2_MeetMatrix, title: "Meet the Matrix" },
-      { component: Scene4_3_MatrixVectorMath, title: "Matrix × Vector" },
-      { component: Scene4_4_GridTransform, title: "Grid Transformation" },
-      { component: Scene4_5_BasisVectors, title: "Reading the Columns" },
-      { component: Scene4_6_ComposingTransforms, title: "Stacking Transforms" },
-      { component: Scene4_7_NeuralLayer, title: "The Neural Layer" },
-      { component: Scene4_8_ActivationFunctions, title: "Non-Linearity" },
-      { component: Scene4_9_DeepNetwork, title: "Deep Networks" },
-      { component: Scene4_10_MatrixSandbox, title: "Matrix Sandbox" }
+      { component: Scene4_1_WarpCuriosity,      title: "What Can You Do to Space?" },
+      { component: Scene4_2_WhatHappens,         title: "Think: What Happens?" },
+      { component: Scene4_3_RealWorldTransforms, title: "Transformations Everywhere" },
+      { component: Scene4_4_ScaleTransform,      title: "Stretch & Shrink" },
+      { component: Scene4_5_HowToRotate,         title: "Think: How to Rotate?" },
+      { component: Scene4_6_RotationTransform,   title: "Spinning Space" },
+      { component: Scene4_7_ShearTransform,      title: "The Italic Effect" },
+      { component: Scene4_8_FourNumbers,         title: "Just 4 Numbers" },
+      { component: Scene4_9_WhatDoesEachDo,      title: "Think: What Does Each Do?" },
+      { component: Scene4_10_ColumnDestinations, title: "Where Arrows Land" },
+      { component: Scene4_11_MatrixVectorRecipe, title: "The Recipe" },
+      { component: Scene4_12_GridWarpPresets,    title: "Watch Space Warp" },
+      { component: Scene4_13_WhatIfStack,        title: "Think: Stack Two?" },
+      { component: Scene4_14_ComposingTransforms,title: "Two in a Row" },
+      { component: Scene4_15_DotProductBridge,   title: "You Already Know This" },
+      { component: Scene4_16_OneNeuron,          title: "One Neuron First" },
+      { component: Scene4_17_NeuralLayer,        title: "A Full Layer" },
+      { component: Scene4_18_StackLinearQuestion,title: "Think: Stack 100 Layers?" },
+      { component: Scene4_19_NonLinearity,       title: "The Bend" },
+      { component: Scene4_20_DeepNetworks,       title: "Depth = Power" },
+      { component: Scene4_21_MatrixSandbox,      title: "Matrix Sandbox" }
     ]
   }
 ];
