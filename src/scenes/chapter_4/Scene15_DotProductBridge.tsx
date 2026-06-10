@@ -1,96 +1,199 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SlideLayout } from '../../components/SlideLayout';
 
-export const Scene4_15_DotProductBridge: React.FC = () => {
-  const [revealed, setRevealed] = useState(false);
+const ROWS   = [[2, 1], [0, 3], [1, 2]];
+const INPUT  = [3, 2];
+const ACCENT = ['#E11D48', '#7C3AED', '#D97706'];
+const LIGHT  = ['#fff1f2', '#f5f3ff', '#fffbeb'];
+const BORDER = ['#fecdd3', '#ddd6fe', '#fde68a'];
 
-  const rows = [[2, 1], [0, 3], [1, 2]];
-  const input = [3, 2];
-  const outputs = rows.map(row => row[0] * input[0] + row[1] * input[1]);
+export const Scene4_15_DotProductBridge: React.FC = () => {
+  const [active, setActive] = useState<number | null>(null);
+
+  const outputs = ROWS.map(r => r[0] * INPUT[0] + r[1] * INPUT[1]);
+
+  const row = active !== null ? ROWS[active] : null;
+  const accent = active !== null ? ACCENT[active] : '#64748b';
 
   return (
     <SlideLayout
-      title="Wait — You Already Know This"
-      text="Matrix multiplication isn't new math. It's just the dot product from Chapter 3, run once per row. Each row of the matrix is a 'question' asked about the input."
+      title="Each Row = One Dot Product"
+      text="Click any row. It runs a dot product against the input and produces one output number."
       sidebarContent={
-        <div className="flex flex-col gap-3">
-          <div className="bg-sky-50 border border-sky-200 rounded-xl p-4 text-sm text-slate-700 leading-relaxed">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-sky-600 font-black block mb-2">From Chapter 3</span>
-            A dot product multiplies matching pairs of numbers and sums them up. It measures how much two vectors align.
-          </div>
+        <div className="flex flex-col gap-3 h-full justify-center">
+          <AnimatePresence mode="wait">
+            {active === null ? (
+              <motion.div
+                key="hint"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center gap-3 py-8 text-center"
+              >
+                <div className="text-4xl">👆</div>
+                <p className="text-sm font-bold text-slate-500">Click any row in the matrix to see its dot product</p>
+                <p className="text-xs text-slate-400 font-medium">Each row asks one question about the input</p>
+              </motion.div>
+            ) : row && (
+              <motion.div
+                key={`row-${active}`}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="flex flex-col gap-4"
+              >
+                {/* Row label */}
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accent }} />
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: accent }}>
+                    Row {active + 1} · Dot Product
+                  </span>
+                </div>
 
-          <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 text-sm text-slate-700 leading-relaxed">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-violet-600 font-black block mb-2">What a matrix adds</span>
-            A matrix runs that dot product once per row. 3 rows = 3 questions = 3 output values.
-          </div>
+                {/* Pair-by-pair multiplication */}
+                <div className="rounded-2xl border p-4 flex flex-col gap-3"
+                  style={{ backgroundColor: LIGHT[active!], borderColor: BORDER[active!] }}>
 
-          <button
-            onClick={() => setRevealed(true)}
-            className={`px-4 py-3 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
-              revealed
-                ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                : 'bg-slate-900 text-white border-slate-900 hover:bg-slate-700'
-            }`}
-          >
-            {revealed ? '✓ Connection made!' : 'Show me the connection →'}
-          </button>
+                  {/* Pairs */}
+                  <div className="flex items-center justify-center gap-3">
+                    {row.map((rv, i) => (
+                      <React.Fragment key={i}>
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="flex items-center gap-1.5">
+                            {/* Row value */}
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-mono text-lg font-black text-white"
+                              style={{ backgroundColor: accent }}>
+                              {rv}
+                            </div>
+                            <span className="text-slate-400 font-bold">×</span>
+                            {/* Input value */}
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-mono text-lg font-black text-white bg-sky-500">
+                              {INPUT[i]}
+                            </div>
+                          </div>
+                          <span className="font-mono text-sm font-black" style={{ color: accent }}>
+                            {rv * INPUT[i]}
+                          </span>
+                        </div>
+                        {i < row.length - 1 && (
+                          <span className="text-slate-400 font-bold text-lg self-start mt-2">+</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+
+                  {/* Divider + result */}
+                  <div className="border-t pt-3 flex items-center justify-center gap-3"
+                    style={{ borderColor: BORDER[active!] }}>
+                    <span className="font-mono text-xs text-slate-500 font-bold">
+                      {row.map((rv, i) => `${rv}×${INPUT[i]}`).join(' + ')}
+                    </span>
+                    <span className="text-slate-400">=</span>
+                    <span className="font-mono text-xl font-black" style={{ color: accent }}>
+                      {outputs[active!]}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Legend */}
+                <div className="flex gap-3 text-[11px] font-medium text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded" style={{ backgroundColor: accent, display: 'inline-block' }} />
+                    from row {active! + 1}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded bg-sky-500 inline-block" />
+                    from input
+                  </span>
+                </div>
+
+                {/* Navigate rows */}
+                <div className="flex gap-2">
+                  {ROWS.map((_, i) => (
+                    <button key={i} onClick={() => setActive(i)}
+                      className="flex-1 py-2 rounded-xl text-xs font-black uppercase tracking-wide border transition-all cursor-pointer"
+                      style={
+                        i === active
+                          ? { backgroundColor: ACCENT[i], color: '#fff', borderColor: ACCENT[i] }
+                          : { backgroundColor: '#fff', color: '#94a3b8', borderColor: '#e2e8f0' }
+                      }>
+                      Row {i + 1}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       }
     >
-      <div className="flex items-center justify-center gap-8 w-full max-w-2xl px-4">
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Input</span>
-          <div className="flex flex-col gap-1">
-            {input.map((v, i) => (
-              <div key={i} className="bg-sky-50 border border-sky-200 rounded-xl px-5 py-3 text-sky-700 font-black text-xl font-mono">
-                {v}
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Matrix equation: M × input = output */}
+      <div className="flex items-center justify-center gap-4 w-full h-full select-none">
 
-        <div className="flex-1 flex flex-col gap-3">
-          {revealed ? (
-            rows.map((row, ri) => (
-              <motion.div
-                key={ri}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: ri * 0.2 }}
-                className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5"
-              >
-                <span className="font-mono text-sm font-bold text-rose-600">[{row.join(', ')}]</span>
-                <span className="text-slate-400 text-sm font-mono">·</span>
-                <span className="font-mono text-sm font-bold text-sky-600">[{input.join(', ')}]</span>
-                <span className="text-slate-400 text-xs">=</span>
-                <span className="font-mono text-sm font-black text-emerald-600">{outputs[ri]}</span>
-              </motion.div>
-            ))
-          ) : (
-            <div className="bg-slate-50 border border-dashed border-slate-300 rounded-xl p-6 text-center text-slate-400 text-sm font-medium">
-              Each row of the matrix does one dot product with the input
-            </div>
-          )}
-        </div>
-
-        {revealed && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-col items-center gap-2"
-          >
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Output</span>
-            <div className="flex flex-col gap-1">
-              {outputs.map((v, i) => (
-                <div key={i} className="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3 text-emerald-700 font-black text-xl font-mono">
+        {/* Matrix — clickable rows */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Matrix</span>
+          {ROWS.map((row, i) => (
+            <motion.button
+              key={i}
+              onClick={() => setActive(active === i ? null : i)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex gap-2 px-5 py-3 rounded-2xl border-2 transition-all cursor-pointer"
+              style={
+                active === i
+                  ? { backgroundColor: LIGHT[i], borderColor: ACCENT[i] }
+                  : { backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }
+              }
+            >
+              {row.map((v, j) => (
+                <span key={j}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-mono text-xl font-black transition-all"
+                  style={
+                    active === i
+                      ? { backgroundColor: ACCENT[i], color: '#fff' }
+                      : { backgroundColor: '#fff', color: '#334155', border: '1.5px solid #e2e8f0' }
+                  }>
                   {v}
-                </div>
+                </span>
               ))}
+            </motion.button>
+          ))}
+        </div>
+
+        {/* × */}
+        <span className="text-3xl font-thin text-slate-300 mt-6">×</span>
+
+        {/* Input vector */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Input</span>
+          {INPUT.map((v, i) => (
+            <div key={i}
+              className="w-14 h-[52px] rounded-2xl border-2 border-sky-200 bg-sky-50 flex items-center justify-center font-mono text-xl font-black text-sky-600">
+              {v}
             </div>
-          </motion.div>
-        )}
+          ))}
+        </div>
+
+        {/* = */}
+        <span className="text-3xl font-thin text-slate-300 mt-6">=</span>
+
+        {/* Output vector */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Output</span>
+          {outputs.map((v, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                backgroundColor: active === i ? LIGHT[i] : '#f8fafc',
+                borderColor:     active === i ? ACCENT[i] : '#e2e8f0',
+                scale:           active === i ? 1.08 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+              className="w-14 h-[52px] rounded-2xl border-2 flex items-center justify-center font-mono text-xl font-black"
+              style={{ color: active === i ? ACCENT[i] : '#94a3b8' }}
+            >
+              {v}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </SlideLayout>
   );
