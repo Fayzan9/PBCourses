@@ -10,9 +10,10 @@ import {
   Scene13_InteractivePlayground, Scene14_FinalModel 
 } from './scenes/Scenes';
 import {
-  Scene2_1_ProximityCuriosity, Scene2_2_EuclideanDistance, Scene2_2b_HighDimEuclidean,
-  Scene2_3_MagnitudeTrap, Scene2_4_CosineSimilarity, Scene2_4b_CosineMath,
-  Scene2_5_ProximitySandbox
+  Scene2_1_CuriosityHook, Scene2_2_HowDoWeCompare, Scene2_3_RealWorldProximity,
+  Scene2_4_EuclideanDistance, Scene2_5_HigherDimensions, Scene2_6_MagnitudeTrapQuestion,
+  Scene2_7_SameDifferent, Scene2_8_CosineIdea, Scene2_9_CosineSimilarity,
+  Scene2_10_CosineMath, Scene2_11_WhenToUseWhich, Scene2_12_ProximitySandbox
 } from './scenes/Chapter2Scenes';
 import {
   Scene3_1_CuriosityHook, Scene3_2_HowToMeasure, Scene3_3_RealWorldAnalogies,
@@ -74,13 +75,18 @@ const CHAPTERS = [
     title: "Measuring Proximity",
     subtitle: "Chapter 2: Similarity & Distance Metrics",
     scenes: [
-      { component: Scene2_1_ProximityCuriosity, title: "Proximity Curiosity" },
-      { component: Scene2_2_EuclideanDistance, title: "Euclidean Distance" },
-      { component: Scene2_2b_HighDimEuclidean, title: "Adding Dimensions (3D)" },
-      { component: Scene2_3_MagnitudeTrap, title: "The Magnitude Trap" },
-      { component: Scene2_4_CosineSimilarity, title: "Cosine Similarity" },
-      { component: Scene2_4b_CosineMath, title: "Inside Cosine Math" },
-      { component: Scene2_5_ProximitySandbox, title: "Proximity Sandbox" }
+      { component: Scene2_1_CuriosityHook,           title: "Near vs Far" },
+      { component: Scene2_2_HowDoWeCompare,           title: "Think: How Do We Compare?" },
+      { component: Scene2_3_RealWorldProximity,       title: "Proximity Everywhere" },
+      { component: Scene2_4_EuclideanDistance,        title: "Euclidean Distance" },
+      { component: Scene2_5_HigherDimensions,         title: "Scale to Any Dimension" },
+      { component: Scene2_6_MagnitudeTrapQuestion,    title: "Think: The Magnitude Trap" },
+      { component: Scene2_7_SameDifferent,            title: "Same Direction, Different Scale" },
+      { component: Scene2_8_CosineIdea,               title: "Think: Only Direction Matters" },
+      { component: Scene2_9_CosineSimilarity,         title: "Cosine Similarity" },
+      { component: Scene2_10_CosineMath,              title: "The Normalization Trick" },
+      { component: Scene2_11_WhenToUseWhich,          title: "Think: Which Metric?" },
+      { component: Scene2_12_ProximitySandbox,        title: "Proximity Sandbox" }
     ]
   },
   {
