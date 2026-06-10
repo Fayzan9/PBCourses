@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, BookOpen, HelpCircle } from 'lucide-react';
 import { 
   Scene1_Curiosity, Scene2_PersonRep, Scene3_PeoplePoints, 
-  Scene4_MovieSpace, Scene5_MusicSpace, Scene6_ProductSpace, 
+  Scene4_MovieSpace, Scene4b_ThreeDSpace, Scene4c_HighDimSpace,
+  Scene5_MusicSpace, Scene6_ProductSpace, 
   Scene7_ImageSpace, Scene8_LanguageSpace, Scene9_SemanticGalaxy, 
   Scene10_ChatGPTReveal, Scene11_Unification, Scene12_MathReveal, 
   Scene13_InteractivePlayground, Scene14_FinalModel 
@@ -14,6 +15,8 @@ const SCENES = [
   { component: Scene2_PersonRep, title: "Measurements to Numbers" },
   { component: Scene3_PeoplePoints, title: "People Become Locations" },
   { component: Scene4_MovieSpace, title: "Movie Space" },
+  { component: Scene4b_ThreeDSpace, title: "Adding a 3rd Dimension" },
+  { component: Scene4c_HighDimSpace, title: "Hyper-Dimensions" },
   { component: Scene5_MusicSpace, title: "Music Clustering" },
   { component: Scene6_ProductSpace, title: "Product Space" },
   { component: Scene7_ImageSpace, title: "Images are Grids" },
