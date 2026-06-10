@@ -70,3 +70,40 @@ export function eigenvector(M: Mat2, λ: number): Vec2 {
     return norm([0, 1]);
   }
 }
+
+// SVD helpers for 2×2 matrices
+// Returns { U, S: [σ1, σ2], Vt } where A ≈ U · diag(S) · Vt
+export interface SVD2 {
+  U: Mat2;
+  S: [number, number];
+  Vt: Mat2; // rows are right singular vectors transposed
+}
+
+export function svd2(A: Mat2): SVD2 {
+  // Compute AᵀA
+  const At: Mat2 = [[A[0][0], A[1][0]], [A[0][1], A[1][1]]];
+  const AtA: Mat2 = [
+    [At[0][0] * A[0][0] + At[0][1] * A[1][0], At[0][0] * A[0][1] + At[0][1] * A[1][1]],
+    [At[1][0] * A[0][0] + At[1][1] * A[1][0], At[1][0] * A[0][1] + At[1][1] * A[1][1]],
+  ];
+
+  // Eigenvalues of AᵀA
+  const evals = eigenvalues(AtA);
+  const [λ1, λ2] = evals ?? [0, 0];
+  const σ1 = Math.sqrt(Math.max(0, λ1));
+  const σ2 = Math.sqrt(Math.max(0, λ2));
+
+  // Right singular vectors (eigenvectors of AᵀA)
+  const v1 = eigenvector(AtA, λ1);
+  const v2: Vec2 = [-v1[1], v1[0]]; // perpendicular
+
+  // Left singular vectors u = Av / σ
+  const Av1 = mulMV(A, v1);
+  const u1: Vec2 = σ1 > 1e-10 ? [Av1[0] / σ1, Av1[1] / σ1] : [1, 0];
+  const u2: Vec2 = [-u1[1], u1[0]];
+
+  const U: Mat2 = [[u1[0], u2[0]], [u1[1], u2[1]]];
+  const Vt: Mat2 = [[v1[0], v1[1]], [v2[0], v2[1]]];
+
+  return { U, S: [σ1, σ2], Vt };
+}

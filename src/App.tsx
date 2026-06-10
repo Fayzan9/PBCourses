@@ -79,15 +79,24 @@ import {
   Scene5_22_NextHook,
 } from './scenes/chapter_5';
 import {
-  Scene6_1_CuriosityHook, Scene6_2_TheSquareProblem, Scene6_3_RealWorldNonSquare,
-  Scene6_4_ThreeMoveIdea, Scene6_5_RotateStretchRotate, Scene6_6_WhatIsU,
-  Scene6_7_WhatIsSigma, Scene6_8_WhatIsVt, Scene6_9_SingularValuesVsEigenvalues,
-  Scene6_10_RankAndSingularValues, Scene6_11_LowRankIdea, Scene6_12_ImageCompression,
-  Scene6_13_RecommenderIntuition, Scene6_14_LatentFactors, Scene6_15_SVDAndPCABridge,
-  Scene6_16_WhyNotEigen, Scene6_17_AttentionPreview, Scene6_18_NumericalStability,
-  Scene6_19_SVDInteractiveSandbox, Scene6_20_RecapTheThreeSteps, Scene6_21_GrandSummary,
-  Scene6_22_NextHook,
+  Scene6_1_CuriosityHook,
+  Scene6_2_TheProblem,
+  Scene6_3_ThinkRectangular,
+  Scene6_4_CircleToEllipse,
+  Scene6_5_StretchingContest,
+  Scene6_6_ChampionDirection,
+  Scene6_7_ThinkSecondBest,
+  Scene6_8_ThreeSteps,
+  Scene6_9_TheReveal,
+  Scene6_10_SingularValues,
+  Scene6_11_ThinkCompression,
+  Scene6_12_LowRankApprox,
+  Scene6_13_NetflixAnalogy,
+  Scene6_14_SVDSandbox,
+  Scene6_15_GrandSummary,
+  Scene6_16_NextHook,
 } from './scenes/chapter_6';
+
 
 const CHAPTERS = [
   {
@@ -219,32 +228,26 @@ const CHAPTERS = [
   {
     id: 6,
     title: "Singular Value Decomposition",
-    subtitle: "Chapter 6: Rotate · Stretch · Rotate",
+    subtitle: "Chapter 6: Every Matrix is Rotate → Stretch → Rotate",
     scenes: [
-      { component: Scene6_1_CuriosityHook, title: "Rotate. Stretch. Rotate." },
-      { component: Scene6_2_TheSquareProblem, title: "The Square Problem" },
-      { component: Scene6_3_RealWorldNonSquare, title: "Non-Square Is Everywhere" },
-      { component: Scene6_4_ThreeMoveIdea, title: "The 3-Move Idea" },
-      { component: Scene6_5_RotateStretchRotate, title: "Three Steps, One Matrix" },
-      { component: Scene6_6_WhatIsU, title: "What Is U?" },
-      { component: Scene6_7_WhatIsSigma, title: "What Is Σ?" },
-      { component: Scene6_8_WhatIsVt, title: "What Is Vᵀ?" },
-      { component: Scene6_9_SingularValuesVsEigenvalues, title: "Eigenvalues vs Singular Values" },
-      { component: Scene6_10_RankAndSingularValues, title: "Rank = Non-Zero σ's" },
-      { component: Scene6_11_LowRankIdea, title: "Keep Only What Matters" },
-      { component: Scene6_12_ImageCompression, title: "Image Compression Live" },
-      { component: Scene6_13_RecommenderIntuition, title: "Filling in the Blanks" },
-      { component: Scene6_14_LatentFactors, title: "Hidden Taste Dimensions" },
-      { component: Scene6_15_SVDAndPCABridge, title: "PCA = SVD in Disguise" },
-      { component: Scene6_16_WhyNotEigen, title: "Why Eigenvalues Break" },
-      { component: Scene6_17_AttentionPreview, title: "SVD in Transformers" },
-      { component: Scene6_18_NumericalStability, title: "The Safe Solver" },
-      { component: Scene6_19_SVDInteractiveSandbox, title: "SVD Sandbox" },
-      { component: Scene6_20_RecapTheThreeSteps, title: "The Full Picture" },
-      { component: Scene6_21_GrandSummary, title: "Everything You Now Know" },
-      { component: Scene6_22_NextHook, title: "What's Next" },
+      { component: Scene6_1_CuriosityHook,       title: "Are We Done?" },
+      { component: Scene6_2_TheProblem,           title: "The Problem with Eigenvectors" },
+      { component: Scene6_3_ThinkRectangular,     title: "Think: What About Rectangles?" },
+      { component: Scene6_4_CircleToEllipse,      title: "Circle → Ellipse" },
+      { component: Scene6_5_StretchingContest,    title: "The Stretching Contest" },
+      { component: Scene6_6_ChampionDirection,    title: "Champion Direction" },
+      { component: Scene6_7_ThinkSecondBest,      title: "Think: Second Best?" },
+      { component: Scene6_8_ThreeSteps,           title: "Three-Step Magic" },
+      { component: Scene6_9_TheReveal,            title: "A = UΣVᵀ Revealed" },
+      { component: Scene6_10_SingularValues,      title: "Singular Values" },
+      { component: Scene6_11_ThinkCompression,    title: "Think: Compression" },
+      { component: Scene6_12_LowRankApprox,       title: "Low-Rank Approximation" },
+      { component: Scene6_13_NetflixAnalogy,      title: "The Netflix Insight" },
+      { component: Scene6_14_SVDSandbox,          title: "SVD Sandbox" },
+      { component: Scene6_15_GrandSummary,        title: "Everything You Now Know" },
+      { component: Scene6_16_NextHook,            title: "What's Next" },
     ]
-  }
+  },
 ];
 
 const CHAPTER_THEMES = [
