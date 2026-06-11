@@ -110,7 +110,7 @@ export const Scene01_StoryHook: React.FC = () => {
           {[
             { label: 'Day', value: '01' },
             { label: 'Chapter', value: '1 of 15' },
-            { label: 'Goal', value: 'FAANG Ready' },
+            { label: 'Goal', value: 'Interview Ready' },
           ].map(item => (
             <div key={item.label} className="flex flex-col gap-0.5">
               <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">{item.label}</span>
@@ -172,7 +172,7 @@ export const Scene01_StoryHook: React.FC = () => {
           transition={{ delay: 5, duration: 1 }}
           className="text-slate-400 text-xs text-center mt-3 font-mono"
         >
-          Follow Maya from zero → FAANG ready.
+          Follow Maya from zero → interview ready.
         </motion.p>
       </motion.div>
     </div>

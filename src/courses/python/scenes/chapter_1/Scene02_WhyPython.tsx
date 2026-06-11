@@ -76,7 +76,7 @@ export const Scene02_WhyPython: React.FC = () => {
           One language. <span className="text-amber-500">Every industry.</span>
         </h2>
         <p className="text-slate-500 text-sm mt-1 leading-relaxed">
-          Python is the most in-demand language for FAANG hiring. Here's why it matters before we write a single line.
+          Python is the most in-demand language in the industry. Here's why it matters before we write a single line.
         </p>
       </motion.div>
 
