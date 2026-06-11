@@ -1,102 +1,151 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-type VarType = 'int' | 'float' | 'str' | 'bool' | 'none';
+type ObjKey = 'alice' | 'bob' | '42' | 'true' | 'list';
 
-const TYPES: {
-  key: VarType; label: string; example: string; value: string;
-  textColor: string; bgColor: string; borderColor: string; description: string;
-}[] = [
-  { key: 'int',   label: 'int',   example: 'age = 25',       value: '25',      textColor: 'text-amber-600',   bgColor: 'bg-amber-50',   borderColor: 'border-amber-300',   description: 'Whole numbers. Ages, counts, scores.' },
-  { key: 'float', label: 'float', example: 'price = 9.99',   value: '9.99',    textColor: 'text-sky-600',     bgColor: 'bg-sky-50',     borderColor: 'border-sky-300',     description: 'Decimal numbers. Money, measurements, percentages.' },
-  { key: 'str',   label: 'str',   example: 'name = "Alice"', value: '"Alice"', textColor: 'text-emerald-600', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-300', description: 'Text, always in quotes. Names, messages, URLs.' },
-  { key: 'bool',  label: 'bool',  example: 'active = True',  value: 'True',    textColor: 'text-violet-600',  bgColor: 'bg-violet-50',  borderColor: 'border-violet-300',  description: 'Just True or False. On/off, yes/no.' },
-  { key: 'none',  label: 'None',  example: 'result = None',  value: 'None',    textColor: 'text-slate-500',   bgColor: 'bg-slate-50',   borderColor: 'border-slate-300',   description: 'The absence of a value. An empty box waiting to be filled.' },
+const OBJECTS: { key: ObjKey; display: string; type: string; textColor: string; bg: string; border: string }[] = [
+  { key: 'alice', display: '"Alice"',   type: 'str',  textColor: 'text-sky-700',     bg: 'bg-sky-50',     border: 'border-sky-300' },
+  { key: 'bob',   display: '"Bob"',     type: 'str',  textColor: 'text-sky-700',     bg: 'bg-sky-50',     border: 'border-sky-300' },
+  { key: '42',    display: '42',        type: 'int',  textColor: 'text-amber-700',   bg: 'bg-amber-50',   border: 'border-amber-300' },
+  { key: 'true',  display: 'True',      type: 'bool', textColor: 'text-violet-700',  bg: 'bg-violet-50',  border: 'border-violet-300' },
+  { key: 'list',  display: '[1, 2, 3]', type: 'list', textColor: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-300' },
+];
+
+const STEPS = [
+  {
+    label: 'Assign',
+    code: 'name = "Alice"',
+    explanation: 'The label "name" now points to the string "Alice" in memory. Python created the object first, then attached the name to it.',
+  },
+  {
+    label: 'Reassign',
+    code: 'name = "Bob"',
+    explanation: 'The label moves to a new object. "Alice" is still in memory — it\'s just unlabelled now. Python\'s garbage collector cleans it up later.',
+  },
+  {
+    label: 'Multiple labels',
+    code: 'x = 42\ny = 42',
+    explanation: 'Python is smart — both x and y can point to the very same object in memory. No duplication needed.',
+  },
 ];
 
 export const Scene03_Variables: React.FC = () => {
-  const [active, setActive] = useState<VarType>('str');
-  const current = TYPES.find(t => t.key === active)!;
+  const [activeStep, setActiveStep] = useState(0);
+  const [nameTarget, setNameTarget] = useState<ObjKey>('alice');
+
+  const nameObj = OBJECTS.find(o => o.key === nameTarget)!;
 
   return (
-    <div className="h-full w-full flex flex-row items-stretch gap-8 px-8 py-5 overflow-hidden">
+    <div className="h-full w-full flex flex-col lg:flex-row px-8 py-5 gap-6 overflow-hidden">
 
-      {/* Left */}
-      <div className="flex-1 min-w-0 flex flex-col justify-center gap-5">
+      {/* Left — concept */}
+      <div className="flex-1 flex flex-col justify-center gap-5 min-w-0">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 03</span>
-          <h2 className="text-3xl lg:text-5xl font-black text-slate-800 mt-1 leading-[1.05]">
-            Variables are<br /><span className="text-amber-500">sticky notes.</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 03 · Variables</span>
+          <h2 className="text-3xl lg:text-4xl font-black text-slate-800 mt-1 leading-[1.1]">
+            Variables are labels,<br /><span className="text-amber-500">not boxes.</span>
           </h2>
-          <p className="text-slate-500 text-sm mt-3 leading-relaxed max-w-xs">
-            A variable is a <span className="font-bold text-slate-700">label</span> you stick onto a value. Python figures out the type automatically — you never declare it.
+          <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-sm">
+            Most beginners think a variable <em>contains</em> a value — like pouring water into a cup.
+            Python works differently: a variable is a <strong className="text-slate-700">sticky label</strong> that <em>points to</em> an object. You can move the label. The object stays.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {TYPES.map(t => (
+        {/* Steps */}
+        <div className="flex flex-col gap-2">
+          {STEPS.map((step, i) => (
             <button
-              key={t.key}
-              onClick={() => setActive(t.key)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all cursor-pointer ${
-                active === t.key
-                  ? `${t.bgColor} ${t.textColor} ${t.borderColor} shadow-sm`
-                  : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300 hover:text-slate-600'
+              key={i}
+              onClick={() => setActiveStep(i)}
+              className={`text-left px-4 py-3 rounded-2xl border-2 transition-all cursor-pointer ${
+                activeStep === i
+                  ? 'bg-amber-50 border-amber-300 shadow-sm'
+                  : 'bg-white border-slate-200 hover:border-amber-200 hover:bg-amber-50/40'
               }`}
             >
-              {t.label}
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center shrink-0 ${
+                  activeStep === i ? 'bg-amber-400 text-white' : 'bg-slate-100 text-slate-400'
+                }`}>{i + 1}</span>
+                <span className={`text-xs font-bold uppercase tracking-wider ${activeStep === i ? 'text-amber-600' : 'text-slate-500'}`}>
+                  {step.label}
+                </span>
+              </div>
+              <code className="font-mono text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg block w-fit">{step.code}</code>
+              <AnimatePresence>
+                {activeStep === i && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-xs text-slate-500 mt-2 leading-relaxed overflow-hidden"
+                  >
+                    {step.explanation}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </button>
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className={`rounded-2xl border-2 px-5 py-4 ${current.bgColor} ${current.borderColor}`}
-          >
-            <p className={`text-xs font-extrabold uppercase tracking-wider mb-1.5 ${current.textColor}`}>What is {current.label}?</p>
-            <p className="text-slate-700 text-sm leading-relaxed">{current.description}</p>
-            <div className={`mt-3 font-mono text-sm font-bold ${current.textColor}`}>{current.example}</div>
-          </motion.div>
-        </AnimatePresence>
+        <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-500 leading-relaxed">
+          <span className="text-amber-600 font-bold">Golden Rule:</span> In Python, everything is an object. Variables are just names that reference those objects.
+        </div>
       </div>
 
-      {/* Right: memory model */}
-      <div className="flex-1 min-w-0 flex flex-col items-center justify-center gap-5">
-        <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Memory Model</p>
+      {/* Right — interactive memory diagram */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 min-w-0">
+        <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400">Memory Diagram</p>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.92 }}
-            transition={{ type: 'spring', stiffness: 220, damping: 20 }}
-            className="bg-white border border-slate-200 rounded-3xl p-8 shadow-lg flex flex-col items-center gap-5 w-full max-w-xs"
-          >
-            <div className="bg-amber-100 border-2 border-amber-300 text-amber-800 font-mono font-extrabold text-lg px-6 py-2.5 rounded-xl shadow-sm">
-              {current.example.split(' =')[0].trim()}
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="w-0.5 h-6 bg-slate-300" />
-              <span className="text-slate-400 text-xs font-bold">points to</span>
-              <div className="w-0.5 h-4 bg-slate-300" />
-            </div>
-            <div className={`border-2 ${current.borderColor} ${current.bgColor} rounded-2xl px-7 py-4 text-center`}>
-              <p className={`text-xs font-extrabold uppercase tracking-wider mb-1 ${current.textColor}`}>{current.label}</p>
-              <p className={`font-mono font-black text-2xl ${current.textColor}`}>{current.value}</p>
-              <p className="font-mono text-xs text-slate-400 mt-1.5">id: 0x7f3c…</p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        {/* Variable label → object */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="bg-amber-50 border-2 border-amber-300 text-amber-800 font-mono font-black text-base px-6 py-2.5 rounded-xl shadow-sm">
+            name
+          </div>
+          <div className="w-px h-5 bg-slate-300" />
+          <span className="text-slate-400 text-[11px] font-mono">→ points to</span>
+          <div className="w-px h-4 bg-slate-300" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={nameTarget}
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+              className={`border-2 rounded-2xl px-6 py-4 text-center ${nameObj.bg} ${nameObj.border}`}
+            >
+              <div className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-1 ${nameObj.textColor} opacity-70`}>{nameObj.type}</div>
+              <div className={`font-mono font-black text-2xl ${nameObj.textColor}`}>{nameObj.display}</div>
+              <div className="text-slate-400 font-mono text-[10px] mt-1.5">
+                id: 0x{Math.abs(nameTarget.charCodeAt(0) * 7318).toString(16).padStart(6, '0')}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        <p className="text-xs text-slate-400 text-center leading-relaxed max-w-[200px]">
-          The label can be moved to any value at any time. Python handles memory for you.
-        </p>
+        {/* Object shelf */}
+        <div className="flex flex-col items-center gap-2 w-full max-w-xs">
+          <p className="text-[11px] text-slate-400 font-mono uppercase tracking-wider">— objects in memory —</p>
+          <div className="w-full bg-white border border-slate-200 rounded-2xl p-3 flex flex-wrap gap-2 justify-center">
+            {OBJECTS.map(obj => (
+              <button
+                key={obj.key}
+                onClick={() => setNameTarget(obj.key)}
+                className={`font-mono text-sm font-bold px-3 py-1.5 rounded-xl border-2 transition-all cursor-pointer ${obj.bg} ${obj.border} ${obj.textColor} ${
+                  nameTarget === obj.key
+                    ? 'ring-2 ring-amber-400 ring-offset-2 scale-105 shadow-sm'
+                    : 'opacity-50 hover:opacity-100'
+                }`}
+              >
+                {obj.display}
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-slate-400 text-center">
+            Click any object to reassign <code className="text-amber-600 font-mono">name</code>
+          </p>
+        </div>
       </div>
     </div>
   );
