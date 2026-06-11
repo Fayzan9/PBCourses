@@ -56,15 +56,6 @@ function arcPath(r: number, a1deg: number, a2deg: number): string {
   return `M ${x1} ${y1} A ${r} ${r} 0 ${large} ${sweep} ${x2} ${y2}`;
 }
 
-// Arrow tip polygon
-function arrowTip(vx: number, vy: number, len = 1): string {
-  const nx = sx(vx * len), ny = sy(vy * len);
-  const [dx, dy] = normalize([vx, vy]);
-  const px = -dy * 7, py = dx * 7;
-  const bx = nx - dx * 14, by = ny + dy * 14;
-  return `${nx},${ny} ${bx + px},${by - py} ${bx - px},${by + py}`;
-}
-
 export const Scene5_2_RubberSheetThink: React.FC = () => {
   const [selected, setSelected] = useState<number | null>(null);
   const [tried, setTried] = useState<Set<number>>(new Set());
@@ -93,8 +84,6 @@ export const Scene5_2_RubberSheetThink: React.FC = () => {
 
   const inputAngle  = sel ? angleDeg([sel.v[0], sel.v[1]]) : 0;
   const outputAngle = mv  ? angleDeg([mv[0], mv[1]]) : 0;
-  const inputLen    = sel ? Math.sqrt(sel.v[0]**2 + sel.v[1]**2) : 1;
-  const outputLen   = mv  ? Math.sqrt(mv[0]**2 + mv[1]**2) / SC * SC : 1;
 
   return (
     <div className="flex h-full w-full overflow-hidden">
