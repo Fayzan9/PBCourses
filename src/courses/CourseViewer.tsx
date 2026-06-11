@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, ArrowRight, BookOpen, HelpCircle, Menu, X,
-  ChevronDown, ChevronRight, ChevronLeft, Edit3, Home
+  ArrowLeft, ArrowRight, BookOpen, Menu, X, Check,
+  ChevronDown, ChevronLeft, Edit3, Settings, Moon
 } from 'lucide-react';
 
 export interface Scene {
@@ -66,6 +66,17 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
+  const [visitedScenes, setVisitedScenes] = useState<Set<string>>(new Set(['0-0']));
+
+  useEffect(() => {
+    const key = `${activeChapterIdx}-${currentSceneIdx}`;
+    setVisitedScenes(prev => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  }, [activeChapterIdx, currentSceneIdx]);
 
   const activeChapter = chapters[activeChapterIdx] || chapters[0];
   const activeScene = activeChapter?.scenes[currentSceneIdx] || activeChapter?.scenes[0];
@@ -144,21 +155,27 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
     }
   };
 
-  const jumpToScene = (idx: number) => {
-    setDirection(idx > currentSceneIdx ? 1 : -1);
-    setCurrentSceneIdx(idx);
+  const jumpToScene = (chapterIdx: number, sceneIdx: number) => {
+    setDirection(chapterIdx > activeChapterIdx || (chapterIdx === activeChapterIdx && sceneIdx > currentSceneIdx) ? 1 : -1);
+    setActiveChapterIdx(chapterIdx);
+    setCurrentSceneIdx(sceneIdx);
+    setIsSidebarOpen(false);
   };
 
   const selectChapter = (chapterIdx: number) => {
-    setDirection(chapterIdx > activeChapterIdx ? 1 : -1);
-    setActiveChapterIdx(chapterIdx);
-    setCurrentSceneIdx(0);
-    setExpandedChapterIdx(chapterIdx);
+    setExpandedChapterIdx(prev => prev === chapterIdx ? null : chapterIdx);
   };
 
-  const toggleChapterExpanded = (chapterIdx: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedChapterIdx(prev => prev === chapterIdx ? null : chapterIdx);
+
+  const totalCourseScenes = chapters.reduce((acc, ch) => acc + ch.scenes.length, 0);
+  const completedCourseScenes = visitedScenes.size;
+  const overallProgressPercent = Math.round((completedCourseScenes / totalCourseScenes) * 100);
+
+  const getChapterProgress = (chapterIdx: number) => {
+    const total = chapters[chapterIdx].scenes.length;
+    const completed = chapters[chapterIdx].scenes.filter((_, sIdx) => visitedScenes.has(`${chapterIdx}-${sIdx}`)).length;
+    const percent = Math.round((completed / total) * 100);
+    return { completed, total, percent };
   };
 
   const ActiveComponent = activeScene?.component;
@@ -193,47 +210,37 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const renderSidebar = (isCollapsed: boolean, isMobile: boolean) => {
     if (isCollapsed) {
       return (
-        <div className="flex flex-col h-full items-center justify-between py-2">
-          <button
-            onClick={onBack}
-            className="p-2.5 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-slate-900 transition-all cursor-pointer"
-            title="Back to Landing Page"
-          >
-            <Home size={20} />
-          </button>
+        <div className="flex flex-col h-full items-center justify-between py-4 w-full">
           <button
             onClick={() => setIsSidebarCollapsed(false)}
-            className="p-2.5 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
+            className="p-2.5 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-slate-900 transition-all cursor-pointer"
             title="Open Menu"
           >
-            <ChevronRight size={20} />
+            <Menu size={20} />
           </button>
-          <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded grayscale opacity-60" />
+          <div />
         </div>
       );
     }
 
     return (
-      <div className="flex flex-col h-full overflow-hidden select-none">
+      <div className={`flex flex-col h-full overflow-hidden select-none w-full ${isMobile ? 'p-5' : 'p-4'}`}>
         {/* Sidebar Header */}
-        <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 shrink-0">
-          <div className="flex items-center gap-2 truncate">
-            <button
-              onClick={onBack}
-              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer mr-1"
-              title="Back to courses"
-            >
-              <Home size={16} />
-            </button>
-            <img src="/channel_icon.png" alt="Productive Bros" className="w-6 h-6 rounded shadow-sm border border-slate-200 bg-white" />
-            <span className="font-extrabold text-sm text-slate-800 tracking-tight truncate">{courseName}</span>
+        <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100 shrink-0">
+          <div
+            onClick={onBack}
+            className="flex items-center gap-3 truncate cursor-pointer hover:opacity-80 transition-opacity"
+            title="Back to courses"
+          >
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-8 h-8 rounded shadow-sm border border-slate-200 bg-white" />
+            <span className="font-extrabold text-base text-slate-800 tracking-tight truncate">{courseName}</span>
           </div>
           {isMobile ? (
             <button
               onClick={() => setIsSidebarOpen(false)}
               className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
           ) : (
             <button
@@ -241,44 +248,62 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
               className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
               title="Collapse Menu"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={20} />
             </button>
           )}
         </div>
 
-        {/* Navigation tree */}
+        {/* Overall Course Progress Panel */}
+        <div className="bg-slate-50 rounded-2xl p-3 mb-4 border border-slate-100 shrink-0">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-xs font-mono font-bold text-slate-700">{completedCourseScenes} / {totalCourseScenes} lessons</span>
+            <span className="text-xs font-mono font-extrabold text-indigo-600">{overallProgressPercent}% Complete</span>
+          </div>
+          <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+            <div 
+              className="bg-indigo-600 h-full transition-all duration-500 ease-out" 
+              style={{ width: `${overallProgressPercent}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Chapters Accordion / Navigation tree */}
         <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-1.5 scrollbar-thin">
           {chapters.map((chapter, chIdx) => {
             const isActiveChapter = chIdx === activeChapterIdx;
             const isExpanded = expandedChapterIdx === chIdx;
             const theme = themes[chIdx] || DEFAULT_THEME;
+            const { percent } = getChapterProgress(chIdx);
 
             return (
-              <div key={chIdx} className="flex flex-col">
-                {/* Chapter Row */}
+              <div key={chIdx} className="flex flex-col border border-slate-100 rounded-xl overflow-hidden bg-white shrink-0">
+                {/* Chapter Row / Accordion Header */}
                 <div
                   onClick={() => selectChapter(chIdx)}
-                  className={`group w-full text-left py-2.5 px-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 border ${
+                  className={`w-full text-left py-2.5 px-3 transition-all cursor-pointer flex items-center justify-between border-b ${
                     isActiveChapter
-                      ? `${theme.bg} ${theme.text} ${theme.border} shadow-sm`
-                      : 'text-slate-600 hover:bg-slate-50 border-transparent hover:text-slate-900'
+                      ? `${theme.bg} ${theme.border} text-slate-800`
+                      : 'bg-slate-50/50 hover:bg-slate-50/80 text-slate-700 border-transparent'
                   }`}
                 >
-                  <button
-                    onClick={(e) => toggleChapterExpanded(chIdx, e)}
-                    className={`p-1 rounded-md hover:bg-slate-200/50 transition-colors cursor-pointer ${
-                      isActiveChapter ? 'text-slate-600' : 'text-slate-400 hover:text-slate-600'
-                    }`}
-                  >
+                  <div className="flex flex-col truncate pr-2">
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider ${isActiveChapter ? theme.text : 'text-slate-400'}`}>
+                      Chapter {chapter.id}
+                    </span>
+                    <span className="font-bold text-sm text-slate-800 truncate">{chapter.title}</span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {!isExpanded && (
+                      <span className="text-xs font-mono font-bold text-slate-400">{percent}%</span>
+                    )}
                     <ChevronDown
-                      size={12}
-                      className={`transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
+                      size={16}
+                      className={`text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : 'rotate-0'}`}
                     />
-                  </button>
-                  <span className="truncate">Ch {chapter.id}: {chapter.title}</span>
+                  </div>
                 </div>
 
-                {/* Scene list */}
+                {/* Scene list & Chapter Progress (only when expanded) */}
                 <AnimatePresence initial={false}>
                   {isExpanded && (
                     <motion.div
@@ -286,25 +311,43 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
+                      className="overflow-hidden bg-white"
                     >
-                      <div className="flex flex-col gap-0.5 pl-3 pr-1 py-1 ml-3 border-l border-slate-200/80">
+                      <div className="flex flex-col gap-0.5 px-2 py-1.5">
                         {chapter.scenes.map((scene, scIdx) => {
                           const isActive = isActiveChapter && scIdx === currentSceneIdx;
+                          const sceneKey = `${chIdx}-${scIdx}`;
+                          const isVisited = visitedScenes.has(sceneKey);
+
                           return (
                             <button
                               key={scIdx}
-                              onClick={() => jumpToScene(scIdx)}
-                              className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                              onClick={() => jumpToScene(chIdx, scIdx)}
+                              className={`w-full text-left px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-between group ${
                                 isActive
                                   ? 'bg-slate-900 text-white shadow-sm font-bold'
-                                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
                               }`}
                             >
-                              <span className={`text-[9px] font-mono shrink-0 ${isActive ? 'text-white/60' : 'text-slate-300'}`}>
-                                {String(scIdx + 1).padStart(2, '0')}
-                              </span>
-                              <span className="truncate">{scene.title}</span>
+                              <div className="flex items-center gap-2.5 truncate pr-2">
+                                <span className={`text-[11px] font-mono shrink-0 ${isActive ? 'text-white/60' : 'text-slate-400'}`}>
+                                  {String(scIdx + 1).padStart(2, '0')}
+                                </span>
+                                <span className="truncate">{scene.title}</span>
+                              </div>
+
+                              {/* Status indicators */}
+                              <div className="shrink-0 flex items-center justify-center">
+                                {isActive ? (
+                                  <div className="w-3 h-3 rounded-full bg-blue-500 ring-2 ring-white" />
+                                ) : isVisited ? (
+                                  <div className="w-5 h-5 rounded-full bg-green-500/15 border border-green-500 flex items-center justify-center">
+                                    <Check size={10} className="text-green-600 stroke-[3]" />
+                                  </div>
+                                ) : (
+                                  <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-300" />
+                                )}
+                              </div>
                             </button>
                           );
                         })}
@@ -317,19 +360,26 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
           })}
         </div>
 
-        {/* Footer */}
+        {/* Sidebar Footer with Settings & Dark Mode crescent icons */}
         <div className="pt-4 border-t border-slate-100 mt-auto shrink-0 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <img src="/channel_icon.png" alt="Productive Bros" className="w-4 h-4 rounded grayscale opacity-60" />
-            <span className="text-[10px] text-slate-400 font-mono font-bold">Productive Bros v1.0</span>
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded grayscale opacity-60" />
+            <span className="text-xs text-slate-400 font-mono font-bold">Productive Bros v1.0</span>
           </div>
-          <button
-            onClick={() => setIsSidebarCollapsed(true)}
-            className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
-            title="Collapse Menu"
-          >
-            <ChevronLeft size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
+              title="Settings"
+            >
+              <Settings size={18} />
+            </button>
+            <button
+              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
+              title="Toggle Theme"
+            >
+              <Moon size={18} />
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -346,9 +396,9 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
 
       {/* DESKTOP SIDEBAR - DOCKED (hidden on mobile) */}
       <motion.aside
-        animate={{ width: isSidebarCollapsed ? 88 : 320 }}
+        animate={{ width: isSidebarCollapsed ? 88 : 380 }}
         transition={{ type: 'spring', damping: 22, stiffness: 150 }}
-        className="hidden md:flex flex-col h-full bg-white border-r border-slate-200/80 shadow-md select-none shrink-0 overflow-hidden p-4 z-30"
+        className="hidden md:flex flex-col h-full bg-white border-r border-slate-200/80 shadow-md select-none shrink-0 overflow-hidden z-30"
       >
         {renderSidebar(isSidebarCollapsed, false)}
       </motion.aside>
@@ -372,7 +422,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute top-0 bottom-0 left-0 w-80 bg-white/95 backdrop-blur border-r border-slate-200 z-50 shadow-2xl flex flex-col p-5 overflow-hidden md:hidden"
+              className="absolute top-0 bottom-0 left-0 w-[380px] bg-white/95 backdrop-blur border-r border-slate-200 z-50 shadow-2xl flex flex-col overflow-hidden md:hidden"
             >
               {renderSidebar(false, true)}
             </motion.aside>
@@ -385,53 +435,40 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
         {/* HEADER SECTION */}
         <header className="w-full px-6 py-4 flex flex-row items-center justify-between gap-4 border-b border-slate-200/80 z-20 shrink-0">
           <div className="flex items-center gap-3">
+            {/* Mobile-only Menu toggle */}
             <button
-              onClick={() => {
-                if (window.innerWidth < 768) {
-                  setIsSidebarOpen(true);
-                } else {
-                  setIsSidebarCollapsed(prev => !prev);
-                }
-              }}
-              className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
-              title="Toggle sidebar"
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 md:hidden"
+              title="Open Menu"
             >
               <Menu size={20} />
             </button>
-
-            <button
-              onClick={onBack}
-              className="flex items-center justify-center p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95"
-              title="Back to Landing Page"
-            >
-              <Home size={20} />
-            </button>
             
-            <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-3">
               <div className={`p-2 rounded-xl border transition-all ${currentTheme.bg} ${currentTheme.border} ${currentTheme.text} ${currentTheme.glow}`}>
                 <BookOpen size={20} />
               </div>
-              <div>
-                <h1 className="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-                  {activeChapter?.title}
-                </h1>
-                <p className="text-xs text-slate-500 font-bold">
-                  {activeChapter?.subtitle}
-                </p>
-              </div>
+            </div>
+            <div>
+              <h1 className="text-sm sm:text-lg font-extrabold tracking-tight text-slate-800 line-clamp-1">
+                {activeChapter?.title}
+              </h1>
+              <p className="hidden md:block text-xs text-slate-500 font-bold">
+                {activeChapter?.subtitle}
+              </p>
             </div>
           </div>
 
           {/* Progress Tracker dots & Whiteboard Button */}
           <div className="flex items-center gap-4 shrink-0">
-            <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+            <div className="hidden md:flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
               {activeChapter?.scenes.map((scene, idx) => {
                 const isActive = idx === currentSceneIdx;
                 const theme = themes[activeChapterIdx] || DEFAULT_THEME;
                 return (
                   <button
                     key={idx}
-                    onClick={() => jumpToScene(idx)}
+                    onClick={() => jumpToScene(activeChapterIdx, idx)}
                     title={scene.title}
                     className={`h-2 rounded-full transition-all cursor-pointer ${
                       isActive 
@@ -446,7 +483,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
             {hasWhiteboard && (
               <button
                 onClick={() => setIsWhiteboardOpen(true)}
-                className="p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5"
+                className="hidden md:flex p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 items-center justify-center gap-1.5"
                 title="Open Whiteboard"
               >
                 <Edit3 size={16} className={currentTheme.text} />
@@ -477,15 +514,16 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
 
         {/* FOOTER CONTROLS BAR */}
         <footer className="w-full px-6 py-4 flex items-center justify-between border-t border-slate-200/80 bg-white/70 backdrop-blur z-20 shadow-sm shrink-0">
-          {/* Navigation Tips */}
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-mono font-semibold">
-            <HelpCircle size={14} className="text-slate-400" />
-            <span>Use</span>
-            <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Left</span>
-            <span className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Right</span>
-            <span>or</span>
-            <span className="px-3 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-600">Space</span>
-            <span>to explore</span>
+          {/* Branding */}
+          <div
+            onClick={onBack}
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            title="Back to Landing Page"
+          >
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded shadow-sm border border-slate-200 bg-white" />
+            <span className="font-mono text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+              Productive Bros
+            </span>
           </div>
 
           {/* Numeric progress indicator */}
