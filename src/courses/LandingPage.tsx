@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Terminal, Code2, Cpu, ArrowRight } from 'lucide-react';
+import { Terminal, Code2, Cpu, ArrowRight, BookOpen } from 'lucide-react';
 
 interface CourseCardProps {
   title: string;
@@ -65,7 +65,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
 };
 
 interface LandingPageProps {
-  onSelectCourse: (course: 'ai' | 'python' | 'javascript') => void;
+  onSelectCourse: (course: 'ai' | 'python' | 'javascript' | 'marathi') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
@@ -110,7 +110,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full"
         >
           <CourseCard
             title="AI & Neural Networks Intuition"
@@ -140,6 +140,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
             accentClass="text-yellow-600 group-hover:border-yellow-500/20"
             icon={<Code2 size={20} />}
             onClick={() => onSelectCourse('javascript')}
+          />
+
+          <CourseCard
+            title="Marathi Fundamentals"
+            description="Learn Marathi from scratch — Devanagari script, grammar, vocabulary, and cultural immersion, from beginner to advanced."
+            badge="Language Learning"
+            chaptersInfo="1 Chapter • Script & Sounds"
+            accentClass="text-orange-600 group-hover:border-orange-500/20"
+            icon={<BookOpen size={20} />}
+            onClick={() => onSelectCourse('marathi')}
           />
         </motion.div>
       </main>
