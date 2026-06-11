@@ -1,6 +1,7 @@
 import type { Chapter, ChapterTheme } from '../CourseViewer';
 import { chapter1 } from './scenes/chapter_1';
 import { Whiteboard } from '../ai/components/Whiteboard';
+import { LiveMarathiAgent } from './components/LiveMarathiAgent';
 
 export const marathiChapters: Chapter[] = [
   chapter1,
@@ -26,4 +27,6 @@ export const marathiConfig = {
   themes: marathiThemes,
   hasWhiteboard: true,
   WhiteboardComponent: Whiteboard,
+  hasLiveAgent: true,
+  LiveAgentComponent: LiveMarathiAgent,
 };

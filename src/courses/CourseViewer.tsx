@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, ArrowRight, BookOpen, Menu, X, Check,
-  ChevronDown, ChevronLeft, Presentation, Settings, Moon, Pen, Trash2, Terminal
+  ChevronDown, ChevronLeft, Presentation, Settings, Moon, Pen, Trash2, Terminal, Headphones
 } from 'lucide-react';
 
 export interface Scene {
@@ -37,6 +37,8 @@ interface CourseViewerProps {
   WhiteboardComponent?: React.ComponentType<{ onClose: () => void; activeChapterIdx: number }>;
   hasSandbox?: boolean;
   SandboxComponent?: React.ComponentType<{ onClose: () => void }>;
+  hasLiveAgent?: boolean;
+  LiveAgentComponent?: React.ComponentType<{ onClose: () => void }>;
   onBack: () => void;
 }
 
@@ -60,6 +62,8 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   WhiteboardComponent,
   hasSandbox = false,
   SandboxComponent,
+  hasLiveAgent = false,
+  LiveAgentComponent,
   onBack
 }) => {
   const [activeChapterIdx, setActiveChapterIdx] = useState(0);
@@ -71,6 +75,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
   const [isSandboxOpen, setIsSandboxOpen] = useState(false);
+  const [isLiveAgentOpen, setIsLiveAgentOpen] = useState(false);
   const [visitedScenes, setVisitedScenes] = useState<Set<string>>(new Set(['0-0']));
   const [isPenActive, setIsPenActive] = useState(false);
   const [penColor, setPenColor] = useState('#EF4444');
@@ -676,6 +681,17 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
                   <Terminal size={16} className={currentTheme.text} />
                 </button>
               )}
+
+              {hasLiveAgent && (
+                <button
+                  onClick={() => setIsLiveAgentOpen(true)}
+                  className="p-2.5 hover:bg-slate-105 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-600 transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-sm hover:shadow"
+                  title="Open Live Marathi AI Tutor"
+                >
+                  <Headphones size={16} />
+                  <span className="text-xs font-bold hidden sm:inline">AI Tutor</span>
+                </button>
+              )}
             </div>
           </div>
         </header>
@@ -787,6 +803,25 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
             >
               <SandboxComponent 
                 onClose={() => setIsSandboxOpen(false)} 
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
+
+      {/* Live Agent Overlay */}
+      {hasLiveAgent && LiveAgentComponent && (
+        <AnimatePresence>
+          {isLiveAgentOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 z-50"
+            >
+              <LiveAgentComponent 
+                onClose={() => setIsLiveAgentOpen(false)} 
               />
             </motion.div>
           )}

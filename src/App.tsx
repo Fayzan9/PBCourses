@@ -84,6 +84,8 @@ export const App: React.FC = () => {
               themes={marathiConfig.themes}
               hasWhiteboard={marathiConfig.hasWhiteboard}
               WhiteboardComponent={marathiConfig.WhiteboardComponent}
+              hasLiveAgent={marathiConfig.hasLiveAgent}
+              LiveAgentComponent={marathiConfig.LiveAgentComponent}
               onBack={() => setCurrentCourse(null)}
             />
           </motion.div>

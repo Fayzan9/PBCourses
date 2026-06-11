@@ -14,6 +14,9 @@ import { Scene11_ReadingWords } from './Scene11_ReadingWords';
 import { Scene12_WritingPractice } from './Scene12_WritingPractice';
 import { Scene13_ChapterSummary } from './Scene13_ChapterSummary';
 import { Scene14_NextHook } from './Scene14_NextHook';
+import { Quiz01_LetterRecognition } from './Quiz01_LetterRecognition';
+import { Quiz02_MatraChallenge } from './Quiz02_MatraChallenge';
+import { Quiz03_WordBlitz } from './Quiz03_WordBlitz';
 
 export const chapter1: Chapter = {
   id: 1,
@@ -33,6 +36,9 @@ export const chapter1: Chapter = {
     { component: Scene11_ReadingWords,        title: 'Read Real Words' },
     { component: Scene12_WritingPractice,     title: 'Writing Practice' },
     { component: Scene13_ChapterSummary,      title: 'Chapter Summary' },
+    { component: Quiz01_LetterRecognition,    title: 'Quiz — Name That Letter' },
+    { component: Quiz02_MatraChallenge,       title: 'Quiz — Matra Challenge' },
+    { component: Quiz03_WordBlitz,            title: 'Quiz — Word Blitz' },
     { component: Scene14_NextHook,            title: "What's Next" },
   ],
 };
