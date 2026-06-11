@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, ArrowRight, BookOpen, Menu, X, Check,
-  ChevronDown, ChevronLeft, Presentation, Settings, Moon, Pen, Trash2
+  ChevronDown, ChevronLeft, Presentation, Settings, Moon, Pen, Trash2, Terminal
 } from 'lucide-react';
 
 export interface Scene {
@@ -35,6 +35,8 @@ interface CourseViewerProps {
   themes?: ChapterTheme[];
   hasWhiteboard?: boolean;
   WhiteboardComponent?: React.ComponentType<{ onClose: () => void; activeChapterIdx: number }>;
+  hasSandbox?: boolean;
+  SandboxComponent?: React.ComponentType<{ onClose: () => void }>;
   onBack: () => void;
 }
 
@@ -56,6 +58,8 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   themes = [],
   hasWhiteboard = false,
   WhiteboardComponent,
+  hasSandbox = false,
+  SandboxComponent,
   onBack
 }) => {
   const [activeChapterIdx, setActiveChapterIdx] = useState(0);
@@ -66,6 +70,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
+  const [isSandboxOpen, setIsSandboxOpen] = useState(false);
   const [visitedScenes, setVisitedScenes] = useState<Set<string>>(new Set(['0-0']));
   const [isPenActive, setIsPenActive] = useState(false);
   const [penColor, setPenColor] = useState('#EF4444');
@@ -661,6 +666,16 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
                   <Presentation size={16} className={currentTheme.text} />
                 </button>
               )}
+
+              {hasSandbox && (
+                <button
+                  onClick={() => setIsSandboxOpen(true)}
+                  className="p-2.5 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  title="Open Python Sandbox"
+                >
+                  <Terminal size={16} className={currentTheme.text} />
+                </button>
+              )}
             </div>
           </div>
         </header>
@@ -753,6 +768,25 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
               <WhiteboardComponent 
                 onClose={() => setIsWhiteboardOpen(false)} 
                 activeChapterIdx={activeChapterIdx}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
+
+      {/* Sandbox Overlay */}
+      {hasSandbox && SandboxComponent && (
+        <AnimatePresence>
+          {isSandboxOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 z-50"
+            >
+              <SandboxComponent 
+                onClose={() => setIsSandboxOpen(false)} 
               />
             </motion.div>
           )}

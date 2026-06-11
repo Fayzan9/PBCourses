@@ -59,6 +59,10 @@ export const App: React.FC = () => {
               courseName={pythonConfig.courseName}
               chapters={pythonConfig.chapters}
               themes={pythonConfig.themes}
+              hasSandbox={pythonConfig.hasSandbox}
+              SandboxComponent={pythonConfig.SandboxComponent}
+              hasWhiteboard={pythonConfig.hasWhiteboard}
+              WhiteboardComponent={pythonConfig.WhiteboardComponent}
               onBack={() => setCurrentCourse(null)}
             />
           </motion.div>

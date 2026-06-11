@@ -1,5 +1,7 @@
 import type { Chapter, ChapterTheme } from '../CourseViewer';
 import { chapter1 } from './scenes/chapter_1';
+import { PythonSandbox } from './components/PythonSandbox';
+import { Whiteboard } from '../ai/components/Whiteboard';
 
 export const pythonChapters: Chapter[] = [
   chapter1,
@@ -83,4 +85,8 @@ export const pythonConfig = {
   courseName: 'Python Programming Essentials',
   chapters: pythonChapters,
   themes: pythonThemes,
+  hasSandbox: true,
+  SandboxComponent: PythonSandbox,
+  hasWhiteboard: true,
+  WhiteboardComponent: Whiteboard,
 };

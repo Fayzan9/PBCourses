@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, RotateCcw, ChevronRight, Terminal } from 'lucide-react';
+import { Play, RotateCcw, ChevronRight, Terminal, Loader2 } from 'lucide-react';
+import { getOrLoadPyodide, runPythonCode } from '../../utils/pyodideRunner';
 
 const CHALLENGES = [
   {
@@ -41,11 +42,6 @@ const CHALLENGES = [
   },
 ];
 
-function simulate(code: string, expected: string): string {
-  if (code.includes('print')) return expected;
-  return '(no output — add a print() statement)';
-}
-
 export const Scene10_CodingSandbox: React.FC = () => {
   const [idx, setIdx] = useState(0);
   const challenge = CHALLENGES[idx];
@@ -53,6 +49,15 @@ export const Scene10_CodingSandbox: React.FC = () => {
   const [output, setOutput] = useState<string | null>(null);
   const [correct, setCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(false);
+  const [pyodideReady, setPyodideReady] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    getOrLoadPyodide()
+      .then(() => setPyodideReady(true))
+      .catch(() => {});
+  }, []);
 
   const handleSelect = (i: number) => {
     setIdx(i);
@@ -62,10 +67,28 @@ export const Scene10_CodingSandbox: React.FC = () => {
     setShowHint(false);
   };
 
-  const handleRun = () => {
-    const result = simulate(code, challenge.expected);
-    setOutput(result);
-    setCorrect(result.trim() === challenge.expected.trim());
+  const handleRun = async () => {
+    if (isRunning) return;
+    setIsRunning(true);
+    setOutput('Running code...');
+
+    try {
+      const result = await runPythonCode(code);
+      if (result.error) {
+        setOutput(result.error);
+        setCorrect(false);
+        return;
+      }
+
+      const finalOutput = result.stdout;
+      setOutput(finalOutput || '(Execution finished successfully, but produced no output. Did you print() anything?)');
+      setCorrect(finalOutput.trim() === challenge.expected.trim());
+    } catch (err: any) {
+      setOutput(err.message || String(err));
+      setCorrect(false);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   const handleReset = () => {
@@ -73,6 +96,22 @@ export const Scene10_CodingSandbox: React.FC = () => {
     setOutput(null);
     setCorrect(null);
     setShowHint(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = e.currentTarget.selectionStart;
+      const end = e.currentTarget.selectionEnd;
+      const newValue = code.substring(0, start) + '    ' + code.substring(end);
+      setCode(newValue);
+
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = textareaRef.current.selectionEnd = start + 4;
+        }
+      }, 0);
+    }
   };
 
   return (
@@ -157,8 +196,10 @@ export const Scene10_CodingSandbox: React.FC = () => {
 
           {/* Textarea */}
           <textarea
+            ref={textareaRef}
             value={code}
             onChange={e => { setCode(e.target.value); setOutput(null); setCorrect(null); }}
+            onKeyDown={handleKeyDown}
             spellCheck={false}
             className="flex-1 min-h-0 bg-slate-900 text-slate-200 font-mono text-sm px-6 py-5 resize-none outline-none leading-7 w-full"
           />
@@ -168,9 +209,25 @@ export const Scene10_CodingSandbox: React.FC = () => {
         <div className="flex items-center gap-3 shrink-0 flex-wrap">
           <button
             onClick={handleRun}
-            className="flex items-center gap-2.5 px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-white rounded-xl text-sm font-extrabold shadow-lg active:scale-95 transition-all cursor-pointer"
+            disabled={!pyodideReady || isRunning}
+            className="flex items-center gap-2.5 px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-white rounded-xl text-sm font-extrabold shadow-lg active:scale-95 transition-all cursor-pointer disabled:opacity-60"
           >
-            <Play size={14} /> Run Code
+            {isRunning ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>Running...</span>
+              </>
+            ) : !pyodideReady ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>Loading Wasm Engine...</span>
+              </>
+            ) : (
+              <>
+                <Play size={14} />
+                <span>Run Code</span>
+              </>
+            )}
           </button>
           <button
             onClick={handleReset}
@@ -213,7 +270,7 @@ export const Scene10_CodingSandbox: React.FC = () => {
             <Terminal size={13} className="text-slate-500" />
             <span className="font-mono text-xs text-slate-500">output</span>
           </div>
-          <div className={`bg-slate-950 px-6 py-4 font-mono text-sm min-h-[52px] transition-colors ${
+          <div className={`bg-slate-950 px-6 py-4 font-mono text-sm min-h-[52px] transition-colors whitespace-pre-wrap ${
             correct === true  ? 'text-emerald-400' :
             correct === false ? 'text-rose-400' :
             'text-slate-500'
