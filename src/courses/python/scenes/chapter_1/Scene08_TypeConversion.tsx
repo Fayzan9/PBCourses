@@ -42,9 +42,9 @@ export const Scene08_TypeConversion: React.FC = () => {
   const style = TYPE_STYLES[from];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
+    <div className="h-full w-full flex flex-row items-stretch gap-8 px-8 py-5 overflow-hidden">
       {/* Left */}
-      <div className="flex-1 flex flex-col gap-7">
+      <div className="flex-1 min-w-0 flex flex-col justify-center gap-5">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 08</span>
           <h2 className="text-4xl md:text-6xl font-black text-slate-800 mt-2 leading-[1.05]">
@@ -89,7 +89,7 @@ export const Scene08_TypeConversion: React.FC = () => {
       </div>
 
       {/* Right: conversion results */}
-      <div className="flex-1 flex flex-col gap-4">
+      <div className="flex-1 min-w-0 flex flex-col justify-center gap-3">
         <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
           Conversions from <span className={`font-mono ${style.text}`}>{from}</span>:
         </p>

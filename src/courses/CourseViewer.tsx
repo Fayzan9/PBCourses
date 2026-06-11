@@ -676,7 +676,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="w-full h-full flex items-center justify-center"
+                className="w-full h-full flex items-start lg:items-center justify-center overflow-y-auto overflow-x-hidden scrollbar-none"
               >
                 {ActiveComponent && <ActiveComponent />}
               </motion.div>

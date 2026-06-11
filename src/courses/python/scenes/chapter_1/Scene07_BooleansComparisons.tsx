@@ -25,9 +25,9 @@ export const Scene07_BooleansComparisons: React.FC = () => {
   const current = CMP_OPS[activeOp];
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
+    <div className="h-full w-full flex flex-row items-stretch gap-8 px-8 py-5 overflow-hidden">
       {/* Left */}
-      <div className="flex-1 flex flex-col gap-7">
+      <div className="flex-1 min-w-0 flex flex-col justify-center gap-5">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 07</span>
           <h2 className="text-4xl md:text-6xl font-black text-slate-800 mt-2 leading-[1.05]">
@@ -80,13 +80,13 @@ export const Scene07_BooleansComparisons: React.FC = () => {
       </div>
 
       {/* Right: truthiness */}
-      <div className="flex-1 flex flex-col gap-5">
+      <div className="flex-1 min-w-0 flex flex-col justify-center gap-4">
         <div>
           <p className="text-base font-extrabold text-slate-700">Truthiness — the secret boolean rule</p>
           <p className="text-sm text-slate-500 mt-1">In Python, any value can act as a boolean. Most things are <span className="text-emerald-600 font-bold">truthy</span>. A few are <span className="text-rose-500 font-bold">falsy</span>.</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-2">
+        <div className="flex flex-col gap-1.5 overflow-hidden">
           {TRUTHINESS.map((t, i) => (
             <motion.div
               key={t.val}

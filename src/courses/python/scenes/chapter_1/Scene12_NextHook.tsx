@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export const Scene12_NextHook: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full w-full px-8 text-center relative overflow-hidden">
+  <div className="flex flex-col items-center justify-center min-h-full w-full px-4 py-8 text-center relative overflow-hidden">
     {/* Ambient glow */}
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-sky-400/10 filter blur-[160px] pointer-events-none" />
 

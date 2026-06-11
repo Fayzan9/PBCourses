@@ -20,7 +20,7 @@ export const Scene06_StringMethods: React.FC = () => {
   const output = active.fn(input);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
+    <div className="h-full w-full flex flex-row items-stretch gap-8 px-8 py-5 overflow-hidden">
       {/* Left */}
       <div className="flex-1 flex flex-col gap-7">
         <div>

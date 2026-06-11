@@ -62,7 +62,7 @@ export const Scene11_ChapterSummary: React.FC = () => {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col h-full w-full max-w-7xl mx-auto px-8 py-6 gap-6">
+    <div className="h-full w-full flex flex-col px-8 py-5 gap-4 overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export const Scene11_ChapterSummary: React.FC = () => {
         <p className="text-slate-500 text-base mt-2">Click any card to zoom in.</p>
       </motion.div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-1">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 flex-1 min-h-0 overflow-hidden">
         {CONCEPTS.map((c, i) => (
           <motion.div
             key={i}

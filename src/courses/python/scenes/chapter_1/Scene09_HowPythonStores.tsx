@@ -95,9 +95,9 @@ export const Scene09_HowPythonStores: React.FC = () => {
   const Diagram = current.diagram;
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
+    <div className="h-full w-full flex flex-row items-stretch gap-8 px-8 py-5 overflow-hidden">
       {/* Left */}
-      <div className="flex-1 flex flex-col gap-7">
+      <div className="flex-1 min-w-0 flex flex-col justify-center gap-5">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 09</span>
           <h2 className="text-4xl md:text-5xl font-black text-slate-800 mt-2 leading-[1.1]">
@@ -158,7 +158,7 @@ export const Scene09_HowPythonStores: React.FC = () => {
       </div>
 
       {/* Right: diagram + insight */}
-      <div className="flex-1 flex flex-col items-center gap-6">
+      <div className="flex-1 min-w-0 flex flex-col items-center justify-center gap-5">
         <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Memory Diagram</p>
 
         <AnimatePresence mode="wait">
