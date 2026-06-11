@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, ArrowRight, BookOpen, Menu, X, Check,
-  ChevronDown, ChevronLeft, Edit3, Settings, Moon
+  ChevronDown, ChevronLeft, Presentation, Settings, Moon, Pen, Trash2
 } from 'lucide-react';
 
 export interface Scene {
@@ -67,6 +67,123 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
   const [visitedScenes, setVisitedScenes] = useState<Set<string>>(new Set(['0-0']));
+  const [isPenActive, setIsPenActive] = useState(false);
+  const [penColor, setPenColor] = useState('#EF4444');
+  const [penWidth] = useState(3.5);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const isDrawingRef = React.useRef(false);
+  const lastPointRef = React.useRef<{ x: number; y: number } | null>(null);
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const getPenCursor = () => {
+    const colorEncoded = penColor.replace('#', '%23');
+    return `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='${colorEncoded}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'/></svg>") 3 20, crosshair`;
+  };
+
+  const resizeCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !canvas.parentElement) return;
+    
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    if (tempCtx) {
+      tempCtx.drawImage(canvas, 0, 0);
+    }
+    
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, canvas.width, canvas.height);
+    }
+  };
+
+  useEffect(() => {
+    if (isPenActive) {
+      const timer = setTimeout(resizeCanvas, 50);
+      window.addEventListener('resize', resizeCanvas);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('resize', resizeCanvas);
+      };
+    }
+  }, [isPenActive]);
+
+  useEffect(() => {
+    clearCanvas();
+  }, [activeChapterIdx, currentSceneIdx]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isPenActive) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.setPointerCapture(e.pointerId);
+    isDrawingRef.current = true;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    lastPointRef.current = { x, y };
+    
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.strokeStyle = penColor;
+    ctx.lineWidth = penWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDrawingRef.current || !isPenActive) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    ctx.beginPath();
+    if (lastPointRef.current) {
+      ctx.moveTo(lastPointRef.current.x, lastPointRef.current.y);
+    } else {
+      ctx.moveTo(x, y);
+    }
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = penColor;
+    ctx.lineWidth = penWidth;
+    ctx.stroke();
+    
+    lastPointRef.current = { x, y };
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDrawingRef.current) return;
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.releasePointerCapture(e.pointerId);
+    }
+    isDrawingRef.current = false;
+    lastPointRef.current = null;
+  };
 
   useEffect(() => {
     const key = `${activeChapterIdx}-${currentSceneIdx}`;
@@ -479,16 +596,72 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
               })}
             </div>
 
-            {hasWhiteboard && (
-              <button
-                onClick={() => setIsWhiteboardOpen(true)}
-                className="hidden md:flex p-2 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 items-center justify-center gap-1.5"
-                title="Open Whiteboard"
-              >
-                <Edit3 size={16} className={currentTheme.text} />
-                <span className="hidden sm:inline text-xs font-extrabold text-slate-700">Whiteboard</span>
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {/* Pen / Inline Drawing Toggle */}
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl p-1 shrink-0">
+                <button
+                  onClick={() => setIsPenActive(!isPenActive)}
+                  className={`p-1.5 rounded-lg transition-all cursor-pointer active:scale-95 flex items-center justify-center ${
+                    isPenActive 
+                      ? 'bg-slate-900 text-white shadow' 
+                      : 'text-slate-600 hover:bg-slate-200/50'
+                  }`}
+                  title="Draw on screen"
+                >
+                  <Pen size={16} />
+                </button>
+                
+                {isPenActive && (
+                  <AnimatePresence>
+                    <motion.div
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: 'auto' }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="flex items-center gap-1 overflow-hidden pl-1 pr-0.5 border-l border-slate-200/85 ml-1 shrink-0"
+                    >
+                      {[
+                        { color: '#EF4444', name: 'Red' },
+                        { color: '#3B82F6', name: 'Blue' },
+                        { color: '#10B981', name: 'Green' },
+                        { color: '#F59E0B', name: 'Orange' },
+                        { color: '#000000', name: 'Black' }
+                      ].map((c) => (
+                        <button
+                          key={c.color}
+                          onClick={() => setPenColor(c.color)}
+                          className={`w-4 h-4 rounded-full border transition-all cursor-pointer hover:scale-110 active:scale-95 ${
+                            penColor === c.color 
+                              ? 'border-slate-800 ring-2 ring-indigo-500/50' 
+                              : 'border-slate-300'
+                          }`}
+                          style={{ backgroundColor: c.color }}
+                          title={`Select ${c.name} Pen`}
+                        />
+                      ))}
+                      
+                      {/* Clear Canvas button */}
+                      <button
+                        onClick={clearCanvas}
+                        className="p-1 hover:bg-slate-200 rounded text-slate-500 hover:text-red-500 transition-colors ml-1 cursor-pointer"
+                        title="Clear Sketch"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+              </div>
+
+              {hasWhiteboard && (
+                <button
+                  onClick={() => setIsWhiteboardOpen(true)}
+                  className="p-2.5 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-600 transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  title="Open Whiteboard"
+                >
+                  <Presentation size={16} className={currentTheme.text} />
+                </button>
+              )}
+            </div>
           </div>
         </header>
 
@@ -508,6 +681,18 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
                 {ActiveComponent && <ActiveComponent />}
               </motion.div>
             </AnimatePresence>
+
+            {/* Drawing Canvas Overlay */}
+            {isPenActive && (
+              <canvas
+                ref={canvasRef}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                className="absolute inset-0 w-full h-full z-30 touch-none"
+                style={{ cursor: getPenCursor() }}
+              />
+            )}
           </div>
         </main>
 

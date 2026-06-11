@@ -6,106 +6,135 @@ const CHARS = WORD.split('');
 
 export const Scene05_StringsIndexing: React.FC = () => {
   const [hovered, setHovered] = useState<number | null>(null);
-  const [sliceStart, setSliceStart] = useState(1);
-  const [sliceEnd, setSliceEnd] = useState(4);
+  const [sliceStart, setSliceStart] = useState(0);
+  const [sliceEnd, setSliceEnd] = useState(3);
 
   const sliceResult = WORD.slice(sliceStart, sliceEnd);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-8 h-full w-full max-w-5xl mx-auto px-4 py-4">
+    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
       {/* Left */}
-      <div className="flex-1 flex flex-col gap-5">
+      <div className="flex-1 flex flex-col gap-7">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 05</span>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-1 leading-tight">
-            Strings & Indexing
+          <h2 className="text-4xl md:text-6xl font-black text-slate-800 mt-2 leading-[1.05]">
+            Strings are like<br />
+            <span className="text-amber-500">a bead necklace.</span>
           </h2>
-          <p className="text-slate-500 text-sm mt-2 leading-relaxed">
-            A string is a <span className="font-bold text-slate-700">sequence of characters</span>. Python gives each character an index starting at <span className="font-mono font-bold text-amber-600">0</span>. Negative indices count from the end.
+          <p className="text-slate-500 text-base mt-4 leading-relaxed max-w-sm">
+            Each character sits at a numbered position starting at <span className="font-mono font-extrabold text-amber-600">0</span>. You can grab any single bead, or yank out a stretch with a <span className="font-bold text-slate-700">slice</span>.
           </p>
         </div>
 
-        {/* String creation */}
-        <div className="bg-slate-900 rounded-xl px-5 py-4 font-mono text-sm text-slate-200 flex flex-col gap-1.5">
-          <span className="text-slate-500"># Three ways to create a string</span>
-          <span>s1 = <span className="text-emerald-400">'single quotes'</span></span>
-          <span>s2 = <span className="text-emerald-400">"double quotes"</span></span>
-          <span>s3 = <span className="text-emerald-400">"""triple for</span></span>
-          <span className="text-emerald-400">   multi-line"""</span>
+        {/* Creation syntax */}
+        <div className="bg-slate-900 rounded-2xl px-6 py-5 font-mono text-sm leading-7 border border-slate-800">
+          <span className="text-slate-500"># Three ways to create a string</span><br />
+          <span className="text-sky-300">greeting</span><span className="text-slate-400"> = </span><span className="text-emerald-400">'single quotes work'</span><br />
+          <span className="text-sky-300">name</span><span className="text-slate-400">    = </span><span className="text-emerald-400">"double quotes too"</span><br />
+          <span className="text-sky-300">essay</span><span className="text-slate-400">   = </span><span className="text-emerald-400">"""triple for<br />multi-line text"""</span>
         </div>
 
         {/* Slice controls */}
-        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-3 shadow-sm">
-          <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500">Slice Explorer: <span className="font-mono text-amber-600">"{WORD}"[{sliceStart}:{sliceEnd}]</span></p>
-          <div className="flex gap-4">
+        <div className="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500">Slice Explorer</p>
+            <span className="font-mono text-sm font-extrabold text-amber-600">
+              "Python"[{sliceStart}:{sliceEnd}]
+            </span>
+          </div>
+          <div className="flex gap-5">
             <div className="flex-1">
-              <label className="text-xs text-slate-500 font-bold">start: {sliceStart}</label>
+              <label className="text-xs text-slate-400 font-bold">start index: {sliceStart}</label>
               <input type="range" min={0} max={WORD.length} value={sliceStart}
                 onChange={e => setSliceStart(Math.min(Number(e.target.value), sliceEnd))}
-                className="w-full accent-amber-500 cursor-pointer" />
+                className="w-full accent-amber-500 cursor-pointer mt-1.5" />
             </div>
             <div className="flex-1">
-              <label className="text-xs text-slate-500 font-bold">end: {sliceEnd}</label>
+              <label className="text-xs text-slate-400 font-bold">end index: {sliceEnd}</label>
               <input type="range" min={0} max={WORD.length} value={sliceEnd}
                 onChange={e => setSliceEnd(Math.max(Number(e.target.value), sliceStart))}
-                className="w-full accent-amber-500 cursor-pointer" />
+                className="w-full accent-amber-500 cursor-pointer mt-1.5" />
             </div>
           </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-center font-mono font-extrabold text-amber-700 text-lg">
-            "{sliceResult || '(empty)'}"
+          <div className="bg-amber-50 border-2 border-amber-300 rounded-xl px-5 py-3 text-center">
+            <span className="font-mono font-black text-amber-700 text-2xl">
+              "{sliceResult || '(empty)'}"
+            </span>
           </div>
         </div>
       </div>
 
       {/* Right: index visualizer */}
-      <div className="flex-1 flex flex-col items-center gap-6">
-        <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Hover a character</p>
+      <div className="flex-1 flex flex-col items-center gap-8">
+        <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Hover any character</p>
 
-        {/* Positive indices */}
-        <div className="flex flex-col items-center gap-1 w-full">
-          <div className="flex gap-2">
+        {/* Character boxes */}
+        <div className="flex flex-col items-center gap-6">
+          {/* Positive indices above */}
+          <div className="flex gap-3">
             {CHARS.map((ch, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <span className="text-[10px] font-mono font-bold text-slate-400">{i}</span>
+              <div key={i} className="flex flex-col items-center gap-2">
+                <motion.span
+                  animate={{ opacity: hovered === i ? 1 : 0.4 }}
+                  className="text-xs font-mono font-extrabold text-amber-500"
+                >
+                  {i}
+                </motion.span>
                 <motion.div
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
-                  animate={{ scale: hovered === i ? 1.15 : 1 }}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center font-mono font-extrabold text-lg border-2 cursor-default transition-colors ${
+                  animate={{
+                    scale: hovered === i ? 1.2 : 1,
+                    y: hovered === i ? -4 : 0,
+                  }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center font-mono font-extrabold text-2xl border-2 cursor-default select-none transition-colors duration-150 ${
                     i >= sliceStart && i < sliceEnd
-                      ? 'bg-amber-100 border-amber-400 text-amber-700'
+                      ? 'bg-amber-100 border-amber-400 text-amber-700 shadow-md'
                       : hovered === i
-                      ? 'bg-sky-100 border-sky-400 text-sky-700'
+                      ? 'bg-sky-100 border-sky-400 text-sky-700 shadow-lg'
                       : 'bg-white border-slate-200 text-slate-700'
                   }`}
                 >
                   {ch}
                 </motion.div>
-                <span className="text-[10px] font-mono font-bold text-slate-300">{i - WORD.length}</span>
+                <motion.span
+                  animate={{ opacity: hovered === i ? 1 : 0.3 }}
+                  className="text-xs font-mono font-bold text-slate-400"
+                >
+                  {i - WORD.length}
+                </motion.span>
               </div>
             ))}
           </div>
-          <div className="flex gap-8 mt-1">
-            <span className="text-[10px] font-mono text-slate-400">↑ positive index</span>
-            <span className="text-[10px] font-mono text-slate-400">↓ negative index</span>
+
+          <div className="flex gap-8 text-[11px] font-bold text-slate-400">
+            <span>↑ positive index (from start)</span>
+            <span>↓ negative index (from end)</span>
           </div>
         </div>
 
-        {/* Detail card */}
+        {/* Detail callout */}
         <AnimatePresence mode="wait">
-          {hovered !== null && (
+          {hovered !== null ? (
             <motion.div
               key={hovered}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="bg-slate-900 rounded-xl px-6 py-4 font-mono text-sm text-slate-200 text-center shadow-lg"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-slate-900 rounded-2xl px-8 py-5 font-mono text-center shadow-xl border border-slate-800 w-full max-w-xs"
             >
-              <span className="text-slate-500">&gt;&gt;&gt; </span>
-              <span className="text-amber-300">"Python"[{hovered}]</span>
-              <br />
-              <span className="text-emerald-400">'{CHARS[hovered]}'</span>
-              <span className="ml-3 text-slate-500 text-xs">also: [-{WORD.length - hovered}]</span>
+              <p className="text-slate-500 text-xs mb-3 uppercase tracking-wider font-bold">Two ways to access "{CHARS[hovered]}"</p>
+              <p className="text-lg text-amber-400 font-bold mb-1">"Python"[{hovered}] → <span className="text-emerald-400">'{CHARS[hovered]}'</span></p>
+              <p className="text-lg text-amber-400 font-bold">"Python"[{-(WORD.length - hovered)}] → <span className="text-emerald-400">'{CHARS[hovered]}'</span></p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-slate-50 border border-slate-200 rounded-2xl px-8 py-5 text-center w-full max-w-xs"
+            >
+              <p className="text-slate-400 text-sm font-medium">Hover a character to see how to access it</p>
             </motion.div>
           )}
         </AnimatePresence>

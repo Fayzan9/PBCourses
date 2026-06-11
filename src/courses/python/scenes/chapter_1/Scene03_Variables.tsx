@@ -3,40 +3,46 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 type VarType = 'int' | 'float' | 'str' | 'bool' | 'none';
 
-const TYPES: { key: VarType; label: string; color: string; bg: string; example: string; value: string }[] = [
-  { key: 'int',   label: 'int',   color: 'text-amber-600',  bg: 'bg-amber-50 border-amber-200',   example: 'age = 25',          value: '25' },
-  { key: 'float', label: 'float', color: 'text-sky-600',    bg: 'bg-sky-50 border-sky-200',        example: 'price = 9.99',      value: '9.99' },
-  { key: 'str',   label: 'str',   color: 'text-emerald-600',bg: 'bg-emerald-50 border-emerald-200',example: 'name = "Alice"',    value: '"Alice"' },
-  { key: 'bool',  label: 'bool',  color: 'text-violet-600', bg: 'bg-violet-50 border-violet-200',  example: 'active = True',     value: 'True' },
-  { key: 'none',  label: 'None',  color: 'text-slate-500',  bg: 'bg-slate-50 border-slate-200',    example: 'result = None',     value: 'None' },
+const TYPES: {
+  key: VarType; label: string; example: string; value: string;
+  textColor: string; bgColor: string; borderColor: string; description: string;
+}[] = [
+  { key: 'int',   label: 'int',   example: 'age = 25',       value: '25',     textColor: 'text-amber-600',   bgColor: 'bg-amber-50',   borderColor: 'border-amber-300',  description: 'Whole numbers — no decimal point. Ages, counts, scores.' },
+  { key: 'float', label: 'float', example: 'price = 9.99',   value: '9.99',   textColor: 'text-sky-600',     bgColor: 'bg-sky-50',     borderColor: 'border-sky-300',    description: 'Decimal numbers. Money, measurements, percentages.' },
+  { key: 'str',   label: 'str',   example: 'name = "Alice"', value: '"Alice"',textColor: 'text-emerald-600', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-300',description: 'Text, always in quotes. Names, messages, URLs.' },
+  { key: 'bool',  label: 'bool',  example: 'active = True',  value: 'True',   textColor: 'text-violet-600',  bgColor: 'bg-violet-50',  borderColor: 'border-violet-300', description: 'Just True or False. On/off, yes/no, exists/missing.' },
+  { key: 'none',  label: 'None',  example: 'result = None',  value: 'None',   textColor: 'text-slate-500',   bgColor: 'bg-slate-50',   borderColor: 'border-slate-300',  description: 'The absence of a value. Like an empty box waiting to be filled.' },
 ];
 
 export const Scene03_Variables: React.FC = () => {
-  const [active, setActive] = useState<VarType>('int');
+  const [active, setActive] = useState<VarType>('str');
   const current = TYPES.find(t => t.key === active)!;
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-8 h-full w-full max-w-5xl mx-auto px-4 py-4">
-      {/* Left: explanation */}
-      <div className="flex-1 flex flex-col gap-5">
+    <div className="flex flex-col lg:flex-row items-center gap-10 h-full w-full max-w-7xl mx-auto px-8 py-6">
+      {/* Left */}
+      <div className="flex-1 flex flex-col gap-7">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">Scene 03</span>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-1 leading-tight">
-            Data Types & Variables
+          <h2 className="text-4xl md:text-6xl font-black text-slate-800 mt-2 leading-[1.05]">
+            Variables are<br />
+            <span className="text-amber-500">sticky notes.</span>
           </h2>
-          <p className="text-slate-500 text-sm mt-2 leading-relaxed">
-            Variables are labels pointing to objects in memory. Python figures out the type automatically — you never declare it.
+          <p className="text-slate-500 text-base md:text-lg mt-4 leading-relaxed max-w-sm">
+            A variable is just a <span className="font-bold text-slate-700">label</span> you stick onto a value. Python figures out the type automatically — you never declare it.
           </p>
         </div>
 
-        {/* Type selector */}
+        {/* Type tabs */}
         <div className="flex flex-wrap gap-2">
           {TYPES.map(t => (
             <button
               key={t.key}
               onClick={() => setActive(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold border transition-all cursor-pointer ${
-                active === t.key ? `${t.bg} ${t.color} border-current shadow-sm` : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+              className={`px-4 py-2 rounded-xl text-sm font-extrabold border-2 transition-all cursor-pointer ${
+                active === t.key
+                  ? `${t.bgColor} ${t.textColor} ${t.borderColor} shadow-sm`
+                  : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300 hover:text-slate-600'
               }`}
             >
               {t.label}
@@ -44,68 +50,62 @@ export const Scene03_Variables: React.FC = () => {
           ))}
         </div>
 
-        {/* Code block */}
+        {/* Description */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="bg-slate-900 rounded-xl px-5 py-4 font-mono text-sm text-slate-200"
+            transition={{ duration: 0.2 }}
+            className={`rounded-2xl border-2 px-6 py-5 ${current.bgColor} ${current.borderColor}`}
           >
-            <span className="text-slate-500"># type is inferred automatically</span>
-            <br />
-            <span className={current.color}>{current.example}</span>
-            <br />
-            <span className="text-slate-400">print(type(x))  </span>
-            <span className="text-emerald-400"># &lt;class '{current.label}'&gt;</span>
+            <p className={`text-xs font-extrabold uppercase tracking-wider mb-2 ${current.textColor}`}>What is {current.label}?</p>
+            <p className="text-slate-700 text-sm leading-relaxed">{current.description}</p>
+            <div className={`mt-4 font-mono text-base font-bold ${current.textColor}`}>
+              {current.example}
+            </div>
           </motion.div>
         </AnimatePresence>
-
-        <p className="text-xs text-slate-400 font-medium">
-          Python also lets you <span className="font-bold text-slate-600">reassign</span> a variable to a completely different type — it just creates a new object.
-        </p>
       </div>
 
       {/* Right: memory model */}
-      <div className="flex-1 flex flex-col gap-4 items-center">
-        <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Memory Model</p>
+      <div className="flex-1 flex flex-col items-center gap-8">
+        <div className="w-full max-w-sm flex flex-col gap-4">
+          <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400 text-center">Memory Model — What Python actually does</p>
 
-        <div className="w-full max-w-xs flex flex-col gap-3">
-          {/* Variable box */}
-          <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-sm">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Variable (label)</span>
-              <span className="font-mono font-extrabold text-slate-800 text-lg">
-                {current.example.split(' = ')[0]}
-              </span>
-            </div>
-            <span className="text-2xl text-slate-300">→</span>
-            {/* Object box */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.85, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 220, damping: 18 }}
-                className={`flex flex-col items-center border rounded-xl px-4 py-2 ${current.bg}`}
-              >
-                <span className={`text-[10px] font-extrabold uppercase tracking-wider ${current.color}`}>{current.label}</span>
-                <span className={`font-mono font-extrabold text-lg ${current.color}`}>{current.value}</span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          {/* The sticky note analogy */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+              className="bg-white border border-slate-200 rounded-3xl p-8 shadow-lg flex flex-col items-center gap-6"
+            >
+              {/* Label / sticky note */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="bg-amber-100 border-2 border-amber-300 text-amber-800 font-mono font-extrabold text-xl px-6 py-3 rounded-xl shadow-sm">
+                  {current.example.split(' =')[0].trim()}
+                </div>
+                <div className="w-0.5 h-8 bg-slate-300" />
+                <span className="text-slate-400 text-xs font-bold">points to →</span>
+                <div className="w-0.5 h-4 bg-slate-300" />
+              </div>
 
-          {/* id() */}
-          <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Memory Address</span>
-            <p className="font-mono text-xs text-slate-600 mt-1">id({current.example.split(' = ')[0]}) → <span className="text-amber-500 font-bold">0x7f3c…</span></p>
-          </div>
+              {/* Value object */}
+              <div className={`border-2 ${current.borderColor} ${current.bgColor} rounded-2xl px-8 py-5 text-center`}>
+                <p className={`text-xs font-extrabold uppercase tracking-wider mb-1 ${current.textColor}`}>{current.label} object</p>
+                <p className={`font-mono font-black text-3xl ${current.textColor}`}>{current.value}</p>
+                <p className="font-mono text-xs text-slate-400 mt-2">id: 0x7f3c…</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-          <p className="text-xs text-slate-400 text-center leading-relaxed px-2">
-            The variable name is just a <span className="font-bold text-slate-600">pointer</span>. The actual value lives in memory at an address Python manages.
+          <p className="text-xs text-slate-400 text-center leading-relaxed px-4">
+            The label can be moved to any value at any time.<br />
+            <span className="font-bold text-slate-500">Python handles memory for you.</span>
           </p>
         </div>
       </div>
