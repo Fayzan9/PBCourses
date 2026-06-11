@@ -360,11 +360,10 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
           })}
         </div>
 
-        {/* Sidebar Footer with Settings & Dark Mode crescent icons */}
         <div className="pt-4 border-t border-slate-100 mt-auto shrink-0 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded grayscale opacity-60" />
-            <span className="text-xs text-slate-400 font-mono font-bold">Productive Bros v1.0</span>
+          <div className="flex items-center gap-2.5">
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-7 h-7 rounded-lg shadow-sm border border-slate-200 bg-white" />
+            <span className="text-xs font-extrabold tracking-wider uppercase text-slate-500 font-mono">Productive Bros</span>
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -517,11 +516,11 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
           {/* Branding */}
           <div
             onClick={onBack}
-            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
             title="Back to Landing Page"
           >
-            <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded shadow-sm border border-slate-200 bg-white" />
-            <span className="font-mono text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-8 h-8 rounded-lg shadow-sm border border-slate-200 bg-white" />
+            <span className="font-extrabold text-xs tracking-wider uppercase text-slate-600 font-mono">
               Productive Bros
             </span>
           </div>
