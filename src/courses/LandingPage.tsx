@@ -70,7 +70,7 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
   return (
-    <div className="w-full min-h-screen bg-[#FAFAFA] text-[#0F172A] relative overflow-hidden font-sans space-grid-pattern-fine py-20 px-6 sm:px-12 flex flex-col justify-between">
+    <div className="w-full h-screen overflow-y-auto bg-[#FAFAFA] text-[#0F172A] relative font-sans space-grid-pattern-fine py-12 px-6 sm:px-12 flex flex-col justify-between">
       {/* Brand Header */}
       <header className="w-full max-w-6xl mx-auto flex items-center justify-between mb-16 z-10 shrink-0">
         <div className="flex items-center gap-3">
@@ -84,15 +84,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
       </header>
 
       {/* Hero Container */}
-      <main className="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center gap-12 z-10 my-10">
-        <div className="flex flex-col gap-4 max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-800 leading-tight">
-            Visual & Interactive <br />
-            <span className="text-slate-400 font-medium font-serif italic">Learning Pathways</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-lg">
-            Explore programming languages, algorithmic mechanics, and neural networks through live sandboxes, real-time spatial transformations, and animated diagrams.
-          </p>
+      <main className="w-full max-w-6xl mx-auto flex-1 flex flex-col justify-center gap-12 z-10 my-10">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+          <div className="flex flex-col gap-4 max-w-xl">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-800 leading-tight">
+              Visual & Interactive <br />
+              <span className="text-indigo-600 font-medium font-serif italic">Learning Pathways</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-lg">
+              Explore programming languages, algorithmic mechanics, and neural networks through live sandboxes, real-time spatial transformations, and animated diagrams.
+            </p>
+          </div>
+          <div className="flex-1 max-w-xl w-full relative shrink-0 lg:max-w-2xl">
+            <div className="absolute inset-0 bg-indigo-500/5 rounded-full filter blur-3xl pointer-events-none" />
+            <img 
+              src="/course_hero.png" 
+              alt="Course Hero Illustration" 
+              className="w-full relative z-10 object-contain max-h-[460px]" 
+            />
+          </div>
         </div>
 
         {/* Card Grid */}
@@ -104,9 +114,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
         >
           <CourseCard
             title="AI & Neural Networks Intuition"
-            description="Build spatial models of high-dimensional vectors, projection math, matrix warping, eigenvectors, and SVD in real time."
+            description="Explore high-dimensional vector spaces, projections, matrices, and neural networks through interactive visual sandboxes."
             badge="Interactive Math"
-            chaptersInfo="6 Chapters • Sandbox"
+            chaptersInfo="6 Chapters • Visual Sandbox"
             accentClass="text-sky-600 group-hover:border-sky-500/20"
             icon={<Cpu size={20} />}
             onClick={() => onSelectCourse('ai')}
@@ -114,9 +124,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
 
           <CourseCard
             title="Python Programming Essentials"
-            description="Master clean coding syntax, dynamic types, memory reference mechanics, and data structures through responsive coding interfaces."
-            badge="Code Playground"
-            chaptersInfo="Intro Chapters • Console"
+            description="Master variables, dynamic typing, and memory mechanics through interactive code playgrounds."
+            badge="Python Foundations"
+            chaptersInfo="1 Chapter • Interactive Console"
             accentClass="text-amber-600 group-hover:border-amber-500/20"
             icon={<Terminal size={20} />}
             onClick={() => onSelectCourse('python')}
@@ -124,9 +134,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
 
           <CourseCard
             title="Modern JavaScript Deep Dive"
-            description="Deep-dive into engine architectures, variable scoping, closures, prototype chaining, and async callback loop visualization."
-            badge="Engine Visualizer"
-            chaptersInfo="Animated Scope • Loops"
+            description="Visualize scope chains, closures, prototype mechanics, and asynchronous event loops in real time."
+            badge="JavaScript Mastery"
+            chaptersInfo="1 Chapter • Visualizer"
             accentClass="text-yellow-600 group-hover:border-yellow-500/20"
             icon={<Code2 size={20} />}
             onClick={() => onSelectCourse('javascript')}
