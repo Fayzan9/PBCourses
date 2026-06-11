@@ -208,7 +208,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
           >
             <ChevronRight size={20} />
           </button>
-          <div />
+          <img src="/channel_icon.png" alt="Productive Bros" className="w-5 h-5 rounded grayscale opacity-60" />
         </div>
       );
     }
@@ -225,9 +225,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
             >
               <Home size={16} />
             </button>
-            <div className={`p-1.5 rounded-lg transition-colors ${currentTheme.bg} ${currentTheme.text}`}>
-              <BookOpen size={16} />
-            </div>
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-6 h-6 rounded shadow-sm border border-slate-200 bg-white" />
             <span className="font-extrabold text-sm text-slate-800 tracking-tight truncate">{courseName}</span>
           </div>
           {isMobile ? (
@@ -321,7 +319,10 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
 
         {/* Footer */}
         <div className="pt-4 border-t border-slate-100 mt-auto shrink-0 flex items-center justify-between">
-          <span className="text-[10px] text-slate-400 font-mono font-bold">{courseName} v1.0</span>
+          <div className="flex items-center gap-1.5">
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-4 h-4 rounded grayscale opacity-60" />
+            <span className="text-[10px] text-slate-400 font-mono font-bold">Productive Bros v1.0</span>
+          </div>
           <button
             onClick={() => setIsSidebarCollapsed(true)}
             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
