@@ -88,7 +88,7 @@ export const aiThemes: ChapterTheme[] = [
 ];
 
 export const aiConfig = {
-  courseName: "AI Course",
+  courseName: "AI & Neural Networks Intuition",
   chapters: aiChapters,
   themes: aiThemes,
   hasWhiteboard: true,

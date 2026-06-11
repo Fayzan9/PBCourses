@@ -113,7 +113,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
           />
 
           <CourseCard
-            title="Python Foundations"
+            title="Python Programming Essentials"
             description="Master clean coding syntax, dynamic types, memory reference mechanics, and data structures through responsive coding interfaces."
             badge="Code Playground"
             chaptersInfo="Intro Chapters • Console"
@@ -123,7 +123,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
           />
 
           <CourseCard
-            title="JavaScript Mastery"
+            title="Modern JavaScript Deep Dive"
             description="Deep-dive into engine architectures, variable scoping, closures, prototype chaining, and async callback loop visualization."
             badge="Engine Visualizer"
             chaptersInfo="Animated Scope • Loops"

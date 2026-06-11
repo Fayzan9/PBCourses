@@ -29,7 +29,7 @@ export const pythonThemes: ChapterTheme[] = [
 ];
 
 export const pythonConfig = {
-  courseName: "Python Foundations",
+  courseName: "Python Programming Essentials",
   chapters: pythonChapters,
   themes: pythonThemes
 };

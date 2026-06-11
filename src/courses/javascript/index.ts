@@ -29,7 +29,7 @@ export const javascriptThemes: ChapterTheme[] = [
 ];
 
 export const javascriptConfig = {
-  courseName: "JavaScript Mastery",
+  courseName: "Modern JavaScript Deep Dive",
   chapters: javascriptChapters,
   themes: javascriptThemes
 };
