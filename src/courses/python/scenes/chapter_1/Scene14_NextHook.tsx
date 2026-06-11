@@ -12,7 +12,7 @@ const TOPICS = [
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.55, delay, ease: 'easeOut' },
+  transition: { duration: 0.275, delay, ease: 'easeOut' },
 });
 
 export const Scene14_NextHook: React.FC = () => {
@@ -90,7 +90,7 @@ export const Scene14_NextHook: React.FC = () => {
             key={topic.label}
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 + i * 0.07, duration: 0.3, ease: 'easeOut' }}
+            transition={{ delay: 0.3 + i * 0.07, duration: 0.15, ease: 'easeOut' }}
             className={`rounded-full border px-4 py-1.5 text-xs font-semibold ${topic.colorClass}`}
           >
             {topic.label}

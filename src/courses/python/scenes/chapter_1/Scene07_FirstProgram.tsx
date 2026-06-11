@@ -72,7 +72,7 @@ export const Scene07_FirstProgram: React.FC = () => {
           setActiveStep(nextStep);
         }
         setAdvancing(false);
-      }, 1500);
+      }, 300);
     }
   };
 
@@ -160,7 +160,7 @@ export const Scene07_FirstProgram: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.2 }}
               className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4"
             >
               <p className="text-xs font-bold text-amber-700 mb-1">Maya's breakthrough</p>
@@ -200,7 +200,7 @@ export const Scene07_FirstProgram: React.FC = () => {
                     key={step.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.15 }}
                     className="mb-3"
                   >
                     <p className="font-mono text-xs text-slate-400 mb-0.5 select-none">
@@ -237,7 +237,7 @@ export const Scene07_FirstProgram: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.2 }}
               className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 shrink-0"
             >
               <div className="flex items-center gap-2 mb-2">

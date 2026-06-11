@@ -87,7 +87,7 @@ export const Scene04b_Strings: React.FC = () => {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: 0.075 }}
                 className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 text-xs font-mono text-amber-800 w-fit"
               >
                 <span className="text-slate-500">word[{hoveredIdx}]</span>

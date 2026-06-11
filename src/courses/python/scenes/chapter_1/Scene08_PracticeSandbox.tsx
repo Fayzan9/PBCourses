@@ -276,7 +276,7 @@ export const Scene08_PracticeSandbox: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.1 }}
               className="overflow-hidden shrink-0"
             >
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-700 leading-relaxed">

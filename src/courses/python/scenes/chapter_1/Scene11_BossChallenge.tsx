@@ -60,7 +60,7 @@ const ConfettiPiece: React.FC<{ index: number }> = ({ index }) => {
       className={`absolute w-2 h-2 rounded-full ${colors[index % colors.length]}`}
       initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
       animate={{ x, y, opacity: 0, scale: 0 }}
-      transition={{ duration: 1.2, delay: index * 0.04, ease: 'easeOut' }}
+      transition={{ duration: 0.6, delay: index * 0.04, ease: 'easeOut' }}
     />
   );
 };
@@ -136,7 +136,7 @@ export const Scene11_BossChallenge: React.FC = () => {
                 background: bossHealthPct > 40 ? '#f43f5e' : bossHealthPct > 0 ? '#fb923c' : '#22c55e',
               }}
               animate={{ width: `${bossHealthPct}%` }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
             />
           </div>
           <span className="text-xs font-mono text-slate-500">
@@ -162,7 +162,7 @@ export const Scene11_BossChallenge: React.FC = () => {
               >
                 <motion.div
                   animate={checks[i] ? { scale: [1, 1.3, 1] } : {}}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.15 }}
                   className="mt-0.5 shrink-0"
                 >
                   {checks[i] ? (
@@ -270,7 +270,7 @@ export const Scene11_BossChallenge: React.FC = () => {
               <motion.div
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 24 }}
                 className="bg-white border-2 border-amber-300 rounded-2xl p-8 flex flex-col items-center gap-4 max-w-sm text-center shadow-xl"
               >
                 <span className="text-5xl">🏆</span>

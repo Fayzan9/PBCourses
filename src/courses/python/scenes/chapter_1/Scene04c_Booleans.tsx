@@ -136,7 +136,7 @@ export const Scene04c_Booleans: React.FC = () => {
                   initial={{ x: 60, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -60, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 26 }}
                   className={`w-full max-w-md rounded-3xl border-2 px-8 py-8 text-center shadow-sm transition-colors ${
                     guess === null
                       ? 'bg-white border-slate-200'
@@ -154,7 +154,7 @@ export const Scene04c_Booleans: React.FC = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.1 }}
                         className="mt-4 overflow-hidden"
                       >
                         <div className={`text-sm font-semibold mb-1 ${isCorrect ? 'text-emerald-700' : 'text-rose-600'}`}>
@@ -199,7 +199,7 @@ export const Scene04c_Booleans: React.FC = () => {
             <motion.div
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               className="flex flex-col items-center gap-5 text-center"
             >
               <span className="text-7xl">{score >= 7 ? '🏆' : score >= 5 ? '🎯' : '💪'}</span>

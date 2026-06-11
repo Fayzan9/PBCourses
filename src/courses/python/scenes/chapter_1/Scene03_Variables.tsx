@@ -33,6 +33,17 @@ export const Scene03_Variables: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [nameTarget, setNameTarget] = useState<ObjKey>('alice');
 
+  // Sync step changes to corresponding objects
+  React.useEffect(() => {
+    if (activeStep === 0) {
+      setNameTarget('alice');
+    } else if (activeStep === 1) {
+      setNameTarget('bob');
+    } else if (activeStep === 2) {
+      setNameTarget('42');
+    }
+  }, [activeStep]);
+
   const nameObj = OBJECTS.find(o => o.key === nameTarget)!;
 
   return (
@@ -78,7 +89,7 @@ export const Scene03_Variables: React.FC = () => {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.1 }}
                     className="text-xs text-slate-500 mt-2 leading-relaxed overflow-hidden"
                   >
                     {step.explanation}
@@ -100,28 +111,56 @@ export const Scene03_Variables: React.FC = () => {
 
         {/* Variable label → object */}
         <div className="flex flex-col items-center gap-2">
-          <div className="bg-amber-50 border-2 border-amber-300 text-amber-800 font-mono font-black text-base px-6 py-2.5 rounded-xl shadow-sm">
-            name
-          </div>
+          {activeStep === 2 ? (
+            <div className="flex gap-4">
+              <div className="bg-amber-50 border-2 border-amber-300 text-amber-800 font-mono font-black text-sm px-4 py-2 rounded-xl shadow-sm">
+                x
+              </div>
+              <div className="bg-amber-50 border-2 border-amber-300 text-amber-800 font-mono font-black text-sm px-4 py-2 rounded-xl shadow-sm">
+                y
+              </div>
+            </div>
+          ) : (
+            <div className="bg-amber-50 border-2 border-amber-300 text-amber-800 font-mono font-black text-sm px-5 py-2 rounded-xl shadow-sm">
+              name
+            </div>
+          )}
           <div className="w-px h-5 bg-slate-300" />
           <span className="text-slate-400 text-[11px] font-mono">→ points to</span>
           <div className="w-px h-4 bg-slate-300" />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={nameTarget}
-              initial={{ scale: 0.88, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.88, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-              className={`border-2 rounded-2xl px-6 py-4 text-center ${nameObj.bg} ${nameObj.border}`}
-            >
-              <div className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-1 ${nameObj.textColor} opacity-70`}>{nameObj.type}</div>
-              <div className={`font-mono font-black text-2xl ${nameObj.textColor}`}>{nameObj.display}</div>
-              <div className="text-slate-400 font-mono text-[10px] mt-1.5">
-                id: 0x{Math.abs(nameTarget.charCodeAt(0) * 7318).toString(16).padStart(6, '0')}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          
+          <div className="flex items-center gap-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={nameTarget}
+                initial={{ scale: 0.88, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.88, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                className={`border-2 rounded-2xl px-6 py-4 text-center ${nameObj.bg} ${nameObj.border}`}
+              >
+                <div className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-1 ${nameObj.textColor} opacity-70`}>{nameObj.type}</div>
+                <div className={`font-mono font-black text-2xl ${nameObj.textColor}`}>{nameObj.display}</div>
+                <div className="text-slate-400 font-mono text-[10px] mt-1.5">
+                  id: 0x{Math.abs(nameTarget.charCodeAt(0) * 7318).toString(16).padStart(6, '0')}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* If reassigned, show "Alice" floating unlabelled */}
+            {activeStep === 1 && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 0.4, x: 0 }}
+                className="border-2 border-dashed border-slate-300 rounded-2xl px-5 py-3 text-center bg-slate-50 text-slate-400"
+                title="Unlabelled object — soon to be garbage collected"
+              >
+                <div className="text-[9px] font-mono uppercase tracking-widest mb-0.5">str</div>
+                <div className="font-mono font-bold text-lg">"Alice"</div>
+                <div className="text-[9px] mt-1 italic">unlabelled</div>
+              </motion.div>
+            )}
+          </div>
         </div>
 
         {/* Object shelf */}
@@ -131,7 +170,11 @@ export const Scene03_Variables: React.FC = () => {
             {OBJECTS.map(obj => (
               <button
                 key={obj.key}
-                onClick={() => setNameTarget(obj.key)}
+                onClick={() => {
+                  setNameTarget(obj.key);
+                  // Reset activeStep to custom state when user plays with shelf manually
+                  setActiveStep(-1);
+                }}
                 className={`font-mono text-sm font-bold px-3 py-1.5 rounded-xl border-2 transition-all cursor-pointer ${obj.bg} ${obj.border} ${obj.textColor} ${
                   nameTarget === obj.key
                     ? 'ring-2 ring-amber-400 ring-offset-2 scale-105 shadow-sm'
@@ -143,7 +186,7 @@ export const Scene03_Variables: React.FC = () => {
             ))}
           </div>
           <p className="text-[11px] text-slate-400 text-center">
-            Click any object to reassign <code className="text-amber-600 font-mono">name</code>
+            Click any object to reassign manually
           </p>
         </div>
       </div>

@@ -39,7 +39,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
             className="bg-white border border-slate-200 rounded-2xl p-4"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.05 }}
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg">1️⃣</span>
@@ -54,7 +54,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
             className="bg-white border border-slate-200 rounded-2xl p-4"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.1 }}
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg">2️⃣</span>
@@ -69,7 +69,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
             className="bg-white border border-slate-200 rounded-2xl p-4"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.15 }}
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg">3️⃣</span>
@@ -85,7 +85,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
             className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mt-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.25 }}
           >
             <div className="flex items-start gap-2">
               <Database className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
@@ -111,7 +111,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
                 className="flex flex-col gap-2"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * (i + 1) }}
+                transition={{ delay: 0.05 * (i + 1) }}
               >
                 <div className="flex items-center gap-3">
                   {/* Variable label pill */}
@@ -161,7 +161,7 @@ export const Scene06a_MemoryModel: React.FC = () => {
                       initial={{ opacity: 0, height: 0, y: -5 }}
                       animate={{ opacity: 1, height: 'auto', y: 0 }}
                       exit={{ opacity: 0, height: 0, y: -5 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.1 }}
                       className="ml-[100px] bg-amber-50 border-2 border-amber-300 rounded-xl px-4 py-2"
                     >
                       <p className="text-amber-800 text-xs font-mono font-medium">{data.callout}</p>

@@ -94,7 +94,7 @@ export const Scene05_InputOutput: React.FC = () => {
             <motion.div
               key={i}
               animate={{ opacity: activeStep >= i ? 1 : 0.35 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.2 }}
               className={`rounded-xl border px-4 py-3 transition-colors ${
                 activeStep === i
                   ? 'bg-amber-50 border-amber-200'
@@ -154,7 +154,7 @@ export const Scene05_InputOutput: React.FC = () => {
                 key={msg.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22 }}
+                transition={{ duration: 0.11 }}
               >
                 {msg.type === 'annotation' && (
                   <div className="flex justify-center my-1">

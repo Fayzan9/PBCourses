@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const INTERVIEW_LINES = [
-  { text: '$ python interview_prep.py', color: 'text-slate-500', delay: 0 },
-  { text: 'Interviewer: "What is a variable?"', color: 'text-slate-300', delay: 700 },
-  { text: 'Maya: "..."', color: 'text-rose-400', delay: 1600 },
-  { text: 'Interviewer: "Take your time."', color: 'text-slate-300', delay: 2600 },
-  { text: 'Maya: "..."', color: 'text-rose-400', delay: 3600 },
-  { text: 'Result: Not selected.', color: 'text-rose-400 font-bold', delay: 4600 },
+  { text: '$ python interview_prep.py', color: 'text-slate-500', delay: 0.0 },
+  { text: 'Interviewer: "What is a variable?"', color: 'text-slate-300', delay: 350.0 },
+  { text: 'Maya: "..."', color: 'text-rose-400', delay: 800.0 },
+  { text: 'Interviewer: "Take your time."', color: 'text-slate-300', delay: 1300.0 },
+  { text: 'Maya: "..."', color: 'text-rose-400', delay: 1800.0 },
+  { text: 'Result: Not selected.', color: 'text-rose-400 font-bold', delay: 2300.0 },
 ];
 
 const RESTART_LINES = [
-  { text: '$ mkdir day_1', color: 'text-slate-500', delay: 300 },
-  { text: '$ touch main.py', color: 'text-slate-500', delay: 700 },
-  { text: '$ python main.py', color: 'text-slate-500', delay: 1100 },
-  { text: '# This time will be different.', color: 'text-amber-400', delay: 1700 },
+  { text: '$ mkdir day_1', color: 'text-slate-500', delay: 150.0 },
+  { text: '$ touch main.py', color: 'text-slate-500', delay: 350.0 },
+  { text: '$ python main.py', color: 'text-slate-500', delay: 550.0 },
+  { text: '# This time will be different.', color: 'text-amber-400', delay: 850.0 },
 ];
 
 function TypingLine({ text, color, startDelay }: { text: string; color: string; startDelay: number }) {
@@ -59,7 +59,7 @@ export const Scene01_StoryHook: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.25 }}
         >
           <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">
             Chapter 1 · The Awakening
@@ -75,7 +75,7 @@ export const Scene01_StoryHook: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
           className="flex flex-col gap-3"
         >
           <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
@@ -88,7 +88,7 @@ export const Scene01_StoryHook: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.25 }}
                 className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4"
               >
                 <p className="text-amber-800 text-sm leading-relaxed font-medium">
@@ -104,7 +104,7 @@ export const Scene01_StoryHook: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
+          transition={{ delay: 0.35, duration: 0.25 }}
           className="flex items-center gap-6 pt-2"
         >
           {[
@@ -124,7 +124,7 @@ export const Scene01_StoryHook: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
         className="flex-1 flex flex-col justify-center min-w-0"
       >
         <div className="bg-slate-900 rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
@@ -152,7 +152,7 @@ export const Scene01_StoryHook: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                transition={{ duration: 0.35 }}
+                transition={{ duration: 0.175 }}
                 className="border-t border-slate-800 px-6 py-5 flex flex-col gap-1 overflow-hidden"
               >
                 <div className="text-[11px] font-mono text-slate-600 mb-3 border-b border-slate-800 pb-2">
@@ -169,7 +169,7 @@ export const Scene01_StoryHook: React.FC = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 5, duration: 1 }}
+          transition={{ delay: 2.5, duration: 0.5 }}
           className="text-slate-400 text-xs text-center mt-3 font-mono"
         >
           Follow Maya from zero → interview ready.

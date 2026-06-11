@@ -67,7 +67,7 @@ export const Scene02_WhyPython: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.25 }}
       >
         <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-extrabold">
           Scene 02 · Why Python?
@@ -89,7 +89,7 @@ export const Scene02_WhyPython: React.FC = () => {
               key={d.id}
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.4 }}
+              transition={{ delay: i * 0.07, duration: 0.2 }}
               onClick={() => setActive(i)}
               className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                 active === i
@@ -113,7 +113,7 @@ export const Scene02_WhyPython: React.FC = () => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.1 }}
             className="flex-1 flex flex-col gap-3 min-h-0"
           >
             {/* Info card */}

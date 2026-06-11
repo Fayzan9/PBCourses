@@ -146,7 +146,7 @@ export const Scene10_Quiz2: React.FC = () => {
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
             className="bg-white border border-slate-200 rounded-2xl p-8 max-w-xl w-full text-center flex flex-col gap-5"
           >
             <div className="text-6xl">{getFinalEmoji(score)}</div>
@@ -230,7 +230,7 @@ export const Scene10_Quiz2: React.FC = () => {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.125 }}
               className="bg-white border-2 border-slate-200 rounded-3xl p-8 flex flex-col gap-5"
             >
               {/* Question text */}
@@ -285,7 +285,7 @@ export const Scene10_Quiz2: React.FC = () => {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.15 }}
                     className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"
                   >
                     <p className="text-sm text-amber-800">
@@ -306,7 +306,7 @@ export const Scene10_Quiz2: React.FC = () => {
             className="h-1.5 rounded-full bg-violet-400"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.2 }}
           />
         </div>
       </div>

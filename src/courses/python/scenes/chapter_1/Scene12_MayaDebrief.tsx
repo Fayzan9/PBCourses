@@ -121,7 +121,7 @@ export const Scene12_MayaDebrief: React.FC = () => {
                 initial={{ rotateY: flipped ? -90 : 90, opacity: 0 }}
                 animate={{ rotateY: 0, opacity: 1 }}
                 exit={{ rotateY: flipped ? 90 : -90, opacity: 0 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
+                transition={{ duration: 0.175, ease: 'easeOut' }}
                 style={{ transformStyle: 'preserve-3d' }}
                 className={`rounded-2xl border-2 p-7 min-h-[220px] flex flex-col justify-between shadow-sm ${
                   flipped

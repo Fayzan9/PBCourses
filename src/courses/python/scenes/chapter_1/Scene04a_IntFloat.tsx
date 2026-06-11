@@ -112,7 +112,7 @@ export const Scene04a_IntFloat: React.FC = () => {
                   initial={{ scale: 0.8, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.8, opacity: 0, y: -20 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 25 }}
                   className="bg-white border-2 border-slate-200 rounded-3xl px-12 py-8 shadow-sm text-center"
                 >
                   <p className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">What type is this?</p>
@@ -156,7 +156,7 @@ export const Scene04a_IntFloat: React.FC = () => {
                 <motion.div
                   className="bg-amber-400 h-full rounded-full"
                   animate={{ width: `${((current) / EXAMPLES.length) * 100}%` }}
-                  transition={{ duration: 0.4 }}
+                  transition={{ duration: 0.2 }}
                 />
               </div>
             </>
@@ -164,7 +164,7 @@ export const Scene04a_IntFloat: React.FC = () => {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               className="flex flex-col items-center gap-4 text-center"
             >
               <span className="text-6xl">{score >= 5 ? '🏆' : score >= 3 ? '👍' : '💪'}</span>
