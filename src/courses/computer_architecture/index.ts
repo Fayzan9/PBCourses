@@ -2,11 +2,13 @@ import type { Chapter, ChapterTheme } from '../CourseViewer';
 import { chapter1 } from './scenes/chapter_1';
 import { chapter2 } from './scenes/chapter_2';
 import { chapter3 } from './scenes/chapter_3';
+import { chapter4 } from './scenes/chapter_4';
 
 export const computerArchitectureChapters: Chapter[] = [
   chapter1,
   chapter2,
-  chapter3
+  chapter3,
+  chapter4
 ];
 
 export const computerArchitectureThemes: ChapterTheme[] = [
@@ -42,6 +44,17 @@ export const computerArchitectureThemes: ChapterTheme[] = [
     dotBg: 'bg-amber-500',
     bgActive: 'bg-amber-500 text-slate-900 hover:bg-amber-600',
     hover: 'hover:bg-amber-500/5 hover:text-amber-600'
+  },
+  {
+    id: 4,
+    primary: 'rose-500',
+    text: 'text-rose-600',
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/20',
+    glow: 'filter drop-shadow(0 0 10px rgba(244, 63, 94, 0.2))',
+    dotBg: 'bg-rose-500',
+    bgActive: 'bg-rose-500 text-white hover:bg-rose-600',
+    hover: 'hover:bg-rose-500/5 hover:text-rose-600'
   }
 ];
 
