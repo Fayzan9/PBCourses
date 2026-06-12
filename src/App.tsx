@@ -4,10 +4,11 @@ import { LandingPage } from './courses/LandingPage';
 import { CourseViewer } from './courses/CourseViewer';
 import { aiConfig } from './courses/ai';
 import { pythonConfig } from './courses/python';
+import { pythonProConfig } from './courses/python_pro';
 import { javascriptConfig } from './courses/javascript';
 import { marathiConfig } from './courses/marathi';
 
-type CourseType = 'ai' | 'python' | 'javascript' | 'marathi' | null;
+type CourseType = 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | null;
 
 export const App: React.FC = () => {
   const [currentCourse, setCurrentCourse] = useState<CourseType>(null);
@@ -64,6 +65,28 @@ export const App: React.FC = () => {
               SandboxComponent={pythonConfig.SandboxComponent}
               hasWhiteboard={pythonConfig.hasWhiteboard}
               WhiteboardComponent={pythonConfig.WhiteboardComponent}
+              onBack={() => setCurrentCourse(null)}
+            />
+          </motion.div>
+        )}
+
+        {currentCourse === 'python_pro' && (
+          <motion.div
+            key="python-pro-course"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.25 }}
+            className="w-full h-screen"
+          >
+            <CourseViewer
+              courseName={pythonProConfig.courseName}
+              chapters={pythonProConfig.chapters}
+              themes={pythonProConfig.themes}
+              hasSandbox={pythonProConfig.hasSandbox}
+              SandboxComponent={pythonProConfig.SandboxComponent}
+              hasWhiteboard={pythonProConfig.hasWhiteboard}
+              WhiteboardComponent={pythonProConfig.WhiteboardComponent}
               onBack={() => setCurrentCourse(null)}
             />
           </motion.div>

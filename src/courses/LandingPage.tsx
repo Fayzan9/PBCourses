@@ -65,7 +65,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
 };
 
 interface LandingPageProps {
-  onSelectCourse: (course: 'ai' | 'python' | 'javascript' | 'marathi') => void;
+  onSelectCourse: (course: 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
@@ -110,7 +110,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 w-full"
         >
           <CourseCard
             title="AI & Neural Networks Intuition"
@@ -130,6 +130,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
             accentClass="text-amber-600 group-hover:border-amber-500/20"
             icon={<Terminal size={20} />}
             onClick={() => onSelectCourse('python')}
+          />
+
+          <CourseCard
+            title="Python Pro Curriculum"
+            description="Go deep into computer architecture, memory maps, reference models, and implementation details."
+            badge="Advanced Python"
+            chaptersInfo="1 Chapter • Professional"
+            accentClass="text-indigo-600 group-hover:border-indigo-500/20"
+            icon={<Terminal size={20} />}
+            onClick={() => onSelectCourse('python_pro')}
           />
 
           <CourseCard
