@@ -4,6 +4,7 @@ import { chapter2 } from './scenes/chapter_2';
 import { chapter3 } from './scenes/chapter_3';
 import { chapter4 } from './scenes/chapter_4';
 import { chapter5 } from './scenes/chapter_5';
+import { chapter6 } from './scenes/chapter_6';
 import { PythonSandbox } from '../python/components/PythonSandbox';
 import { Whiteboard } from '../ai/components/Whiteboard';
 
@@ -13,6 +14,7 @@ export const pythonProChapters: Chapter[] = [
   chapter3,
   chapter4,
   chapter5,
+  chapter6,
 ];
 
 export const pythonProThemes: ChapterTheme[] = [
@@ -70,6 +72,17 @@ export const pythonProThemes: ChapterTheme[] = [
     dotBg: 'bg-pink-500',
     bgActive: 'bg-pink-500 hover:bg-pink-600',
     hover: 'hover:bg-pink-50/5 hover:text-pink-600',
+  },
+  {
+    id: 6,
+    primary: 'amber-500',
+    text: 'text-amber-600',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    glow: 'filter drop-shadow(0 0 10px rgba(245, 158, 11, 0.2))',
+    dotBg: 'bg-amber-500',
+    bgActive: 'bg-amber-500 hover:bg-amber-600',
+    hover: 'hover:bg-amber-50/5 hover:text-amber-600',
   },
 ];
 
