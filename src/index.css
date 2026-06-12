@@ -47,18 +47,21 @@ body {
 .premium-gradient-text {
   background: linear-gradient(135deg, #0F172A 30%, #475569 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .vector-gradient-text {
   background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .similarity-gradient-text {
   background: linear-gradient(135deg, #D97706 0%, #059669 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

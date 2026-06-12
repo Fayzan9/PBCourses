@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 export const Scene04_IfStatements: React.FC = () => {
   const [temperature, setTemperature] = useState(35);
@@ -7,7 +8,7 @@ export const Scene04_IfStatements: React.FC = () => {
   const condition = temperature > 30;
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -202,7 +203,7 @@ if temperature > 30:
         </div>
 
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

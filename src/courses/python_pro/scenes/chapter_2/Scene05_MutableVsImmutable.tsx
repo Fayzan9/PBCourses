@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 type Mode = 'immutable' | 'mutable';
 
@@ -9,7 +10,7 @@ export const Scene05_MutableVsImmutable: React.FC = () => {
   const isImmutable = mode === 'immutable';
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -244,7 +245,7 @@ nums.append(3)`}
 
         </div>
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

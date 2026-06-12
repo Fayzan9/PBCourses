@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 interface Layer {
   id: number;
@@ -101,7 +102,7 @@ Clock Cycle Active`
   };
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-6 overflow-hidden">
+    <SceneLayout gap="gap-6">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -242,7 +243,7 @@ Clock Cycle Active`
           </div>
         </div>
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

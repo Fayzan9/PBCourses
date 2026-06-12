@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 export const Scene02_BooleanValues: React.FC = () => {
   const [selectedExample, setSelectedExample] = useState(0);
@@ -26,7 +27,7 @@ export const Scene02_BooleanValues: React.FC = () => {
   const current = examples[selectedExample];
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -203,7 +204,7 @@ export const Scene02_BooleanValues: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 export const Scene03_BinaryFundamentals: React.FC = () => {
   const [bits, setBits] = useState<boolean[]>([
@@ -35,7 +36,7 @@ export const Scene03_BinaryFundamentals: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -184,7 +185,7 @@ export const Scene03_BinaryFundamentals: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 type Stage =
   | 'idle'
@@ -61,7 +62,7 @@ export const Scene02_ComputerArchitecture: React.FC = () => {
     states.includes(stage);
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -258,7 +259,7 @@ export const Scene02_ComputerArchitecture: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 

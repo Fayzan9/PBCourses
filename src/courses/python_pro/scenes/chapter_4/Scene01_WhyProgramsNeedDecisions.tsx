@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SceneLayout } from '../../../SceneLayout';
 
 export const Scene01_WhyProgramsNeedDecisions: React.FC = () => {
   const [age, setAge] = useState(20);
@@ -7,7 +8,7 @@ export const Scene01_WhyProgramsNeedDecisions: React.FC = () => {
   const isAdult = age >= 18;
 
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
+    <SceneLayout gap="gap-5">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
@@ -200,7 +201,7 @@ if age >= 18:
         </div>
 
       </div>
-    </div>
+    </SceneLayout>
   );
 };
 
