@@ -1,12 +1,16 @@
 import type { Chapter, ChapterTheme } from '../CourseViewer';
 import { chapter1 } from './scenes/chapter_1';
 import { chapter2 } from './scenes/chapter_2';
+import { chapter3 } from './scenes/chapter_3';
+import { chapter4 } from './scenes/chapter_4';
 import { PythonSandbox } from '../python/components/PythonSandbox';
 import { Whiteboard } from '../ai/components/Whiteboard';
 
 export const pythonProChapters: Chapter[] = [
   chapter1,
   chapter2,
+  chapter3,
+  chapter4,
 ];
 
 export const pythonProThemes: ChapterTheme[] = [
@@ -31,6 +35,28 @@ export const pythonProThemes: ChapterTheme[] = [
     dotBg: 'bg-sky-500',
     bgActive: 'bg-sky-500 hover:bg-sky-600',
     hover: 'hover:bg-sky-50/5 hover:text-sky-600',
+  },
+  {
+    id: 3,
+    primary: 'emerald-500',
+    text: 'text-emerald-600',
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    glow: 'filter drop-shadow(0 0 10px rgba(16, 185, 129, 0.2))',
+    dotBg: 'bg-emerald-500',
+    bgActive: 'bg-emerald-500 hover:bg-emerald-600',
+    hover: 'hover:bg-emerald-50/5 hover:text-emerald-600',
+  },
+  {
+    id: 4,
+    primary: 'violet-500',
+    text: 'text-violet-600',
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20',
+    glow: 'filter drop-shadow(0 0 10px rgba(139, 92, 246, 0.2))',
+    dotBg: 'bg-violet-500',
+    bgActive: 'bg-violet-500 hover:bg-violet-600',
+    hover: 'hover:bg-violet-50/5 hover:text-violet-600',
   },
 ];
 
