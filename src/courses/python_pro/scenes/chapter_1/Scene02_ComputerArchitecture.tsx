@@ -1,152 +1,258 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-export const Scene02_ComputerArchitecture: React.FC = () => {
-  const [pipelineState, setPipelineState] = useState<'idle' | 'loading' | 'loaded' | 'executing' | 'done'>('idle');
+type Stage =
+  | 'idle'
+  | 'storage'
+  | 'ram'
+  | 'fetch'
+  | 'decode'
+  | 'execute'
+  | 'complete';
 
-  const triggerPipelineCycle = async () => {
-    setPipelineState('loading');
-    
-    // Simulate Storage -> RAM
-    setTimeout(() => {
-      setPipelineState('loaded');
-      
-      // Simulate RAM -> CPU
-      setTimeout(() => {
-        setPipelineState('executing');
-        
-        // Done
-        setTimeout(() => {
-          setPipelineState('done');
-        }, 1500);
-      }, 1500);
-    }, 1500);
+export const Scene02_ComputerArchitecture: React.FC = () => {
+  const [stage, setStage] = useState<Stage>('idle');
+
+  const flow: Stage[] = [
+    'storage',
+    'ram',
+    'fetch',
+    'decode',
+    'execute',
+    'complete'
+  ];
+
+  const nextStage = () => {
+    if (stage === 'idle') {
+      setStage('storage');
+      return;
+    }
+
+    const currentIndex = flow.indexOf(stage);
+
+    if (currentIndex === flow.length - 1) {
+      setStage('idle');
+      return;
+    }
+
+    setStage(flow[currentIndex + 1]);
   };
 
-  const getStatusText = () => {
-    switch (pipelineState) {
-      case 'idle': return 'Click "Run Pipeline Cycle" to watch code execute.';
-      case 'loading': return '1. OS copies code from permanent Storage to RAM...';
-      case 'loaded': return '2. Code is ready in RAM. CPU fetches instruction...';
-      case 'executing': return '3. CPU executes instruction inside ALU registers...';
-      case 'done': return 'Success! Instruction complete. Click to reset.';
+  const getStatus = () => {
+    switch (stage) {
+      case 'idle':
+        return 'Ready to execute a program.';
+      case 'storage':
+        return 'Program located on SSD.';
+      case 'ram':
+        return 'OS loads program into RAM.';
+      case 'fetch':
+        return 'CPU fetches instruction from memory.';
+      case 'decode':
+        return 'CPU decodes instruction.';
+      case 'execute':
+        return 'CPU executes instruction.';
+      case 'complete':
+        return 'Instruction cycle completed.';
     }
   };
 
+  const active = (...states: Stage[]) =>
+    states.includes(stage);
+
   return (
-    <div className="h-full w-full flex flex-col px-8 py-6 gap-6 overflow-hidden">
+    <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
       {/* Header */}
       <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
           Lesson 1.2 · Computer Fundamentals
         </span>
-        <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-800 mt-1 leading-[1.1]">
-          Computer <span className="text-indigo-600 font-serif italic">Architecture Basics</span>
+
+        <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-800 mt-1">
+          Computer{' '}
+          <span className="text-indigo-600 font-serif italic">
+            Architecture
+          </span>
         </h2>
-        <p className="text-slate-500 text-sm mt-1 max-w-2xl leading-relaxed">
-          The CPU, RAM, and Storage form the core pipeline. Watch how data streams between them during execution.
+
+        <p className="text-sm text-slate-500 mt-1 max-w-2xl">
+          Programs move from Storage → RAM → CPU before they can run.
         </p>
       </div>
 
       {/* Main Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 items-stretch">
-        
-        {/* Left column - Live Controller */}
-        <div className="flex-1 flex flex-col justify-center bg-white border border-slate-100 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] gap-4">
-          <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-            Pipeline Controller
-          </span>
+      <div className="flex-1 flex gap-5 min-h-0">
 
-          <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-            <span className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Status Log</span>
-            <p className="text-sm font-bold text-slate-800 mt-1.5 transition-all">
-              {getStatusText()}
+        {/* Left Panel */}
+        <div className="w-[340px] shrink-0 flex flex-col gap-4">
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-4">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
+              Example Program
+            </span>
+
+            <div className="mt-3 bg-slate-50 rounded-xl p-3 border border-slate-200">
+              <code className="font-mono text-sm text-slate-700">
+                print("Hello")
+              </code>
+            </div>
+          </div>
+
+          <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4">
+            <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wider">
+              Current Step
+            </span>
+
+            <p className="text-sm font-semibold text-indigo-900 mt-2">
+              {getStatus()}
             </p>
           </div>
 
           <button
-            onClick={() => {
-              if (pipelineState === 'done' || pipelineState === 'idle') {
-                triggerPipelineCycle();
-              }
-            }}
-            disabled={pipelineState !== 'idle' && pipelineState !== 'done'}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-xl border border-indigo-600 transition-colors disabled:opacity-40 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+            onClick={nextStage}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-colors"
           >
-            {pipelineState === 'done' ? '🔄 Reset & Run Again' : '⚡ Run Pipeline Cycle'}
+            {stage === 'idle'
+              ? '▶ Start Execution'
+              : stage === 'complete'
+              ? '🔄 Restart'
+              : '➡ Next Step'}
           </button>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-4">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
+              Fetch–Decode–Execute
+            </span>
+
+            <ul className="mt-2 space-y-1 text-xs font-semibold text-slate-600">
+              <li>1. Fetch instruction from RAM</li>
+              <li>2. Decode instruction</li>
+              <li>3. Execute operation</li>
+            </ul>
+          </div>
         </div>
 
-        {/* Right column - Physical Vector Animation */}
-        <div className="flex-1 flex flex-col bg-slate-50/50 border border-slate-200/60 rounded-2xl p-5 relative justify-center items-center min-h-0">
-          <span className="absolute top-4 left-5 text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-            System Data Flow
-          </span>
+        {/* Right Panel */}
+        <div className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between">
 
-          <div className="flex flex-col gap-6 w-full max-w-xs relative py-4">
-            
-            {/* CPU Component */}
-            <div className={`p-4 rounded-xl border bg-white transition-all duration-300 flex items-center gap-3 ${
-              pipelineState === 'executing' ? 'border-indigo-500 scale-105 shadow-sm ring-2 ring-indigo-500/10' : 'border-slate-200/80'
-            }`}>
-              <span className="text-2xl">🧠</span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-sm font-extrabold text-slate-800">CPU</h4>
-                  {pipelineState === 'executing' && <span className="text-[10px] font-mono text-indigo-600 font-bold animate-pulse">EXECUTING...</span>}
+          <div>
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
+              Program Execution Pipeline
+            </span>
+          </div>
+
+          {/* Horizontal Flow */}
+          <div className="flex items-center justify-center gap-3">
+
+            <motion.div
+              animate={{ scale: stage === 'storage' ? 1.05 : 1 }}
+              className={`w-44 p-4 rounded-xl border-2 bg-white ${
+                stage === 'storage'
+                  ? 'border-indigo-500'
+                  : 'border-slate-200'
+              }`}
+            >
+              <div className="text-3xl text-center">💽</div>
+              <h3 className="text-center font-bold text-slate-800 mt-2">
+                Storage
+              </h3>
+              <p className="text-xs text-center text-slate-500 mt-1">
+                Permanent files
+              </p>
+            </motion.div>
+
+            <span className="text-2xl text-slate-300">→</span>
+
+            <motion.div
+              animate={{ scale: stage === 'ram' ? 1.05 : 1 }}
+              className={`w-44 p-4 rounded-xl border-2 bg-white ${
+                stage === 'ram'
+                  ? 'border-indigo-500'
+                  : 'border-slate-200'
+              }`}
+            >
+              <div className="text-3xl text-center">💾</div>
+              <h3 className="text-center font-bold text-slate-800 mt-2">
+                RAM
+              </h3>
+              <p className="text-xs text-center text-slate-500 mt-1">
+                Active memory
+              </p>
+            </motion.div>
+
+            <span className="text-2xl text-slate-300">→</span>
+
+            <motion.div
+              animate={{
+                scale:
+                  active('fetch', 'decode', 'execute')
+                    ? 1.05
+                    : 1
+              }}
+              className={`w-56 p-4 rounded-xl border-2 bg-white ${
+                active('fetch', 'decode', 'execute')
+                  ? 'border-indigo-500'
+                  : 'border-slate-200'
+              }`}
+            >
+              <div className="text-3xl text-center">🧠</div>
+
+              <h3 className="text-center font-bold text-slate-800 mt-2">
+                CPU
+              </h3>
+
+              <div className="grid grid-cols-3 gap-2 mt-4">
+                <div
+                  className={`text-center text-xs font-bold py-2 rounded-lg ${
+                    stage === 'fetch'
+                      ? 'bg-indigo-100 text-indigo-700'
+                      : 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  Fetch
                 </div>
-                <p className="text-xs font-semibold text-slate-400">Registers & Arithmetic Logic</p>
-              </div>
-            </div>
 
-            {/* RAM to CPU connection */}
-            <div className="h-6 w-[2px] bg-slate-200 mx-auto relative">
-              {pipelineState === 'loaded' && (
-                <motion.div
-                  initial={{ y: 24 }}
-                  animate={{ y: 0 }}
-                  transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                  className="absolute left-[-3px] w-2 h-2 rounded-full bg-indigo-500"
-                />
-              )}
-            </div>
-
-            {/* RAM Component */}
-            <div className={`p-4 rounded-xl border bg-white transition-all duration-300 flex items-center gap-3 ${
-              pipelineState === 'loaded' ? 'border-indigo-500 scale-105 shadow-sm ring-2 ring-indigo-500/10' : 'border-slate-200/80'
-            }`}>
-              <span className="text-2xl">💾</span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-sm font-extrabold text-slate-800">RAM</h4>
-                  {(pipelineState === 'loaded' || pipelineState === 'loading') && <span className="text-[10px] font-mono text-indigo-600 font-bold animate-pulse">ACTIVE</span>}
+                <div
+                  className={`text-center text-xs font-bold py-2 rounded-lg ${
+                    stage === 'decode'
+                      ? 'bg-indigo-100 text-indigo-700'
+                      : 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  Decode
                 </div>
-                <p className="text-xs font-semibold text-slate-400">Temporary Volatile Memory</p>
-              </div>
-            </div>
 
-            {/* Storage to RAM connection */}
-            <div className="h-6 w-[2px] bg-slate-200 mx-auto relative">
-              {pipelineState === 'loading' && (
-                <motion.div
-                  initial={{ y: 24 }}
-                  animate={{ y: 0 }}
-                  transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                  className="absolute left-[-3px] w-2 h-2 rounded-full bg-indigo-500"
-                />
-              )}
-            </div>
-
-            {/* Storage Component */}
-            <div className={`p-4 rounded-xl border bg-white transition-all duration-300 flex items-center gap-3 ${
-              pipelineState === 'loading' ? 'border-indigo-500 scale-105 shadow-sm ring-2 ring-indigo-500/10' : 'border-slate-200/80'
-            }`}>
-              <span className="text-2xl">💽</span>
-              <div className="flex-1">
-                <h4 className="text-sm font-extrabold text-slate-800">Storage (SSD)</h4>
-                <p className="text-xs font-semibold text-slate-400">Persistent Disk Drive</p>
+                <div
+                  className={`text-center text-xs font-bold py-2 rounded-lg ${
+                    stage === 'execute'
+                      ? 'bg-indigo-100 text-indigo-700'
+                      : 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  Execute
+                </div>
               </div>
-            </div>
+            </motion.div>
+
+          </div>
+
+          {/* Progress */}
+          <div className="flex justify-center gap-2 flex-wrap">
+
+            {['Storage', 'RAM', 'Fetch', 'Decode', 'Execute'].map(
+              (item, index) => (
+                <div
+                  key={item}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${
+                    flow.indexOf(stage) >= index
+                      ? 'bg-indigo-50 border-indigo-400 text-indigo-700'
+                      : 'bg-white border-slate-200 text-slate-400'
+                  }`}
+                >
+                  {item}
+                </div>
+              )
+            )}
 
           </div>
         </div>

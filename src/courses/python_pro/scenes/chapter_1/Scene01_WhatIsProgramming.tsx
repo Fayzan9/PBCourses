@@ -1,61 +1,104 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Scene01_WhatIsProgramming: React.FC = () => {
-  const [selectedLevel, setSelectedLevel] = useState<number>(3); // Default to Level 3: Python
+interface Layer {
+  id: number;
+  level: string;
+  name: string;
+  badge: string;
+  color: string;
+  preview: {
+    title: string;
+    content: string;
+  };
+  takeaway: string;
+}
 
-  const steps = [
+export const Scene01_WhatIsProgramming: React.FC = () => {
+  const layers: Layer[] = [
     {
       id: 4,
       level: 'Level 4',
       name: 'Human Intent',
-      desc: 'High-level goal or problem representation.',
-      color: 'bg-indigo-50 border-indigo-200 text-indigo-700 text-indigo-500',
       badge: 'Thought',
+      color: 'bg-indigo-50 border-indigo-200 text-indigo-700',
       preview: {
-        title: 'Your Mental Workspace',
-        content: '“I want to sort this list of names alphabetically.”\n- Goal-oriented\n- Abstract human concept\n- Highly structured in intent, zero structure in electrical signals'
-      }
+        title: 'Problem To Solve',
+        content:
+          'Goal:\n\nStore a person’s age and display it on screen.\n\nHumans think in goals and outcomes, not CPU instructions.'
+      },
+      takeaway:
+        'Programming starts with human intent. At this level there is no code yet.'
     },
     {
       id: 3,
       level: 'Level 3',
-      name: 'High-Level Code (Python)',
-      desc: 'Readable text representing logic and structures.',
-      color: 'bg-sky-50 border-sky-200 text-sky-700 text-sky-500',
-      badge: 'Abstractions',
+      name: 'Python Source Code',
+      badge: 'Code',
+      color: 'bg-sky-50 border-sky-200 text-sky-700',
       preview: {
-        title: 'Source Code: sort.py',
-        content: 'names = ["Fayzan", "Alice", "Bob"]\nnames.sort()\nprint(names)\n\n# Very easy for humans to read & write!'
-      }
+        title: 'Python Program',
+        content:
+`age = 25
+
+print(age)
+
+# Easy for humans to read
+# Difficult for hardware to execute directly`
+      },
+      takeaway:
+        'Python is designed for humans. CPUs cannot execute Python source code directly.'
     },
     {
       id: 2,
       level: 'Level 2',
-      name: 'Bytecode Translation',
-      desc: 'Low-level virtual machine commands.',
-      color: 'bg-emerald-50 border-emerald-200 text-emerald-700 text-emerald-500',
+      name: 'Python Bytecode',
       badge: 'Translation',
+      color: 'bg-emerald-50 border-emerald-200 text-emerald-700',
       preview: {
-        title: 'Disassembled Bytecode',
-        content: '0 LOAD_NAME                0 (names)\n2 LOAD_METHOD              1 (sort)\n4 CALL_METHOD              0\n6 POP_TOP\n8 LOAD_NAME                2 (print)'
-      }
+        title: 'Bytecode Instructions',
+        content:
+`LOAD_CONST 25
+STORE_NAME age
+LOAD_NAME age
+CALL print
+RETURN_VALUE`
+      },
+      takeaway:
+        'CPython translates source code into bytecode instructions that run inside the Python Virtual Machine.'
     },
     {
       id: 1,
       level: 'Level 1',
-      name: 'Hardware & Silicon',
-      desc: 'Electricity routing through logical gates.',
-      color: 'bg-slate-100 border-slate-300 text-slate-700 text-slate-500',
+      name: 'Hardware Execution',
       badge: 'Physical',
+      color: 'bg-slate-100 border-slate-300 text-slate-700',
       preview: {
-        title: 'Physical Transistor State',
-        content: '01001100 01001111 01000001 01000100\n[Gate 0x1A: HIGH (5V)]\n[Gate 0x1B: LOW (0V)]\n[Clock Cycle Pulse: Active]'
-      }
+        title: 'Electrical Reality',
+        content:
+`01010101 00101010
+
+Transistor A → HIGH
+Transistor B → LOW
+
+Clock Cycle Active`
+      },
+      takeaway:
+        'Every program eventually becomes electrical signals moving through billions of transistors.'
     }
   ];
 
-  const currentLevelInfo = steps.find(s => s.id === selectedLevel)!;
+  const [selectedIndex, setSelectedIndex] = useState(1);
+
+  const current = layers[selectedIndex];
+
+  const goNext = () => {
+    setSelectedIndex((prev) => Math.min(prev + 1, layers.length - 1));
+  };
+
+  const goPrev = () => {
+    setSelectedIndex((prev) => Math.max(prev - 1, 0));
+  };
 
   return (
     <div className="h-full w-full flex flex-col px-8 py-6 gap-6 overflow-hidden">
@@ -64,98 +107,140 @@ export const Scene01_WhatIsProgramming: React.FC = () => {
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
           Lesson 1.1 · Computer Fundamentals
         </span>
+
         <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-800 mt-1 leading-[1.1]">
-          What Is <span className="text-indigo-600 font-serif italic">Programming?</span>
+          What Is{' '}
+          <span className="text-indigo-600 font-serif italic">
+            Programming?
+          </span>
         </h2>
-        <p className="text-slate-500 text-sm mt-1 max-w-2xl leading-relaxed">
-          Programming bridges the gap between human thought and the physical silicon switches inside the CPU. Click any level to see how representation changes.
+
+        <p className="text-slate-500 text-sm mt-1 max-w-3xl leading-relaxed">
+          Programming is the process of translating human ideas into instructions
+          a computer can execute. Explore how the same task changes as it moves
+          closer to the hardware.
         </p>
       </div>
 
-      {/* Interactive Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 items-stretch">
-        
-        {/* Left column - Abstraction Levels Grid */}
-        <div className="flex-1 flex flex-col gap-3 justify-center">
-          <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-            Select Abstraction Layer
-          </span>
-          
-          <div className="flex flex-col gap-2.5">
-            {steps.map((step) => {
-              const isSelected = selectedLevel === step.id;
-              return (
-                <motion.button
-                  key={step.id}
-                  onClick={() => setSelectedLevel(step.id)}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  className={`text-left p-3.5 border-2 rounded-xl bg-white cursor-pointer transition-all flex items-start justify-between ${
-                    isSelected ? 'border-indigo-500 shadow-sm' : 'border-slate-100 hover:border-slate-200'
-                  }`}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-mono font-bold text-slate-400">{step.level}</span>
-                      <h4 className={`text-sm font-extrabold ${isSelected ? 'text-indigo-600' : 'text-slate-700'}`}>
-                        {step.name}
-                      </h4>
+      {/* Flow Diagram */}
+      <div className="flex items-center justify-center gap-3 flex-wrap">
+        {layers.map((layer, idx) => (
+          <React.Fragment key={layer.id}>
+            <button
+              onClick={() => setSelectedIndex(idx)}
+              className={`px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
+                idx === selectedIndex
+                  ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                  : 'border-slate-200 bg-white text-slate-500'
+              }`}
+            >
+              {layer.name}
+            </button>
+
+            {idx < layers.length - 1 && (
+              <span className="text-slate-300 font-bold">→</span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Main Layout */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
+
+        {/* Left Side */}
+        <div className="flex-1 flex flex-col gap-3">
+          {layers.map((layer, idx) => {
+            const active = idx === selectedIndex;
+
+            return (
+              <motion.button
+                key={layer.id}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => setSelectedIndex(idx)}
+                className={`text-left p-4 rounded-xl border-2 transition-all ${
+                  active
+                    ? 'border-indigo-500 bg-white shadow-sm'
+                    : 'border-slate-100 bg-white'
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-xs font-mono text-slate-400">
+                      {layer.level}
                     </div>
-                    <p className="text-xs text-slate-400 leading-normal font-semibold mt-0.5">
-                      {step.desc}
-                    </p>
+
+                    <div
+                      className={`font-extrabold ${
+                        active ? 'text-indigo-600' : 'text-slate-700'
+                      }`}
+                    >
+                      {layer.name}
+                    </div>
                   </div>
-                  <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border uppercase tracking-wider ${
-                    isSelected ? step.color : 'bg-slate-50 border-slate-200 text-slate-400'
-                  }`}>
-                    {step.badge}
+
+                  <span
+                    className={`text-[11px] px-2 py-1 rounded-md border font-bold uppercase ${layer.color}`}
+                  >
+                    {layer.badge}
                   </span>
-                </motion.button>
-              );
-            })}
-          </div>
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
 
-        {/* Right column - Live Representation Simulator */}
-        <div className="flex-1 flex flex-col bg-slate-50/50 border border-slate-200/60 rounded-2xl p-5 relative justify-between min-h-0">
-          <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest mb-3 block">
-            Layer Preview: {currentLevelInfo.name}
-          </span>
+        {/* Right Side */}
+        <div className="flex-1 flex flex-col gap-4 min-h-0">
 
-          <div className="flex-1 flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm min-h-0">
-            <div className="flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-slate-50 shrink-0">
-              <span className="font-mono text-xs font-bold text-slate-400 uppercase tracking-wider">
-                {currentLevelInfo.preview.title}
+          <div className="flex-1 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-4 py-3 border-b bg-slate-50">
+              <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+                {current.preview.title}
               </span>
-              <div className="flex gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-slate-200" />
-                <span className="w-2 h-2 rounded-full bg-slate-200" />
-                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-              </div>
             </div>
-            
+
             <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedLevel}
-                initial={{ opacity: 0, y: 5 }}
+              <motion.pre
+                key={current.id}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.15 }}
-                className="flex-1 p-5 font-mono text-sm leading-6 font-semibold text-slate-700 overflow-y-auto whitespace-pre-line"
+                exit={{ opacity: 0, y: -8 }}
+                className="p-5 whitespace-pre-wrap text-sm font-mono text-slate-700 h-full overflow-auto"
               >
-                {currentLevelInfo.preview.content}
-              </motion.div>
+                {current.preview.content}
+              </motion.pre>
             </AnimatePresence>
           </div>
 
-          <div className="mt-3 bg-indigo-50/50 border border-indigo-100 rounded-xl p-3 flex items-start gap-2.5 shrink-0">
-            <span className="text-base">💡</span>
-            <p className="text-indigo-900 text-xs leading-relaxed font-semibold">
-              Python abstracts away memory allocation and physical gate operations completely, letting you focus on human logic (Level 3).
+          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+            <h4 className="text-xs uppercase tracking-wider font-mono font-bold text-indigo-600">
+              Key Takeaway
+            </h4>
+
+            <p className="mt-1 text-sm text-indigo-900 font-semibold">
+              {current.takeaway}
             </p>
           </div>
-        </div>
 
+          <div className="flex gap-3">
+            <button
+              onClick={goPrev}
+              disabled={selectedIndex === 0}
+              className="flex-1 py-2 rounded-xl border border-slate-200 font-bold disabled:opacity-40"
+            >
+              ← Previous Layer
+            </button>
+
+            <button
+              onClick={goNext}
+              disabled={selectedIndex === layers.length - 1}
+              className="flex-1 py-2 rounded-xl bg-indigo-600 text-white font-bold disabled:opacity-40"
+            >
+              Next Layer →
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

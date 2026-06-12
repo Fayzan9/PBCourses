@@ -2,117 +2,169 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export const Scene06_Summary: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.12
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -15 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { type: 'spring' as const, stiffness: 100 }
-    }
-  };
-
-  const takeaways = [
+  const concepts = [
     {
-      title: 'Abstraction Layer',
-      desc: 'Coding bridges the gap between human logic and hardware execution. We write code for humans first, and CPU execution second.'
+      title: 'Programming = Translation',
+      description:
+        'Programming converts human ideas into instructions computers can execute.'
     },
     {
-      title: 'CPU, RAM, & Storage Roles',
-      desc: 'Storage keeps files permanently. RAM holds the active execution state. The CPU reads instructions from RAM and does the hard math.'
+      title: 'Storage → RAM → CPU',
+      description:
+        'Programs are loaded from storage into RAM, then executed by the CPU.'
     },
     {
-      title: 'Binary is Base 2',
-      desc: 'Transistors use electrical high/low states (1s and 0s). Bytes group 8 bits together to represent characters via text encoding standards like ASCII & Unicode/UTF-8.'
+      title: 'Everything Becomes Binary',
+      description:
+        'Text, images, videos, and programs are ultimately represented using 0s and 1s.'
     },
     {
-      title: 'Python Translation Pipeline',
-      desc: 'Python translates source code (.py) into Bytecode (.pyc) which executes inside the Python Virtual Machine (PVM) rather than executing directly as native machine code.'
+      title: 'Python Uses a Virtual Machine',
+      description:
+        'Python source code is translated into bytecode which runs inside the Python Virtual Machine (PVM).'
+    },
+    {
+      title: 'Memory Has Addresses',
+      description:
+        'Variables occupy locations in RAM that can be read and modified during execution.'
     }
   ];
 
   return (
     <div className="h-full w-full flex flex-col px-8 py-6 gap-5 overflow-hidden">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
+      <div>
         <span className="text-sm font-mono uppercase tracking-widest text-indigo-600 font-extrabold">
-          Lesson 1.6 · Course Overview
+          Lesson 1.6 · Chapter Review
         </span>
-        <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-800 mt-1 leading-[1.1]">
-          Chapter 1 <span className="text-indigo-600 font-serif italic">Summary</span>
-        </h2>
-        <p className="text-slate-500 text-sm mt-1 max-w-2xl leading-relaxed">
-          Congratulations! You've mastered computer architecture fundamentals. Let's recap before starting variables.
-        </p>
-      </motion.div>
 
-      {/* Main Content Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 items-center justify-between">
-        
-        {/* Left column - takeaways list */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="flex-1 flex flex-col gap-3 min-h-0 w-full"
-        >
-          {takeaways.map((item, idx) => (
+        <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-800 mt-1">
+          Chapter 1{' '}
+          <span className="text-indigo-600 font-serif italic">
+            Summary
+          </span>
+        </h2>
+
+        <p className="text-sm text-slate-500 mt-1 max-w-2xl">
+          Before moving to variables and data, review the core ideas
+          from this chapter.
+        </p>
+      </div>
+
+      {/* Main Layout */}
+      <div className="flex-1 flex gap-5 min-h-0">
+
+        {/* Left Side */}
+        <div className="flex-1 flex flex-col gap-3">
+
+          {concepts.map((concept, index) => (
             <motion.div
-              key={idx}
-              variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col gap-1"
+              key={concept.title}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.08 }}
+              className="bg-white border border-slate-200 rounded-2xl p-4"
             >
-              <h3 className="text-sm font-extrabold text-slate-800 font-mono flex items-center gap-2">
-                <span className="text-indigo-500 font-sans">✓</span> {item.title}
-              </h3>
-              <p className="text-xs font-semibold text-slate-500 leading-normal pl-4">
-                {item.desc}
-              </p>
+              <div className="flex items-start gap-3">
+                <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-sm shrink-0">
+                  ✓
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-800">
+                    {concept.title}
+                  </h3>
+
+                  <p className="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">
+                    {concept.description}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Right column - Next Up Teaser */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="flex-1 w-full h-full max-h-[340px] bg-slate-50 border border-slate-200/80 rounded-2xl p-6 flex flex-col justify-between"
-        >
-          <div className="flex flex-col gap-3">
-            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-              Preview: Chapter 2
+        {/* Right Side */}
+        <div className="w-[360px] shrink-0 flex flex-col gap-4">
+
+          {/* Knowledge Flow */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
+              What You Learned
             </span>
-            <h3 className="text-xl font-extrabold text-slate-800 leading-snug">
-              Variables and the <br />
-              <span className="text-indigo-600 font-serif italic">Python Object Model</span>
-            </h3>
-            <p className="text-slate-500 text-sm leading-relaxed font-semibold mt-1">
-              Now that you understand memory addresses and variables at a hardware level, we'll dive deep into Python's reference model, memory slots, and objects.
-            </p>
+
+            <div className="mt-4 flex flex-col gap-2">
+
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center text-sm font-bold text-indigo-700">
+                Human Intent
+              </div>
+
+              <div className="text-center text-slate-300 font-bold">
+                ↓
+              </div>
+
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center text-sm font-bold text-indigo-700">
+                Python Code
+              </div>
+
+              <div className="text-center text-slate-300 font-bold">
+                ↓
+              </div>
+
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center text-sm font-bold text-indigo-700">
+                Bytecode
+              </div>
+
+              <div className="text-center text-slate-300 font-bold">
+                ↓
+              </div>
+
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center text-sm font-bold text-indigo-700">
+                CPU Execution
+              </div>
+
+              <div className="text-center text-slate-300 font-bold">
+                ↓
+              </div>
+
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center text-sm font-bold text-indigo-700">
+                Binary Signals
+              </div>
+
+            </div>
           </div>
 
-          <div className="bg-indigo-600/5 border border-indigo-500/10 rounded-xl p-4 flex items-center justify-between mt-4">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-mono font-bold text-indigo-500 uppercase">Up Next</span>
-              <span className="text-sm font-extrabold text-slate-800">Module 2 — Variables and Data</span>
+          {/* Next Chapter */}
+          <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-5 text-white flex-1 flex flex-col justify-between">
+
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider opacity-80">
+                Next Chapter
+              </span>
+
+              <h3 className="text-2xl font-black mt-2 leading-tight">
+                Variables & Data
+              </h3>
+
+              <p className="text-sm mt-3 opacity-90 leading-relaxed">
+                Now you'll learn how Python stores data, manages
+                objects, and handles variable references in memory.
+              </p>
             </div>
-            <span className="text-xl">👉</span>
+
+            <div className="bg-white/10 rounded-xl p-3 mt-4">
+              <div className="text-xs font-mono uppercase tracking-wider opacity-80">
+                Coming Up
+              </div>
+
+              <div className="font-bold mt-1">
+                Variables • Objects • References • Types
+              </div>
+            </div>
+
           </div>
-        </motion.div>
+
+        </div>
 
       </div>
     </div>
