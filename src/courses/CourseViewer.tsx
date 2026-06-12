@@ -728,14 +728,14 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
         </main>
 
         {/* FOOTER CONTROLS BAR */}
-        <footer className="w-full px-6 py-4 flex items-center justify-between border-t border-slate-200/80 bg-white/70 backdrop-blur z-20 shadow-sm shrink-0">
+        <footer className="w-full px-6 py-2 flex items-center justify-between border-t border-slate-200/80 bg-white/70 backdrop-blur z-20 shadow-sm shrink-0">
           {/* Branding */}
           <div
             onClick={onBack}
             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
             title="Back to Landing Page"
           >
-            <img src="/channel_icon.png" alt="Productive Bros" className="w-8 h-8 rounded-lg shadow-sm border border-slate-200 bg-white" />
+            <img src="/channel_icon.png" alt="Productive Bros" className="w-7 h-7 rounded-lg shadow-sm border border-slate-200 bg-white" />
             <span className="font-extrabold text-xs tracking-wider uppercase text-slate-600 font-mono">
               Productive Bros
             </span>
@@ -753,7 +753,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
             <button
               onClick={navigatePrev}
               disabled={activeChapterIdx === 0 && currentSceneIdx === 0}
-              className="flex items-center justify-center p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              className="flex items-center justify-center p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
             >
               <ArrowLeft size={16} />
             </button>
@@ -761,7 +761,7 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
             <button
               onClick={navigateNext}
               disabled={activeChapterIdx === chapters.length - 1 && currentSceneIdx === totalScenes - 1}
-              className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all font-bold disabled:opacity-30 disabled:pointer-events-none shadow cursor-pointer ${currentTheme.bgActive} ${currentTheme.glow}`}
+              className={`flex items-center justify-center gap-2 px-4 py-1.5 rounded-xl text-white transition-all font-bold disabled:opacity-30 disabled:pointer-events-none shadow cursor-pointer ${currentTheme.bgActive} ${currentTheme.glow}`}
             >
               <span>Continue</span>
               <ArrowRight size={16} />

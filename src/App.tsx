@@ -7,8 +7,9 @@ import { pythonConfig } from './courses/python';
 import { pythonProConfig } from './courses/python_pro';
 import { javascriptConfig } from './courses/javascript';
 import { marathiConfig } from './courses/marathi';
+import { computerArchitectureConfig } from './courses/computer_architecture';
 
-type CourseType = 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | null;
+type CourseType = 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | 'computer_architecture' | null;
 
 export const App: React.FC = () => {
   const [currentCourse, setCurrentCourse] = useState<CourseType>(null);
@@ -127,6 +128,24 @@ export const App: React.FC = () => {
               courseName={javascriptConfig.courseName}
               chapters={javascriptConfig.chapters}
               themes={javascriptConfig.themes}
+              onBack={() => setCurrentCourse(null)}
+            />
+          </motion.div>
+        )}
+
+        {currentCourse === 'computer_architecture' && (
+          <motion.div
+            key="computer-architecture-course"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.25 }}
+            className="w-full h-screen"
+          >
+            <CourseViewer
+              courseName={computerArchitectureConfig.courseName}
+              chapters={computerArchitectureConfig.chapters}
+              themes={computerArchitectureConfig.themes}
               onBack={() => setCurrentCourse(null)}
             />
           </motion.div>
