@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 
 export const Scene4b_ThreeDSpace: React.FC = () => {
-  const [action, setAction] = useState(60);
-  const [comedy, setComedy] = useState(80);
-  const [romance, setRomance] = useState(40);
+  // Dimension values mapping to Height (X), Weight (Y), Age (Z)
+  // Let's map slider percentages to actual dimensions:
+  // Height: 140 to 200 cm (slider range 0 to 100) -> 140 + (val/100)*60
+  // Weight: 30 to 110 kg (slider range 0 to 100) -> 30 + (val/100)*80
+  // Age: 0 to 100 years (slider range 0 to 100) -> val
+  const [heightRaw, setHeightRaw] = useState(67); // maps to ~180 cm: 140 + (67/100)*60 = 180.2
+  const [weightRaw, setWeightRaw] = useState(56); // maps to ~75 kg: 30 + (56/100)*80 = 74.8
+  const [ageRaw, setAgeRaw] = useState(25);     // maps to 25 years
+
+  const heightVal = Math.round(140 + (heightRaw / 100) * 60);
+  const weightVal = Math.round(30 + (weightRaw / 100) * 80);
+  const ageVal = Math.round(ageRaw);
 
   // Rotation angles in degrees (default tilt)
   const [rotX, setRotX] = useState(20);
@@ -19,7 +28,7 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
   const radX = (rotX * Math.PI) / 180;
   const radY = (rotY * Math.PI) / 180;
 
-  // Projection math: X (Action), Y (Comedy - up), Z (Romance)
+  // Projection math: X (Height), Y (Weight - up), Z (Age)
   const project = (xVal: number, yVal: number, zVal: number) => {
     const scale = 1.6;
     const xc = xVal - 50;
@@ -72,9 +81,9 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
   const yz = project(0, 100, 100);
   const boxEnd = project(100, 100, 100);
 
-  const p1 = project(action, 0, 0);
-  const p2 = project(action, comedy, 0);
-  const p3 = project(action, comedy, romance);
+  const p1 = project(heightRaw, 0, 0);
+  const p2 = project(heightRaw, weightRaw, 0);
+  const p3 = project(heightRaw, weightRaw, ageRaw);
 
   const floorGrid = [];
   const backWallGrid = [];
@@ -106,10 +115,11 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
   const ticksX = [25, 50, 75].map(val => {
     const p = project(val, 0, 0);
     const pOffset = project(val, 0, 5);
+    const displayVal = Math.round(140 + (val / 100) * 60);
     return (
       <g key={`tx-${val}`}>
         <line x1={p.x} y1={p.y} x2={pOffset.x} y2={pOffset.y} stroke="rgba(225, 29, 72, 0.4)" strokeWidth="1" />
-        <text x={p.x - 2} y={p.y + 12} fill="rgba(225, 29, 72, 0.5)" fontSize="8" fontWeight="bold" textAnchor="middle">{val}</text>
+        <text x={p.x - 2} y={p.y + 12} fill="rgba(225, 29, 72, 0.5)" fontSize="8" fontWeight="bold" textAnchor="middle">{displayVal}</text>
       </g>
     );
   });
@@ -117,10 +127,11 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
   const ticksY = [25, 50, 75].map(val => {
     const p = project(0, val, 0);
     const pOffset = project(5, val, 0);
+    const displayVal = Math.round(30 + (val / 100) * 80);
     return (
       <g key={`ty-${val}`}>
         <line x1={p.x} y1={p.y} x2={pOffset.x} y2={pOffset.y} stroke="rgba(2, 130, 199, 0.4)" strokeWidth="1" />
-        <text x={p.x - 6} y={p.y + 3} fill="rgba(2, 130, 199, 0.5)" fontSize="8" fontWeight="bold" textAnchor="end">{val}</text>
+        <text x={p.x - 6} y={p.y + 3} fill="rgba(2, 130, 199, 0.5)" fontSize="8" fontWeight="bold" textAnchor="end">{displayVal}</text>
       </g>
     );
   });
@@ -128,10 +139,11 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
   const ticksZ = [25, 50, 75].map(val => {
     const p = project(0, 0, val);
     const pOffset = project(5, 0, val);
+    const displayVal = val;
     return (
       <g key={`tz-${val}`}>
         <line x1={p.x} y1={p.y} x2={pOffset.x} y2={pOffset.y} stroke="rgba(124, 58, 237, 0.4)" strokeWidth="1" />
-        <text x={p.x + 8} y={p.y + 3} fill="rgba(124, 58, 237, 0.5)" fontSize="8" fontWeight="bold" textAnchor="start">{val}</text>
+        <text x={p.x + 8} y={p.y + 3} fill="rgba(124, 58, 237, 0.5)" fontSize="8" fontWeight="bold" textAnchor="start">{displayVal}</text>
       </g>
     );
   });
@@ -202,27 +214,27 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
           {ticksZ}
 
           <line x1={o.x} y1={o.y} x2={xAx.x} y2={xAx.y} stroke="#E11D48" strokeWidth="2.5" markerEnd="url(#arrow-red)" />
-          <text x={xAx.x - 5} y={xAx.y + 24} fill="#E11D48" fontSize="12" fontWeight="bold">Action X</text>
+          <text x={xAx.x - 5} y={xAx.y + 24} fill="#E11D48" fontSize="12" fontWeight="bold">Height X</text>
           
           <line x1={o.x} y1={o.y} x2={yAx.x} y2={yAx.y} stroke="#0284C7" strokeWidth="2.5" markerEnd="url(#arrow-blue)" />
-          <text x={yAx.x} y={yAx.y - 12} textAnchor="middle" fill="#0284C7" fontSize="12" fontWeight="bold">Comedy Y</text>
+          <text x={yAx.x} y={yAx.y - 12} textAnchor="middle" fill="#0284C7" fontSize="12" fontWeight="bold">Weight Y</text>
 
           <line x1={o.x} y1={o.y} x2={zAx.x} y2={zAx.y} stroke="#7C3AED" strokeWidth="2.5" markerEnd="url(#arrow-violet)" />
-          <text x={zAx.x + 8} y={zAx.y + 16} fill="#7C3AED" fontSize="12" fontWeight="bold">Romance Z</text>
+          <text x={zAx.x + 8} y={zAx.y + 16} fill="#7C3AED" fontSize="12" fontWeight="bold">Age Z</text>
 
           <line x1={o.x} y1={o.y} x2={p1.x} y2={p1.y} stroke="#E11D48" strokeWidth="2.5" />
           <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#0284C7" strokeWidth="2" strokeDasharray="3 3" />
           <line x1={p2.x} y1={p2.y} x2={p3.x} y2={p3.y} stroke="#7C3AED" strokeWidth="2" strokeDasharray="3 3" />
 
-          <line x1={p3.x} y1={p3.y} x2={project(action, 0, romance).x} y2={project(action, 0, romance).y} stroke="rgba(71, 85, 105, 0.4)" strokeWidth="1" strokeDasharray="2 2" />
-          <circle cx={project(action, 0, romance).x} cy={project(action, 0, romance).y} r="3" fill="#64748B" opacity="0.6" />
+          <line x1={p3.x} y1={p3.y} x2={project(heightRaw, 0, ageRaw).x} y2={project(heightRaw, 0, ageRaw).y} stroke="rgba(71, 85, 105, 0.4)" strokeWidth="1" strokeDasharray="2 2" />
+          <circle cx={project(heightRaw, 0, ageRaw).x} cy={project(heightRaw, 0, ageRaw).y} r="3" fill="#64748B" opacity="0.6" />
 
           <line x1={o.x} y1={o.y} x2={p3.x} y2={p3.y} stroke="#059669" strokeWidth="2.5" />
 
           <circle cx={p3.x} cy={p3.y} r="9" fill="url(#sphere-gradient)" stroke="#F8FAFC" strokeWidth="2" />
           
           <text x={p3.x + 12} y={p3.y - 12} fill="#0F172A" fontSize="13" fontWeight="bold" className="font-mono">
-            [{action}, {comedy}, {romance}]
+            [{heightVal}, {weightVal}, {ageVal}]
           </text>
         </svg>
       </div>
@@ -231,33 +243,33 @@ export const Scene4b_ThreeDSpace: React.FC = () => {
         <div>
           <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-1">Adding a 3rd Dimension</h2>
           <p className="text-slate-600 text-xl md:text-2xl leading-relaxed">
-            By adding a third axis (Romance), we can plot movies in a 3D coordinate space.
+            By adding a third axis (Age), we can plot people in a 3D coordinate space.
           </p>
         </div>
 
         <div className="flex flex-col gap-4 bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
           <div>
             <div className="flex justify-between text-xs font-mono mb-1 text-slate-600 font-bold">
-              <span>Action Score (X)</span>
-              <span className="text-loss">{action}</span>
+              <span>Height (X, cm)</span>
+              <span className="text-loss">{heightVal} cm</span>
             </div>
-            <input type="range" min="0" max="100" value={action} onChange={(e) => setAction(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-loss" />
+            <input type="range" min="0" max="100" value={heightRaw} onChange={(e) => setHeightRaw(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-loss" />
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-mono mb-1 text-slate-600 font-bold">
-              <span>Comedy Score (Y)</span>
-              <span className="text-vector">{comedy}</span>
+              <span>Weight (Y, kg)</span>
+              <span className="text-vector">{weightVal} kg</span>
             </div>
-            <input type="range" min="0" max="100" value={comedy} onChange={(e) => setComedy(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-vector" />
+            <input type="range" min="0" max="100" value={weightRaw} onChange={(e) => setWeightRaw(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-vector" />
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-mono mb-1 text-slate-600 font-bold">
-              <span>Romance Score (Z)</span>
-              <span className="text-transformations">{romance}</span>
+              <span>Age (Z, years)</span>
+              <span className="text-transformations">{ageVal} yrs</span>
             </div>
-            <input type="range" min="0" max="100" value={romance} onChange={(e) => setRomance(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-transformations" />
+            <input type="range" min="0" max="100" value={ageRaw} onChange={(e) => setAgeRaw(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-transformations" />
           </div>
         </div>
       </div>

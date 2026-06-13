@@ -2,55 +2,91 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export const Scene15_NextHook: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full px-8 text-center max-w-3xl mx-auto relative">
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-sky-400/10 filter blur-[120px] pointer-events-none" />
+  <div className="relative flex flex-col items-center justify-center h-full px-8 overflow-hidden">
+    {/* Glow */}
+    <div className="absolute w-[600px] h-[600px] rounded-full bg-sky-400/10 blur-[140px]" />
 
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="flex flex-col items-center gap-6 z-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="relative z-10 flex flex-col items-center text-center max-w-4xl"
     >
       <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 14 }}
-        className="text-6xl select-none"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          delay: 0.2,
+          type: 'spring',
+          stiffness: 200,
+          damping: 15
+        }}
+        className="text-7xl mb-6"
       >
-        📐
+        📍
       </motion.div>
 
-      <span className="text-xs font-mono uppercase tracking-widest text-sky-500 font-extrabold">Up Next · Chapter 2</span>
+      <div className="text-sky-500 font-black uppercase tracking-[0.25em] text-xs mb-4">
+        Chapter 2
+      </div>
 
-      <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-tight">
-        Points are in space.<br />
-        <span className="text-sky-500">How close are they?</span>
+      <h1 className="text-5xl md:text-7xl font-black text-slate-800 leading-[0.95]">
+        We Have Points.
+        <br />
+        <span className="text-sky-500">
+          Now We Need Distance.
+        </span>
       </h1>
 
-      <div className="w-16 h-1.5 bg-gradient-to-r from-sky-400 to-violet-500 rounded-full" />
+      <p className="mt-6 text-xl text-slate-500 max-w-2xl leading-relaxed">
+        Once everything becomes a point, the next question is:
+      </p>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.8 }}
-        className="text-slate-500 text-lg font-medium leading-relaxed max-w-md"
-      >
-        Two songs. Two movies. Two words. Once they're points, we need a way to measure proximity — and it's not as simple as it looks.
-      </motion.p>
+      <div className="mt-12 flex items-center gap-10">
+        <motion.div
+          animate={{
+            x: [-8, 8, -8]
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 4
+          }}
+          className="flex items-center gap-4"
+        >
+          <div className="w-5 h-5 rounded-full bg-sky-500" />
+          <div className="w-32 h-[3px] bg-slate-300" />
+          <div className="w-5 h-5 rounded-full bg-violet-500" />
+        </motion.div>
+
+        <span className="text-2xl font-black text-slate-700">
+          Similar?
+        </span>
+      </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.6, duration: 0.7 }}
-        className="flex items-center gap-4 mt-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="mt-12 px-6 py-4 rounded-2xl bg-white/70 border border-slate-200 shadow-sm"
       >
-        {[['Euclidean Distance', '#0284C7'], ['Cosine Similarity', '#7C3AED'], ['The Magnitude Trap', '#E11D48']].map(([label, color]) => (
-          <div key={label} className="px-3 py-1.5 rounded-full border text-xs font-bold" style={{ borderColor: color + '55', color, backgroundColor: color + '11' }}>
-            {label}
-          </div>
-        ))}
+        <div className="text-lg font-bold text-slate-700">
+          Which points are actually close?
+        </div>
+
+        <div className="text-slate-500 mt-1">
+          The answer powers search, recommendations, and modern AI.
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6 }}
+        className="mt-8 text-sm font-mono text-slate-400"
+      >
+        Euclidean Distance • Cosine Similarity • Vector Magnitude
       </motion.div>
     </motion.div>
   </div>
 );
+
 export default Scene15_NextHook;
