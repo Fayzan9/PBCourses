@@ -68,7 +68,7 @@ const EXAMPLES = [
   }
 ];
 
-export const Scene2_3_RealWorldProximity: React.FC = () => {
+export const Scene2_2_RealWorldProximity: React.FC = () => {
   const [active, setActive] = useState(0);
   const [targets, setTargets] = useState(EXAMPLES.map(e => ({ ...e.defaultTarget })));
 

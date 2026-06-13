@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const Scene3_14_NextHook: React.FC = () => (
+export const Scene3_7_NextHook: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-full px-8 text-center max-w-3xl mx-auto relative">
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-rose-400/10 filter blur-[120px] pointer-events-none" />
 
@@ -53,4 +53,4 @@ export const Scene3_14_NextHook: React.FC = () => (
     </motion.div>
   </div>
 );
-export default Scene3_14_NextHook;
+export default Scene3_7_NextHook;

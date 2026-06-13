@@ -8,7 +8,7 @@ const CHARLIE = [20, 80];
 const euclideanDistance = (a: number[], b: number[]) =>
   Math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
 
-export const Scene2_7_SameDifferent: React.FC = () => {
+export const Scene2_5_SameDifferent: React.FC = () => {
   const sameTasteDistance = euclideanDistance(ALICE, BOB);
   const differentTasteDistance = euclideanDistance(ALICE, CHARLIE);
 
@@ -133,4 +133,4 @@ export const Scene2_7_SameDifferent: React.FC = () => {
   );
 };
 
-export default Scene2_7_SameDifferent;
+export default Scene2_5_SameDifferent;

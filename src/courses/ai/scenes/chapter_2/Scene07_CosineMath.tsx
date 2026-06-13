@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Math as KaTeXMath } from '../../components/Math';
 import { SlideLayout } from '../../components/SlideLayout';
 
-export const Scene2_10_CosineMath: React.FC = () => {
+export const Scene2_7_CosineMath: React.FC = () => {
   const [step, setStep] = useState(0);
 
   // Netflix Example
@@ -308,4 +308,4 @@ export const Scene2_10_CosineMath: React.FC = () => {
   );
 };
 
-export default Scene2_10_CosineMath;
+export default Scene2_7_CosineMath;

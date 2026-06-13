@@ -17,7 +17,7 @@ const SONGS: SongPoint[] = [
   { id: 'adele', label: 'Someone Like You', artist: 'Adele', x: 25, y: 75, color: '#059669' },
 ];
 
-export const Scene2_4_EuclideanDistance: React.FC = () => {
+export const Scene2_3_EuclideanDistance: React.FC = () => {
   const [target, setTarget] = useState({ x: 50, y: 45 });
   const [selectedSongId, setSelectedSongId] = useState<string>('billie');
 

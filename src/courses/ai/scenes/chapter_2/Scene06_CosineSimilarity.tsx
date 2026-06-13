@@ -90,7 +90,7 @@ const AnnotatedCosineCanvas: React.FC<{
   );
 };
 
-export const Scene2_9_CosineSimilarity: React.FC = () => {
+export const Scene2_6_CosineSimilarity: React.FC = () => {
   const [angleA, setAngleA] = useState(55);
   const [angleB, setAngleB] = useState(25);
   const [lenA, setLenA] = useState(25);

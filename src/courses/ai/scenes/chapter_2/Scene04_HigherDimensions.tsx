@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Math as KaTeXMath } from '../../components/Math';
 import { SlideLayout } from '../../components/SlideLayout';
 
-export const Scene2_5_HigherDimensions: React.FC = () => {
+export const Scene2_4_HigherDimensions: React.FC = () => {
   const [step, setStep] = useState(0);
 
   const steps = [
@@ -178,4 +178,4 @@ export const Scene2_5_HigherDimensions: React.FC = () => {
   );
 };
 
-export default Scene2_5_HigherDimensions;
+export default Scene2_4_HigherDimensions;

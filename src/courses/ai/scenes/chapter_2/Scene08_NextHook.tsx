@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Math as KaTeXMath } from '../../components/Math';
 
-export const Scene2_13_NextHook: React.FC = () => (
+export const Scene2_8_NextHook: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-full px-8 text-center max-w-4xl mx-auto relative overflow-hidden">
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
       <div className="w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[140px]" />
@@ -96,4 +96,4 @@ export const Scene2_13_NextHook: React.FC = () => (
   </div>
 );
 
-export default Scene2_13_NextHook;
+export default Scene2_8_NextHook;
