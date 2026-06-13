@@ -3,7 +3,7 @@ import { SlideLayout } from '../../components/SlideLayout';
 import { TransformGrid, useAnimatedMatrix } from '../../components/TransformGrid';
 import { type Mat2, mulMM, IDENTITY } from '../../components/mathHelpers';
 
-export const Scene4_14_ComposingTransforms: React.FC = () => {
+export const Scene4_11_ComposingTransforms: React.FC = () => {
   const [phaseIdx, setPhaseIdx] = useState<0 | 1 | 2>(0);
 
   const scaleX: Mat2 = [[2, 0], [0, 1]];
@@ -50,4 +50,4 @@ export const Scene4_14_ComposingTransforms: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_14_ComposingTransforms;
+export default Scene4_11_ComposingTransforms;

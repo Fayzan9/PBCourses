@@ -66,8 +66,23 @@ export const CourseViewer: React.FC<CourseViewerProps> = ({
   LiveAgentComponent,
   onBack
 }) => {
-  const [activeChapterIdx, setActiveChapterIdx] = useState(0);
-  const [currentSceneIdx, setCurrentSceneIdx] = useState(0);
+  const [activeChapterIdx, setActiveChapterIdx] = useState(() => {
+    const saved = localStorage.getItem(`${courseName}_activeChapterIdx`);
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [currentSceneIdx, setCurrentSceneIdx] = useState(() => {
+    const saved = localStorage.getItem(`${courseName}_currentSceneIdx`);
+    return saved ? parseInt(saved, 10) : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(`${courseName}_activeChapterIdx`, activeChapterIdx.toString());
+  }, [courseName, activeChapterIdx]);
+
+  useEffect(() => {
+    localStorage.setItem(`${courseName}_currentSceneIdx`, currentSceneIdx.toString());
+  }, [courseName, currentSceneIdx]);
+
   const [direction, setDirection] = useState<1 | -1>(1);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

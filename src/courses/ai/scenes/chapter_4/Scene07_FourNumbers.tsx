@@ -55,7 +55,7 @@ const insights = [
   },
 ];
 
-export const Scene4_8_FourNumbers: React.FC = () => (
+export const Scene4_7_FourNumbers: React.FC = () => (
   <SlideLayout
     title="Just 4 Numbers"
     text="Scale, rotate, shear — every transformation reduces to 4 numbers in a 2×2 grid."
@@ -108,4 +108,4 @@ export const Scene4_8_FourNumbers: React.FC = () => (
     </div>
   </SlideLayout>
 );
-export default Scene4_8_FourNumbers;
+export default Scene4_7_FourNumbers;

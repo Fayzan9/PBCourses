@@ -104,7 +104,7 @@ const stageDesc = (act: ActKey): string[] => [
   `M₂ applied to both. Left = always a parallelogram. Right depends on ${ACT_META[act].label}.`,
 ];
 
-export const Scene4_19b_StackedVsActivated: React.FC = () => {
+export const Scene4_19_StackedVsActivated: React.FC = () => {
   const [act, setAct]       = useState<ActKey>('relu');
   const [stage, setStage]   = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -445,4 +445,4 @@ export const Scene4_19b_StackedVsActivated: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_19b_StackedVsActivated;
+export default Scene4_19_StackedVsActivated;

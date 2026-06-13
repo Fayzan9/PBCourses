@@ -80,7 +80,7 @@ const linearPath = xs.map((x, i) => {
   return `${i === 0 ? 'M' : 'L'} ${toX(x).toFixed(1)} ${toY(y).toFixed(1)}`;
 }).join(' ');
 
-export const Scene4_19_NonLinearity: React.FC = () => {
+export const Scene4_18_NonLinearity: React.FC = () => {
   const [selected, setSelected] = useState(0);
   const act = ACTIVATIONS[selected];
 
@@ -304,4 +304,4 @@ export const Scene4_19_NonLinearity: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_19_NonLinearity;
+export default Scene4_18_NonLinearity;

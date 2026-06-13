@@ -36,7 +36,7 @@ const STEPS = [
   { label: 'Output',    desc: `${OUT} is the neuron's score — "how much does [${X}] match my weights?"` },
 ];
 
-export const Scene4_16_OneNeuron: React.FC = () => {
+export const Scene4_14_OneNeuron: React.FC = () => {
   const [step, setStep] = useState(0);
 
   const e1  = toCircle(I1.x, I1.y, NX, NY, NR);
@@ -227,4 +227,4 @@ export const Scene4_16_OneNeuron: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_16_OneNeuron;
+export default Scene4_14_OneNeuron;

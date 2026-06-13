@@ -30,7 +30,7 @@ const DATASETS: { id: Dataset; label: string; sub: string }[] = [
   { id: 'ring',   label: 'Hard — concentric rings', sub: 'No straight line works here' },
 ];
 
-export const Scene4_18b_WhyNonLinear: React.FC = () => {
+export const Scene4_16_WhyNonLinear: React.FC = () => {
   const [dataset, setDataset] = useState<Dataset>('linear');
   const [boundary, setBoundary] = useState<Boundary>('none');
 
@@ -217,4 +217,4 @@ export const Scene4_18b_WhyNonLinear: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_18b_WhyNonLinear;
+export default Scene4_16_WhyNonLinear;

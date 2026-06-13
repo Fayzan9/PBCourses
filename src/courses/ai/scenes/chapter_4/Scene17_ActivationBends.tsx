@@ -51,7 +51,7 @@ const STEP_INFO = [
   },
 ];
 
-export const Scene4_18c_ActivationBends: React.FC = () => {
+export const Scene4_17_ActivationBends: React.FC = () => {
   const [step, setStep] = useState(0);
 
   const transformed = step >= 1;
@@ -283,4 +283,4 @@ export const Scene4_18c_ActivationBends: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_18c_ActivationBends;
+export default Scene4_17_ActivationBends;

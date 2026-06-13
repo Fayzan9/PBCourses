@@ -8,7 +8,7 @@ const RECAP = [
   { label: 'Curves unlock any shape',  color: '#10B981', icon: '∿' },
 ];
 
-export const Scene4_22_NextHook: React.FC = () => (
+export const Scene4_20_NextHook: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-full px-8 text-center max-w-3xl mx-auto relative overflow-hidden">
     {/* Background glow */}
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] rounded-full bg-emerald-400/10 filter blur-[140px] pointer-events-none" />
@@ -102,4 +102,4 @@ export const Scene4_22_NextHook: React.FC = () => (
     </motion.div>
   </div>
 );
-export default Scene4_22_NextHook;
+export default Scene4_20_NextHook;

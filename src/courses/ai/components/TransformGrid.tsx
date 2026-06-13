@@ -108,12 +108,16 @@ export const TransformGrid: React.FC<{
   highlightVec?: [number, number] | null;
   showOriginalVec?: boolean;
   extraVec?: { vec: [number, number]; color: string; marker: string; label?: string } | null;
+  showBasisVectors?: boolean;
+  showTransformVectors?: boolean;
   width?: number;
   height?: number;
   scale?: number;
   range?: number;
 }> = ({
   M, highlightVec = null, showOriginalVec = false, extraVec = null,
+  showBasisVectors = true,
+  showTransformVectors = true,
   width = LAYOUT_CONFIG.graphWidth,
   height = LAYOUT_CONFIG.graphHeight,
   scale = LAYOUT_CONFIG.graphScale,
@@ -148,15 +152,47 @@ export const TransformGrid: React.FC<{
   const hvRaw = (highlightVec && showOriginalVec) ? rawPt(highlightVec[0], highlightVec[1]) : null;
   const ev = extraVec ? pt(extraVec.vec[0], extraVec.vec[1]) : null;
 
+  const grayVectors = [
+    [1, 1], [-1, 1], [-1, -1], [1, -1],
+    [1.5, 0.5], [-0.5, 1.5], [-1.5, -0.5], [0.5, -1.5],
+    [2, -1], [-2, 1], [-1, -2], [1, 2]
+  ] as [number, number][];
+
+  const q1Points = [pt(0,0), pt(range,0), pt(range,range), pt(0,range)].map(p => `${p[0]},${p[1]}`).join(' ');
+  const q2Points = [pt(0,0), pt(0,range), pt(-range,range), pt(-range,0)].map(p => `${p[0]},${p[1]}`).join(' ');
+  const q3Points = [pt(0,0), pt(-range,0), pt(-range,-range), pt(0,-range)].map(p => `${p[0]},${p[1]}`).join(' ');
+  const q4Points = [pt(0,0), pt(0,-range), pt(range,-range), pt(range,0)].map(p => `${p[0]},${p[1]}`).join(' ');
+
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full max-h-full">
       {MARKER_DEFS}
       <rect width={width} height={height} fill="white" rx="16" />
+      
+      {/* Warped quadrant planes */}
+      <polygon points={q1Points} fill="rgba(225, 29, 72, 0.05)" />
+      <polygon points={q2Points} fill="rgba(2, 132, 199, 0.05)" />
+      <polygon points={q3Points} fill="rgba(124, 58, 237, 0.05)" />
+      <polygon points={q4Points} fill="rgba(217, 119, 6, 0.05)" />
+
       {lines}
-      <line x1={origin[0]} y1={origin[1]} x2={e1[0]} y2={e1[1]}
-        stroke="#E11D48" strokeWidth="2.5" markerEnd="url(#g4-red)" />
-      <line x1={origin[0]} y1={origin[1]} x2={e2[0]} y2={e2[1]}
-        stroke="#0284C7" strokeWidth="2.5" markerEnd="url(#g4-blue)" />
+      
+      {/* Grayed-out background vectors showing space transformation */}
+      {showTransformVectors && grayVectors.map((v, idx) => {
+        const p = pt(v[0], v[1]);
+        return (
+          <line key={`gray-${idx}`} x1={origin[0]} y1={origin[1]} x2={p[0]} y2={p[1]}
+            stroke="#94a3b8" strokeWidth="1.5" strokeOpacity="0.35" markerEnd="url(#g4-slate)" />
+        );
+      })}
+
+      {showBasisVectors && (
+        <>
+          <line x1={origin[0]} y1={origin[1]} x2={e1[0]} y2={e1[1]}
+            stroke="#E11D48" strokeWidth="2.5" markerEnd="url(#g4-red)" />
+          <line x1={origin[0]} y1={origin[1]} x2={e2[0]} y2={e2[1]}
+            stroke="#0284C7" strokeWidth="2.5" markerEnd="url(#g4-blue)" />
+        </>
+      )}
       {hvRaw && (
         <line x1={origin[0]} y1={origin[1]} x2={hvRaw[0]} y2={hvRaw[1]}
           stroke="#cbd5e1" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#g4-slate)" />

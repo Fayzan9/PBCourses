@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlideLayout } from '../../components/SlideLayout';
 
-const ROWS   = [[2, 1], [0, 3], [1, 2]];
+const ROWS   = [[2, 1], [0, 3], [1, 2], [3, 1], [2, 3]];
 const INPUT  = [3, 2];
-const ACCENT = ['#E11D48', '#7C3AED', '#D97706'];
-const LIGHT  = ['#fff1f2', '#f5f3ff', '#fffbeb'];
-const BORDER = ['#fecdd3', '#ddd6fe', '#fde68a'];
+const ACCENT = ['#E11D48', '#7C3AED', '#D97706', '#059669', '#2563EB'];
+const LIGHT  = ['#fff1f2', '#f5f3ff', '#fffbeb', '#ecfdf5', '#eff6ff'];
+const BORDER = ['#fecdd3', '#ddd6fe', '#fde68a', '#a7f3d0', '#bfdbfe'];
 
-export const Scene4_15_DotProductBridge: React.FC = () => {
+export const Scene4_13_DotProductBridge: React.FC = () => {
   const [active, setActive] = useState<number | null>(null);
 
   const outputs = ROWS.map(r => r[0] * INPUT[0] + r[1] * INPUT[1]);
@@ -124,12 +124,11 @@ export const Scene4_15_DotProductBridge: React.FC = () => {
         </div>
       }
     >
-      {/* Matrix equation: M × input = output */}
-      <div className="flex items-center justify-center gap-4 w-full h-full select-none">
+      <div className="flex items-center justify-center gap-5 w-full h-full select-none">
 
         {/* Matrix — clickable rows */}
         <div className="flex flex-col gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Matrix</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Matrix</span>
           {ROWS.map((row, i) => (
             <motion.button
               key={i}
@@ -145,7 +144,7 @@ export const Scene4_15_DotProductBridge: React.FC = () => {
             >
               {row.map((v, j) => (
                 <span key={j}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center font-mono text-xl font-black transition-all"
+                  className="w-14 h-14 rounded-xl flex items-center justify-center font-mono text-2xl font-black transition-all"
                   style={
                     active === i
                       ? { backgroundColor: ACCENT[i], color: '#fff' }
@@ -159,25 +158,25 @@ export const Scene4_15_DotProductBridge: React.FC = () => {
         </div>
 
         {/* × */}
-        <span className="text-3xl font-thin text-slate-300 mt-6">×</span>
+        <span className="text-5xl font-thin text-slate-300 mt-6">×</span>
 
         {/* Input vector */}
         <div className="flex flex-col gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Input</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Input</span>
           {INPUT.map((v, i) => (
             <div key={i}
-              className="w-14 h-[52px] rounded-2xl border-2 border-sky-200 bg-sky-50 flex items-center justify-center font-mono text-xl font-black text-sky-600">
+              className="w-20 h-16 rounded-2xl border-2 border-sky-200 bg-sky-50 flex items-center justify-center font-mono text-2xl font-black text-sky-600">
               {v}
             </div>
           ))}
         </div>
 
         {/* = */}
-        <span className="text-3xl font-thin text-slate-300 mt-6">=</span>
+        <span className="text-5xl font-thin text-slate-300 mt-6">=</span>
 
         {/* Output vector */}
         <div className="flex flex-col gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Output</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold text-center mb-1">Output</span>
           {outputs.map((v, i) => (
             <motion.div
               key={i}
@@ -187,7 +186,7 @@ export const Scene4_15_DotProductBridge: React.FC = () => {
                 scale:           active === i ? 1.08 : 1,
               }}
               transition={{ duration: 0.2 }}
-              className="w-14 h-[52px] rounded-2xl border-2 flex items-center justify-center font-mono text-xl font-black"
+              className="w-20 h-16 rounded-2xl border-2 flex items-center justify-center font-mono text-2xl font-black"
               style={{ color: active === i ? ACCENT[i] : '#94a3b8' }}
             >
               {v}
@@ -198,4 +197,4 @@ export const Scene4_15_DotProductBridge: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_15_DotProductBridge;
+export default Scene4_13_DotProductBridge;

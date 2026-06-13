@@ -12,7 +12,18 @@ import { computerArchitectureConfig } from './courses/computer_architecture';
 type CourseType = 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | 'computer_architecture' | null;
 
 export const App: React.FC = () => {
-  const [currentCourse, setCurrentCourse] = useState<CourseType>(null);
+  const [currentCourse, setCurrentCourse] = useState<CourseType>(() => {
+    return (localStorage.getItem('currentCourse') as CourseType) || null;
+  });
+
+  const updateCourse = (course: CourseType) => {
+    setCurrentCourse(course);
+    if (course) {
+      localStorage.setItem('currentCourse', course);
+    } else {
+      localStorage.removeItem('currentCourse');
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#F8FAFC]">
@@ -25,7 +36,7 @@ export const App: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <LandingPage onSelectCourse={(course) => setCurrentCourse(course)} />
+            <LandingPage onSelectCourse={(course) => updateCourse(course)} />
           </motion.div>
         )}
 
@@ -44,7 +55,7 @@ export const App: React.FC = () => {
               themes={aiConfig.themes}
               hasWhiteboard={aiConfig.hasWhiteboard}
               WhiteboardComponent={aiConfig.WhiteboardComponent}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}
@@ -66,7 +77,7 @@ export const App: React.FC = () => {
               SandboxComponent={pythonConfig.SandboxComponent}
               hasWhiteboard={pythonConfig.hasWhiteboard}
               WhiteboardComponent={pythonConfig.WhiteboardComponent}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}
@@ -88,7 +99,7 @@ export const App: React.FC = () => {
               SandboxComponent={pythonProConfig.SandboxComponent}
               hasWhiteboard={pythonProConfig.hasWhiteboard}
               WhiteboardComponent={pythonProConfig.WhiteboardComponent}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}
@@ -110,7 +121,7 @@ export const App: React.FC = () => {
               WhiteboardComponent={marathiConfig.WhiteboardComponent}
               hasLiveAgent={marathiConfig.hasLiveAgent}
               LiveAgentComponent={marathiConfig.LiveAgentComponent}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}
@@ -128,7 +139,7 @@ export const App: React.FC = () => {
               courseName={javascriptConfig.courseName}
               chapters={javascriptConfig.chapters}
               themes={javascriptConfig.themes}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}
@@ -146,7 +157,7 @@ export const App: React.FC = () => {
               courseName={computerArchitectureConfig.courseName}
               chapters={computerArchitectureConfig.chapters}
               themes={computerArchitectureConfig.themes}
-              onBack={() => setCurrentCourse(null)}
+              onBack={() => updateCourse(null)}
             />
           </motion.div>
         )}

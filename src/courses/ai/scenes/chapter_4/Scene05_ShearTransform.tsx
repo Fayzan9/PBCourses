@@ -5,7 +5,7 @@ import { type Mat2 } from '../../components/mathHelpers';
 
 const CX = 240, CY = 240, SC = 68;
 
-export const Scene4_7_ShearTransform: React.FC = () => {
+export const Scene4_5_ShearTransform: React.FC = () => {
   const [shear, setShear] = useState(0.0);
   const M: Mat2 = [[1, shear], [0, 1]];
   const animated = useAnimatedMatrix(M, 80);
@@ -73,11 +73,11 @@ export const Scene4_7_ShearTransform: React.FC = () => {
           <div>
             <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2 text-center">Matrix</p>
             <div className="flex items-center justify-center gap-1">
-              <span className="text-slate-300 text-3xl font-thin self-stretch flex items-center">⌊</span>
+              <span className="text-slate-300 text-5xl font-thin self-stretch flex items-center">⌊</span>
               <div className="grid grid-cols-2 gap-1.5">
                 {matCells.map((c, i) => (
                   <div key={i}
-                    className="w-14 h-10 rounded-lg flex items-center justify-center font-mono text-sm font-bold transition-all duration-100"
+                    className="w-20 h-14 rounded-xl flex items-center justify-center font-mono text-base font-bold transition-all duration-100"
                     style={c.active
                       ? { backgroundColor: '#fef3c7', color: '#D97706' }
                       : { backgroundColor: '#f8fafc', color: '#94a3b8' }}>
@@ -85,7 +85,7 @@ export const Scene4_7_ShearTransform: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <span className="text-slate-300 text-3xl font-thin self-stretch flex items-center">⌋</span>
+              <span className="text-slate-300 text-5xl font-thin self-stretch flex items-center">⌋</span>
             </div>
             <p className="text-[10px] text-slate-400 text-center mt-2 font-medium">one slot drives the tilt</p>
           </div>
@@ -157,4 +157,4 @@ export const Scene4_7_ShearTransform: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_7_ShearTransform;
+export default Scene4_5_ShearTransform;

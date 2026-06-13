@@ -12,7 +12,7 @@ const WARP_PRESETS: { label: string; desc: string; M: Mat2 }[] = [
   { label: 'Squash',     desc: 'Space is squashed vertically and stretched horizontally.',                      M: [[1.5, 0], [0, 0.5]] },
 ];
 
-export const Scene4_12_GridWarpPresets: React.FC = () => {
+export const Scene4_10_GridWarpPresets: React.FC = () => {
   const [idx, setIdx] = useState(0);
   const animated = useAnimatedMatrix(WARP_PRESETS[idx].M);
 
@@ -47,4 +47,4 @@ export const Scene4_12_GridWarpPresets: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_12_GridWarpPresets;
+export default Scene4_10_GridWarpPresets;

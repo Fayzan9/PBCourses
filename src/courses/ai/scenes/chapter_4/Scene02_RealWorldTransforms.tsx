@@ -3,7 +3,7 @@ import { SlideLayout } from '../../components/SlideLayout';
 import { TransformGrid, useAnimatedMatrix } from '../../components/TransformGrid';
 import { type Mat2 } from '../../components/mathHelpers';
 
-export const Scene4_3_RealWorldTransforms: React.FC = () => {
+export const Scene4_2_RealWorldTransforms: React.FC = () => {
   const [active, setActive] = useState(0);
 
   const examples = [
@@ -73,4 +73,4 @@ export const Scene4_3_RealWorldTransforms: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_3_RealWorldTransforms;
+export default Scene4_2_RealWorldTransforms;

@@ -31,7 +31,7 @@ function fromCircle(cx: number, cy: number, x2: number, y2: number, r: number) {
   return { x: cx+(dx/d)*r, y: cy+(dy/d)*r };
 }
 
-export const Scene4_17_NeuralLayer: React.FC = () => {
+export const Scene4_15_NeuralLayer: React.FC = () => {
   const [active, setActive] = useState<number | null>(null);
 
   return (
@@ -261,4 +261,4 @@ export const Scene4_17_NeuralLayer: React.FC = () => {
     </SlideLayout>
   );
 };
-export default Scene4_17_NeuralLayer;
+export default Scene4_15_NeuralLayer;
