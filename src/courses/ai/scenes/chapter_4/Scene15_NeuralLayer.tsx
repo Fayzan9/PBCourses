@@ -10,8 +10,8 @@ const BORDER = ['#fecdd3', '#ddd6fe', '#fde68a'];
 const SVG_W = 680, SVG_H = 320;
 const IR = 22, NR = 30, OR = 22;
 // Matrix panel left zone
-const CELL_W = 38, CELL_H = 28, CELL_GAP_X = 4, CELL_GAP_Y = 6;
-const MAT_X = 10, MAT_Y = 50;
+const CELL_W = 38, CELL_H = 28, CELL_GAP_X = 4;
+const MAT_X = 10;
 
 function toCircle(x1: number, y1: number, cx: number, cy: number, r: number) {
   const dx = cx-x1, dy = cy-y1, d = Math.hypot(dx, dy);
