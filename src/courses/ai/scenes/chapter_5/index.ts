@@ -5,6 +5,10 @@ import { Scene5_2_RubberSheetThink } from './Scene02_RubberSheetThink';
 import { Scene5_3b_Bridge } from './Scene03b_Bridge';
 import { Scene5_5_WhatMakesSpecial } from './Scene05_WhatMakesSpecial';
 import { Scene5_6_TheEquation } from './Scene06_TheEquation';
+import { Scene5_6b_WhyEigenvaluesMatter } from './Scene06b_WhyEigenvaluesMatter';
+import { Scene5_6c_WhyEigenvaluesMatter } from './Scene06c_WhyEigenvaluesMatter';
+import { Scene5_6d_WhyEigenvaluesMatter } from './Scene06d_WhyEigenvaluesMatter';
+import { Scene5_6e_WhyEigenvaluesMatter } from './Scene06e_WhyEigenvaluesMatter';
 import { Scene5_7_SolveExample } from './Scene07_SolveExample';
 import { Scene5_22_NextHook } from './Scene22_NextHook';
 
@@ -18,6 +22,10 @@ export const chapter5: Chapter = {
     { component: Scene5_3b_Bridge,                   title: "What Are We Looking For?" },
     { component: Scene5_5_WhatMakesSpecial,          title: "Think: What Makes Special?" },
     { component: Scene5_6_TheEquation,               title: "The Equation Revealed" },
+    { component: Scene5_6b_WhyEigenvaluesMatter,     title: "Why Eigenvalues Matter" },
+    { component: Scene5_6c_WhyEigenvaluesMatter,     title: "Eigenvalue Behaviors" },
+    { component: Scene5_6d_WhyEigenvaluesMatter,     title: "Eigenvalue Iteration" },
+    { component: Scene5_6e_WhyEigenvaluesMatter,     title: "Eigenvalue Survival" },
     { component: Scene5_7_SolveExample,              title: "Solving an Example" },
     { component: Scene5_22_NextHook,                 title: "What's Next" }
   ]

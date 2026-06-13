@@ -20,11 +20,13 @@ export const Scene5_22_NextHook: React.FC = () => (
         🗜️
       </motion.div>
 
-      <span className="text-xs font-mono uppercase tracking-widest text-sky-500 font-extrabold">Up Next · Chapter 6</span>
+      <span className="text-xs font-mono uppercase tracking-widest text-indigo-600 font-black px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full">
+        ⚡ Up Next: The Swiss Army Knife of AI
+      </span>
 
-      <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 leading-tight">
+      <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-850 leading-tight">
         You found the axes.<br />
-        <span className="text-sky-500">Now compress along them.</span>
+        <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Now let's decompose reality.</span>
       </h1>
 
       <div className="w-16 h-1.5 bg-gradient-to-r from-sky-400 to-violet-500 rounded-full" />
