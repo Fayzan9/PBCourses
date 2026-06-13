@@ -1,220 +1,261 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Math as KaTeXMath } from '../../components/Math';
+import { Activity, Radio, Music, Award } from 'lucide-react';
 
-// ─── Points — same world from Scene03 ────────────────────────────────────────
-const YOUR_SONG  = { x: 48, y: 45, label: 'Your Song' };
+type SongPoint = {
+  id: string;
+  label: string;
+  artist: string;
+  x: number; // Energy (0-100)
+  y: number; // Acousticness (0-100)
+  color: string;
+};
 
-const SONGS = [
-  { id: 'lofi',  label: 'Lo-fi Chill', x: 32, y: 58, good: true  },
-  { id: 'indie', label: 'Indie Rock',  x: 62, y: 60, good: true  },
-  { id: 'metal', label: 'Heavy Metal', x: 92, y: 88, good: false },
-  { id: 'pop',   label: 'Pop Hit',     x: 88, y: 12, good: false },
+const SONGS: SongPoint[] = [
+  { id: 'billie', label: 'Bad Guy', artist: 'Billie Eilish', x: 55, y: 50, color: '#7C3AED' },
+  { id: 'daft', label: 'One More Time', artist: 'Daft Punk', x: 85, y: 15, color: '#0284C7' },
+  { id: 'adele', label: 'Someone Like You', artist: 'Adele', x: 25, y: 75, color: '#059669' },
 ];
 
-const GOOD_COLOR = '#10B981';
-const BAD_COLOR  = '#E11D48';
+export const Scene2_4_EuclideanDistance: React.FC = () => {
+  const [target, setTarget] = useState({ x: 50, y: 45 });
+  const [selectedSongId, setSelectedSongId] = useState<string>('billie');
 
-function euclidean(ax: number, ay: number, bx: number, by: number) {
-  const dx = bx - ax, dy = by - ay;
-  return { dx, dy, dist: Math.sqrt(dx * dx + dy * dy) };
-}
-
-// ─── Annotated Canvas ─────────────────────────────────────────────────────────
-const EuclidCanvas: React.FC = () => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const W = 500, H = 420, PAD = 52;
-  const pw = W - PAD * 2, ph = H - PAD * 2;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const W = 480;
+  const H = 480;
+  const PAD = 40;
+  const pw = W - PAD * 2;
+  const ph = H - PAD * 2;
 
   const toSvg = (x: number, y: number): [number, number] => [
     PAD + (x / 100) * pw,
     PAD + ph - (y / 100) * ph,
   ];
 
-  const [oX, oY] = toSvg(YOUR_SONG.x, YOUR_SONG.y);
-  const ticks = [0, 25, 50, 75, 100];
+  const fromSvg = (svgX: number, svgY: number): [number, number] => {
+    const rawX = ((svgX - PAD) / pw) * 100;
+    const rawY = (1 - (svgY - PAD) / ph) * 100;
+    return [
+      Math.max(0, Math.min(100, Math.round(rawX))),
+      Math.max(0, Math.min(100, Math.round(rawY))),
+    ];
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    const [dataX, dataY] = fromSvg(x * scaleX, y * scaleY);
+    setTarget({ x: dataX, y: dataY });
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (e.buttons !== 1 || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    const [dataX, dataY] = fromSvg(x * scaleX, y * scaleY);
+    setTarget({ x: dataX, y: dataY });
+  };
+
+  const selectedSong = useMemo(() => {
+    return SONGS.find(s => s.id === selectedSongId) || SONGS[0];
+  }, [selectedSongId]);
+
+  // Calculations
+  const dx = selectedSong.x - target.x;
+  const dy = selectedSong.y - target.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // SVG coordinates
+  const [tx, ty] = toSvg(target.x, target.y);
+  const [sx, sy] = toSvg(selectedSong.x, selectedSong.y);
+
+  // Grid Ticks
+  const ticks = [0, 20, 40, 60, 80, 100];
 
   return (
-    <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
-      {/* Grid */}
-      {ticks.map(t => {
-        const [xi] = toSvg(t, 0);
-        const [, yi] = toSvg(0, t);
-        return (
-          <g key={t}>
-            <line x1={xi} y1={PAD} x2={xi} y2={PAD + ph} stroke="#f1f5f9" strokeWidth="1" />
-            <line x1={PAD} y1={yi} x2={PAD + pw} y2={yi} stroke="#f1f5f9" strokeWidth="1" />
-            <text x={xi} y={PAD + ph + 14} textAnchor="middle" fill="#cbd5e1" fontSize="9">{t}</text>
-            <text x={PAD - 5} y={yi + 3} textAnchor="end" fill="#cbd5e1" fontSize="9">{t}</text>
-          </g>
-        );
-      })}
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden">
+      {/* Left side: Interactive Canvas */}
+      <div ref={containerRef} className="flex-[60] min-w-0 bg-slate-50 border border-slate-200/80 rounded-3xl p-4 shadow-sm relative overflow-hidden flex flex-col justify-between select-none">
+        <div className="absolute top-4 left-4 z-10 flex gap-2">
+          <span className="text-xs bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-full font-mono flex items-center gap-1.5 shadow-sm">
+            <Activity className="w-3.5 h-3.5 text-violet-600" />
+            Energy (x): {target.x}
+          </span>
+          <span className="text-xs bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-full font-mono flex items-center gap-1.5 shadow-sm">
+            <Radio className="w-3.5 h-3.5 text-emerald-600" />
+            Acousticness (y): {target.y}
+          </span>
+        </div>
 
-      {/* Axes */}
-      <line x1={PAD} y1={PAD} x2={PAD} y2={PAD + ph} stroke="#e2e8f0" strokeWidth="1.5" />
-      <line x1={PAD} y1={PAD + ph} x2={PAD + pw} y2={PAD + ph} stroke="#e2e8f0" strokeWidth="1.5" />
-      <text x={PAD + pw / 2} y={H - 4} textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="bold">Tempo / Energy →</text>
-      <text x={10} y={PAD + ph / 2} textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="bold"
-        transform={`rotate(-90,10,${PAD + ph / 2})`}>Genre Score →</text>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="w-full h-auto cursor-crosshair grow"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+        >
+          {/* Grid lines */}
+          {ticks.map(t => {
+            const [gx] = toSvg(t, 0);
+            const [, gy] = toSvg(0, t);
+            return (
+              <g key={t} opacity="0.4">
+                <line x1={gx} y1={PAD} x2={gx} y2={PAD + ph} stroke="#94a3b8" strokeWidth="0.8" strokeDasharray="3 3" />
+                <line x1={PAD} y1={gy} x2={PAD + pw} y2={gy} stroke="#94a3b8" strokeWidth="0.8" strokeDasharray="3 3" />
+                <text x={gx} y={PAD + ph + 16} textAnchor="middle" fill="#64748b" fontSize="10" fontWeight="bold">{t}</text>
+                <text x={PAD - 8} y={gy + 3} textAnchor="end" fill="#64748b" fontSize="10" fontWeight="bold">{t}</text>
+              </g>
+            );
+          })}
 
-      {/* Distance lines + labels for each song */}
-      {SONGS.map(s => {
-        const [px, py] = toSvg(s.x, s.y);
-        const { dist } = euclidean(YOUR_SONG.x, YOUR_SONG.y, s.x, s.y);
-        const color = s.good ? GOOD_COLOR : BAD_COLOR;
-        const mx = (oX + px) / 2, my = (oY + py) / 2;
-        // perpendicular offset for label
-        const lineLen = Math.sqrt((px - oX) ** 2 + (py - oY) ** 2);
-        const nx = -(py - oY) / lineLen * 12, ny = (px - oX) / lineLen * 12;
-        return (
-          <g key={s.id}>
-            <line x1={oX} y1={oY} x2={px} y2={py}
-              stroke={color} strokeWidth={s.good ? 2.5 : 1.5}
-              strokeDasharray={s.good ? 'none' : '5,4'}
-              opacity={s.good ? 0.9 : 0.45} />
-            {/* distance label perpendicular to line */}
-            <text x={mx + nx} y={my + ny} textAnchor="middle" fill={color}
-              fontSize="9" fontWeight="bold"
-              stroke="white" strokeWidth="2.5"
-              style={{ paintOrder: 'stroke' } as React.CSSProperties}>
-              {dist.toFixed(0)}
+          {/* Axes */}
+          <line x1={PAD} y1={PAD} x2={PAD} y2={PAD + ph} stroke="#475569" strokeWidth="1.5" />
+          <line x1={PAD} y1={PAD + ph} x2={PAD + pw} y2={PAD + ph} stroke="#475569" strokeWidth="1.5" />
+
+          {/* Helper Right-Triangle Visualization (Pythagorean) */}
+          <g>
+            {/* Base leg dx (horizontal) */}
+            <line x1={tx} y1={ty} x2={sx} y2={ty} stroke="#E11D48" strokeWidth="1.8" strokeDasharray="4 4" opacity="0.85" />
+            {/* Height leg dy (vertical) */}
+            <line x1={sx} y1={ty} x2={sx} y2={sy} stroke="#0284C7" strokeWidth="1.8" strokeDasharray="4 4" opacity="0.85" />
+            {/* Hypotenuse (Euclidean path) */}
+            <line x1={tx} y1={ty} x2={sx} y2={sy} stroke="#10B981" strokeWidth="2.5" opacity="0.95" />
+
+            {/* Label delta x */}
+            <text x={(tx + sx) / 2} y={ty + (ty > sy ? 16 : -8)} textAnchor="middle" fill="#E11D48" fontSize="11" fontWeight="bold" className="font-mono"
+              style={{ paintOrder: 'stroke', stroke: '#f8fafc', strokeWidth: 3.5 } as React.CSSProperties}>
+              Δx = {Math.abs(dx)}
+            </text>
+            {/* Label delta y */}
+            <text x={sx + (sx > tx ? 10 : -10)} y={(ty + sy) / 2 + 4} textAnchor={sx > tx ? 'start' : 'end'} fill="#0284C7" fontSize="11" fontWeight="bold" className="font-mono"
+              style={{ paintOrder: 'stroke', stroke: '#f8fafc', strokeWidth: 3.5 } as React.CSSProperties}>
+              Δy = {Math.abs(dy)}
             </text>
           </g>
-        );
-      })}
 
-      {/* Candidate dots + labels */}
-      {SONGS.map(s => {
-        const [px, py] = toSvg(s.x, s.y);
-        const color = s.good ? GOOD_COLOR : BAD_COLOR;
-        const labelX = px + (s.x > 50 ? -12 : 12);
-        const anchor = s.x > 50 ? 'end' : 'start';
-        return (
-          <g key={s.id}>
-            <circle cx={px} cy={py} r={s.good ? 7 : 6}
-              fill={color} opacity={s.good ? 1 : 0.5}
-              stroke="white" strokeWidth="1.5" />
-            <text x={labelX} y={py - 10} textAnchor={anchor} fill={color}
-              fontSize="9" fontWeight="bold"
-              stroke="white" strokeWidth="2.5"
-              style={{ paintOrder: 'stroke' } as React.CSSProperties}>
-              {s.label}
+          {/* Target points */}
+          {SONGS.map(s => {
+            const [px, py] = toSvg(s.x, s.y);
+            const isSel = s.id === selectedSongId;
+            return (
+              <g key={s.id} className="cursor-pointer" onClick={(e) => { e.stopPropagation(); setSelectedSongId(s.id); }}>
+                {isSel && (
+                  <circle cx={px} cy={py} r={12} fill="none" stroke={s.color} strokeWidth="1.5" opacity="0.6" />
+                )}
+                <circle cx={px} cy={py} r={5} fill={s.color} stroke="#f8fafc" strokeWidth="1.5" />
+                <text x={px} y={py - 12} textAnchor="middle" fill="#0f172a" fontSize="10" fontWeight="bold" style={{ paintOrder: 'stroke', stroke: '#f8fafc', strokeWidth: 3.5 } as React.CSSProperties}>
+                  {s.label} ({s.x}, {s.y})
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Custom Track Target point */}
+          <g>
+            <circle cx={tx} cy={ty} r={8} fill="white" stroke="#10B981" strokeWidth="2.5" className="shadow-sm" />
+            <circle cx={tx} cy={ty} r={3.5} fill="#10B981" />
+            <text x={tx} y={ty - 14} textAnchor="middle" fill="#10B981" fontSize="11" fontWeight="extrabold" style={{ paintOrder: 'stroke', stroke: '#f8fafc', strokeWidth: 3.5 } as React.CSSProperties}>
+              Custom Track ({target.x}, {target.y})
             </text>
           </g>
-        );
-      })}
+        </svg>
 
-      {/* Your Song dot */}
-      <circle cx={oX} cy={oY} r={10} fill="white" stroke="#1e293b" strokeWidth="2.5" />
-      <circle cx={oX} cy={oY} r={5}  fill="#1e293b" />
-      <text x={oX} y={oY + 20} textAnchor="middle" fill="#1e293b"
-        fontSize="9" fontWeight="bold"
-        stroke="white" strokeWidth="2.5"
-        style={{ paintOrder: 'stroke' } as React.CSSProperties}>
-        Your Song
-      </text>
-
-      {/* Legend */}
-      <g transform={`translate(${PAD + 8}, ${PAD + 8})`}>
-        <line x1="0" y1="6" x2="18" y2="6" stroke={GOOD_COLOR} strokeWidth="2.5" />
-        <text x="22" y="10" fill="#475569" fontSize="9" fontWeight="600">Close match</text>
-        <line x1="0" y1="22" x2="18" y2="22" stroke={BAD_COLOR} strokeWidth="1.5" strokeDasharray="4,3" opacity="0.6" />
-        <text x="22" y="26" fill="#475569" fontSize="9" fontWeight="600">Poor match</text>
-      </g>
-    </svg>
-  );
-};
-
-// ─── Scene ────────────────────────────────────────────────────────────────────
-const containerClass = "flex flex-col lg:flex-row items-stretch gap-6 h-full py-2 w-full max-w-7xl mx-auto px-4 overflow-hidden";
-const leftSideClass  = "flex-[65] min-w-0 bg-white/40 border border-slate-200/50 rounded-3xl p-3 shadow-inner overflow-hidden";
-const rightSideClass = "flex-[35] flex flex-col justify-start gap-4 shrink-0 pt-2 pb-2 overflow-y-auto";
-
-export const Scene2_4_EuclideanDistance: React.FC = () => {
-  const ax = YOUR_SONG.x, ay = YOUR_SONG.y;
-
-  const goodSongs = SONGS.filter(s => s.good);
-  const badSongs  = SONGS.filter(s => !s.good);
-
-  return (
-    <div className={containerClass}>
-      {/* Left — graph */}
-      <div className={leftSideClass}>
-        <EuclidCanvas />
+        <div className="text-center text-xs text-slate-400 font-semibold mt-2">
+          Drag anywhere on the grid to position the Custom Track. Click on songs to switch target distance.
+        </div>
       </div>
 
-      {/* Right — sidebar */}
-      <div className={rightSideClass}>
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 font-bold mb-1">Building on Scene 3 ↑</p>
-          <h2 className="text-3xl font-black text-slate-800 leading-tight mb-1">Euclidean Distance</h2>
-          <p className="text-slate-500 text-sm font-medium leading-snug">
-            The proximity sandbox used this formula the whole time. Smaller distance = better match. Here's why.
-          </p>
-        </div>
-
-        {/* Good vs Bad side-by-side */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl">
-            <div className="text-[10px] font-black uppercase tracking-wider text-emerald-600 mb-2">✓ Close matches</div>
-            {goodSongs.map(s => {
-              const { dx, dy, dist } = euclidean(ax, ay, s.x, s.y);
-              return (
-                <div key={s.id} className="mb-2 last:mb-0">
-                  <div className="font-bold text-xs text-emerald-700">{s.label}</div>
-                  <div className="font-mono text-[10px] text-emerald-600">
-                    Δ({Math.abs(dx)}, {Math.abs(dy)}) → d = <span className="font-black">{dist.toFixed(0)}</span>
-                  </div>
-                </div>
-              );
-            })}
+      {/* Right side: Modern interactive stats & formulas */}
+      <div className="flex-[40] flex flex-col justify-between gap-4 shrink-0 pt-1 pb-1 overflow-y-auto">
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-3xl font-black text-slate-800 leading-tight">Euclidean Distance</h2>
+            <p className="text-slate-500 text-sm font-semibold leading-relaxed mt-1">
+              Geometrical straight-line distance, mapped exactly like the Pythagorean theorem in coordinate space.
+            </p>
           </div>
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl">
-            <div className="text-[10px] font-black uppercase tracking-wider text-rose-500 mb-2">✗ Poor matches</div>
-            {badSongs.map(s => {
-              const { dx, dy, dist } = euclidean(ax, ay, s.x, s.y);
-              return (
-                <div key={s.id} className="mb-2 last:mb-0">
-                  <div className="font-bold text-xs text-rose-600">{s.label}</div>
-                  <div className="font-mono text-[10px] text-rose-500">
-                    Δ({Math.abs(dx)}, {Math.abs(dy)}) → d = <span className="font-black">{dist.toFixed(0)}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Step-by-step for Lo-fi (best match) */}
-        {(() => {
-          const s = SONGS[0]; // Lo-fi Chill
-          const { dx, dy } = euclidean(ax, ay, s.x, s.y);
-          return (
-            <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
-              <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">
-                How it's computed — Your Song → {s.label}
+          {/* Target Song Selector */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Select Target Song</span>
+            <div className="grid grid-cols-3 gap-2">
+              {SONGS.map(s => (
+                <button
+                  key={s.id}
+                  onClick={() => setSelectedSongId(s.id)}
+                  className={`px-2 py-3 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                    selectedSongId === s.id
+                      ? 'bg-slate-900 border-slate-900 text-white shadow-md scale-[1.02]'
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                  }`}
+                >
+                  <Music className="w-4 h-4" style={{ color: selectedSongId === s.id ? '#ffffff' : s.color }} />
+                  <span className="font-extrabold text-[10px] truncate w-full">{s.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dynamic math visualizer */}
+          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 shadow-inner">
+            <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold block mb-3">
+              Pythagorean Calculation
+            </span>
+            <div className="flex flex-col gap-2.5 font-mono text-sm text-slate-600">
+              <div className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-rose-500 animate-pulse" />
+                  <span className="font-extrabold text-slate-700">Δx (Energy diff)</span>
+                </div>
+                <span className="font-black text-slate-900 text-base">
+                  |{selectedSong.x} - {target.x}| = {Math.abs(dx)}
+                </span>
               </div>
-              <div className="flex flex-col gap-1.5 text-xs font-mono">
-                <div className="flex justify-between px-2 py-1 bg-rose-50 border border-rose-100 rounded-lg">
-                  <span className="text-rose-600">Δx = {s.x}−{ax}</span>
-                  <span className="font-black text-rose-700">{dx}</span>
+
+              <div className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-sky-500 animate-pulse" />
+                  <span className="font-extrabold text-slate-700">Δy (Acousticness diff)</span>
                 </div>
-                <div className="flex justify-between px-2 py-1 bg-sky-50 border border-sky-100 rounded-lg">
-                  <span className="text-sky-600">Δy = {s.y}−{ay}</span>
-                  <span className="font-black text-sky-700">{dy}</span>
+                <span className="font-black text-slate-900 text-base">
+                  |{selectedSong.y} - {target.y}| = {Math.abs(dy)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-emerald-550/10 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500" />
+                  <span className="font-black">Distance (d)</span>
                 </div>
-                <div className="flex justify-between px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg">
-                  <span className="text-slate-500">√({dx}²+{dy}²)</span>
-                  <span className="font-black text-emerald-600">{Math.sqrt(dx*dx+dy*dy).toFixed(1)}</span>
-                </div>
+                <span className="font-black text-lg text-emerald-700">
+                  √({Math.abs(dx)}² + {Math.abs(dy)}²) = {dist.toFixed(1)}
+                </span>
               </div>
             </div>
-          );
-        })()}
+          </div>
+        </div>
 
-        {/* General formula */}
-        <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-center">
-          <div className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Scales to n dimensions</div>
-          <KaTeXMath tex={`d = \\sqrt{\\sum_{i=1}^{n}(B_i - A_i)^2}`} />
+        {/* Dynamic Formula representation */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-white flex flex-col gap-2 relative overflow-hidden">
+          <div className="absolute top-2 right-2 opacity-10">
+            <Award className="w-20 h-20 text-white" />
+          </div>
+          <span className="text-[9px] font-mono uppercase tracking-wider text-slate-400 font-black">
+            The Euclidean Formula
+          </span>
+          <div className="py-2 text-center text-lg">
+            <KaTeXMath tex={`d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}`} />
+          </div>
+          <p className="text-[10px] text-slate-400 font-medium leading-relaxed text-center">
+            This simple relationship scales perfectly to 3D, 10D, or even 1,536D spaces by extending the sum under the square root.
+          </p>
         </div>
       </div>
     </div>

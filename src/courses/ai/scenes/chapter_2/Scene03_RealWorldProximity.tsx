@@ -11,67 +11,61 @@ type Candidate = { id: string; label: string; x: number; y: number; color: strin
 const EXAMPLES = [
   {
     icon: '🎵',
-    label: 'Music Streaming',
-    tag: 'Nearest Neighbors',
-    tagColor: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-    accent: '#10B981',
-    targetLabel: 'Your Song',
-    defaultTarget: { x: 38, y: 42 },
-    xLabel: 'Tempo / Energy',
-    yLabel: 'Genre Score',
-    analogy: 'Drag "Your Song" anywhere. The two nearest songs get recommended — the rest fade out.',
-    candidates: [
-      { id: 'c1', label: 'Indie Rock',  x: 48, y: 51, color: '#10B981' },
-      { id: 'c2', label: 'Lo-fi Chill', x: 30, y: 55, color: '#10B981' },
-      { id: 'c3', label: 'Pop Hit',     x: 72, y: 18, color: '#10B981' },
-      { id: 'c4', label: 'Classical',   x: 85, y: 78, color: '#10B981' },
-      { id: 'c5', label: 'Jazz',        x: 15, y: 82, color: '#10B981' },
-      { id: 'c6', label: 'Country',     x: 62, y: 85, color: '#10B981' },
-      { id: 'c7', label: 'Heavy Metal', x: 90, y: 45, color: '#10B981' },
-    ] as Candidate[],
-  },
-  {
-    icon: '🔍',
-    label: 'Semantic Search',
-    tag: 'Vector Search',
-    tagColor: 'bg-sky-50 border-sky-200 text-sky-700',
-    accent: '#0284C7',
-    targetLabel: 'Your Query',
-    defaultTarget: { x: 52, y: 58 },
-    xLabel: 'Topic Dimension 1',
-    yLabel: 'Topic Dimension 2',
-    analogy: 'Drag "Your Query" to explore which documents are conceptually closest — no keyword matching needed.',
-    candidates: [
-      { id: 'c1', label: 'Dog Photos',   x: 63, y: 68, color: '#0284C7' },
-      { id: 'c2', label: 'Pet Guide',    x: 44, y: 47, color: '#0284C7' },
-      { id: 'c3', label: 'Finance Doc',  x: 12, y: 22, color: '#0284C7' },
-      { id: 'c4', label: 'Legal Text',   x: 88, y: 15, color: '#0284C7' },
-      { id: 'c5', label: 'Sports News',  x: 78, y: 82, color: '#0284C7' },
-      { id: 'c6', label: 'Recipe Blog',  x: 22, y: 88, color: '#0284C7' },
-      { id: 'c7', label: 'Tech Article', x: 18, y: 42, color: '#0284C7' },
-    ] as Candidate[],
-  },
-  {
-    icon: '🎬',
-    label: 'Movie Recommendations',
-    tag: 'Content Filtering',
+    label: 'Music Space',
+    tag: 'Song Energy vs Acousticness',
     tagColor: 'bg-violet-50 border-violet-200 text-violet-700',
     accent: '#7C3AED',
-    targetLabel: 'Your Taste',
-    defaultTarget: { x: 40, y: 60 },
-    xLabel: 'Action Score',
-    yLabel: 'Comedy Score',
-    analogy: 'Drag "Your Taste" around. Watch how movie rankings flip — especially for films at opposite corners.',
+    targetLabel: 'Custom Track',
+    defaultTarget: { x: 50, y: 50 },
+    xLabel: 'Energy',
+    yLabel: 'Acousticness',
+    analogy: 'Drag "Custom Track" around. Observe which existing songs are conceptually closest and recommended.',
     candidates: [
-      { id: 'c1', label: 'Action Drama', x: 52, y: 68, color: '#7C3AED' },
-      { id: 'c2', label: 'Rom-Com',      x: 28, y: 72, color: '#7C3AED' },
-      { id: 'c3', label: 'Sci-Fi',       x: 82, y: 22, color: '#7C3AED' },
-      { id: 'c4', label: 'Horror',       x: 75, y: 85, color: '#7C3AED' },
-      { id: 'c5', label: 'Anime',        x: 15, y: 18, color: '#7C3AED' },
-      { id: 'c6', label: 'Musical',      x: 90, y: 55, color: '#7C3AED' },
-      { id: 'c7', label: 'Western',      x: 55, y: 15, color: '#7C3AED' },
+      { id: 'daft', label: 'One More Time (Daft Punk)', x: 85, y: 15, color: '#7C3AED' },
+      { id: 'avicii', label: 'Levels (Avicii)', x: 95, y: 25, color: '#7C3AED' },
+      { id: 'sheeran', label: 'Thinking Out Loud (Ed Sheeran)', x: 15, y: 85, color: '#7C3AED' },
+      { id: 'adele', label: 'Someone Like You (Adele)', x: 25, y: 75, color: '#7C3AED' },
+      { id: 'billie', label: 'Bad Guy (Billie Eilish)', x: 55, y: 50, color: '#7C3AED' },
     ] as Candidate[],
   },
+  {
+    icon: '🛍️',
+    label: 'Product Space',
+    tag: 'Price vs Performance',
+    tagColor: 'bg-sky-50 border-sky-200 text-sky-700',
+    accent: '#0284C7',
+    targetLabel: 'Target Device',
+    defaultTarget: { x: 45, y: 55 },
+    xLabel: 'Price ($ x100)',
+    yLabel: 'Performance Score',
+    analogy: 'Drag "Target Device" to search alternate models nearby. Find options with equivalent value.',
+    candidates: [
+      { id: 'phone', label: 'Flagship Phone', x: 50, y: 75, color: '#0284C7' },
+      { id: 'laptop', label: 'Pro Laptop', x: 85, y: 90, color: '#0284C7' },
+      { id: 'camera', label: 'Mirrorless Camera', x: 80, y: 60, color: '#0284C7' },
+      { id: 'headphones', label: 'ANC Headphones', x: 15, y: 35, color: '#0284C7' }
+    ] as Candidate[],
+  },
+  {
+    icon: '💬',
+    label: 'Language Space',
+    tag: 'Concept Semantics',
+    tagColor: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+    accent: '#059669',
+    targetLabel: 'Query Concept',
+    defaultTarget: { x: 50, y: 50 },
+    xLabel: 'Semantic Dimension A',
+    yLabel: 'Semantic Dimension B',
+    analogy: 'Drag "Query Concept" to explore related words. Watch how the selector locks onto either the animal or vehicle cluster.',
+    candidates: [
+      { id: 'cat', label: 'Cat (Domestic)', x: 15, y: 80, color: '#059669' },
+      { id: 'dog', label: 'Dog (Companion)', x: 25, y: 75, color: '#059669' },
+      { id: 'tiger', label: 'Tiger (Apex)', x: 20, y: 90, color: '#059669' },
+      { id: 'car', label: 'Car (Personal)', x: 80, y: 20, color: '#059669' },
+      { id: 'truck', label: 'Truck (Commercial)', x: 90, y: 15, color: '#059669' },
+      { id: 'bus', label: 'Bus (Transit)', x: 75, y: 30, color: '#059669' }
+    ] as Candidate[],
+  }
 ];
 
 export const Scene2_3_RealWorldProximity: React.FC = () => {
@@ -82,7 +76,7 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
   const target = targets[active];
 
   const handleDrag = useCallback((x: number, y: number) => {
-    setTargets(prev => prev.map((t, i) => i === active ? { x: Math.round(x), y: Math.round(y) } : t));
+    setTargets(prev => prev.map((t, i) => i === active ? { x, y } : t));
   }, [active]);
 
   const ranked = [...ex.candidates]
@@ -92,6 +86,7 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
     })
     .sort((a, b) => a.dist - b.dist);
 
+  // Pick nearest neighbors (nearest 2 items)
   const topIds = ranked.slice(0, 2).map(r => r.id);
 
   const points: PlotPoint[] = [
@@ -129,7 +124,7 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
         <div>
           <h2 className="text-3xl font-black text-slate-800 leading-tight mb-1">Proximity Is Everywhere</h2>
           <p className="text-slate-500 text-sm font-medium leading-snug">
-            Drag the reference point — the two nearest neighbours update live.
+            Drag the reference point. The nearest concepts update live based on distance.
           </p>
         </div>
 
@@ -139,18 +134,18 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`px-3 py-3 rounded-xl border text-left transition-all cursor-pointer ${
-                active === i
-                  ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
+              className={`px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between ${active === i
+                  ? 'bg-slate-900 border-slate-900 text-white shadow-sm scale-[1.01]'
                   : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-              }`}
+                }`}
             >
-              <span className="mr-2">{e.icon}</span>
-              <span className="font-bold text-sm">{e.label}</span>
-              <span className={`ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                active === i ? 'bg-white/20 border-white/20 text-white' : e.tagColor
-              }`}>
-                {e.tag}
+              <div className="flex items-center gap-2">
+                <span>{e.icon}</span>
+                <span className="font-extrabold text-sm">{e.label}</span>
+              </div>
+              <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${active === i ? 'bg-white/20 border-white/20 text-white' : e.tagColor
+                }`}>
+                {active === i ? 'Active' : 'Select'}
               </span>
             </button>
           ))}
@@ -158,26 +153,25 @@ export const Scene2_3_RealWorldProximity: React.FC = () => {
 
         {/* Live rankings */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Nearest → Farthest</span>
+          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Concept Recommendations</span>
           {ranked.map((c, i) => (
-            <div key={c.id} className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-mono font-bold transition-all ${
-              i < 2 ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-50/50 border-slate-100 text-slate-400'
-            }`}>
+            <div key={c.id} className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-mono font-bold transition-all ${i < 2 ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-50/50 border-slate-100 text-slate-400'
+              }`}>
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-black"
                   style={{ backgroundColor: i < 2 ? ex.accent : '#cbd5e1' }}>
                   {i + 1}
                 </span>
-                <span className={i < 2 ? 'text-slate-700' : 'text-slate-400'}>{c.label}</span>
+                <span className={i < 2 ? 'text-slate-700' : 'text-slate-400'}>{c.label.split(' (')[0]}</span>
               </div>
               <span className={i < 2 ? 'text-emerald-600' : 'text-slate-300'}>
-                d: {c.dist.toFixed(1)}
+                dist: {c.dist.toFixed(1)}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 font-medium leading-relaxed">
+        <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 font-semibold leading-relaxed">
           {ex.analogy}
         </div>
       </div>
