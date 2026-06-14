@@ -24,27 +24,28 @@ export const Scene2_8_NextHook: React.FC = () => (
         Part Was Hidden.
       </h1>
 
-      <div className="mt-10 mb-8 bg-white border border-slate-200 rounded-3xl shadow-sm px-8 py-6">
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          <span className="text-slate-400 font-medium">
+      <div className="mt-10 mb-8 bg-white border border-slate-200 rounded-3xl shadow-sm px-8 py-8">
+        <div className="flex items-center justify-center gap-6 flex-wrap text-3xl sm:text-4xl md:text-5xl">
+          <span className="text-slate-400 font-bold tracking-tight">
             cos(θ)
           </span>
 
-          <span className="text-slate-400">=</span>
+          <span className="text-slate-400 font-light">=</span>
 
           <div className="relative">
             <KaTeXMath
               tex={`\\frac{\\color{#7C3AED}{A\\cdot B}}{\\|A\\|\\|B\\|}`}
-              block
+              block={false}
+              className="text-3xl sm:text-4xl md:text-5xl font-medium"
             />
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap"
+              className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap"
             >
-              <div className="px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-xs font-black">
+              <div className="px-3.5 py-1.5 rounded-full bg-violet-100 text-violet-700 text-xs font-black shadow-sm">
                 ← This is the star
               </div>
             </motion.div>
