@@ -106,9 +106,9 @@ export const Scene4c_HighDimSpace: React.FC = () => {
               <span className="text-xs text-slate-400 font-bold tracking-wide uppercase">{person.desc}</span>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1 w-full sm:w-auto">
-            <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest font-mono">12-Dimensional Feature Vector</span>
-            <div className="font-mono text-[11px] bg-slate-800 text-slate-100 border border-slate-700 px-3.5 py-2 rounded-xl font-bold max-w-full sm:max-w-[320px] overflow-hidden text-ellipsis whitespace-nowrap shadow-inner">
+          <div className="flex flex-col items-end gap-1.5 w-full sm:w-auto">
+            <span className="text-[11px] sm:text-xs text-slate-400 font-extrabold uppercase tracking-widest font-mono">12-Dimensional Feature Vector</span>
+            <div className="font-mono text-sm sm:text-base bg-slate-800 text-slate-100 border border-slate-700 px-4 py-2.5 rounded-xl font-bold max-w-full sm:max-w-[420px] overflow-x-auto no-scrollbar shadow-inner">
               [{person.features.map(f => f.val).join(', ')}]
             </div>
           </div>

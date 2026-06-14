@@ -155,36 +155,42 @@ export const Scene7_ImageSpace: React.FC = () => {
       {/* Cursor Follower Tooltip */}
       {hoveredPixel && (
         <div
-          className="fixed pointer-events-none bg-slate-950/95 border border-slate-700/80 rounded-2xl p-4 text-white text-[11px] font-mono font-bold shadow-2xl flex flex-col gap-1.5 z-[9999]"
+          className="fixed pointer-events-none bg-slate-950/95 border border-slate-700/80 rounded-2xl px-5 py-4 text-white shadow-2xl flex items-center gap-4 z-[9999]"
           style={{
-            left: mousePos.x + 16,
-            top: mousePos.y + 16,
+            left: mousePos.x + 20,
+            top: mousePos.y + 20,
           }}
         >
-          <div className="flex justify-between items-center border-b border-white/10 pb-1 gap-4">
-            <span className="text-sky-400 font-extrabold text-xs">Pixel ({hoveredPixel.xCoord}, {hoveredPixel.yCoord})</span>
-            <span className="text-[10px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded font-sans">16x16 Grid</span>
+          <div 
+            className="w-8 h-8 rounded-full border-2 border-white/30 shadow-inner shrink-0" 
+            style={{ backgroundColor: `rgb(${hoveredPixel.r}, ${hoveredPixel.g}, ${hoveredPixel.b})` }} 
+          />
+          <div className="font-mono text-2xl font-black text-slate-100 tracking-tight">
+            ({hoveredPixel.r}, {hoveredPixel.g}, {hoveredPixel.b})
           </div>
-          <div>Color: <span className="text-slate-300">rgb({hoveredPixel.r}, {hoveredPixel.g}, {hoveredPixel.b})</span></div>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span>Sample:</span>
-            <div 
-              className="w-4 h-4 rounded-md border border-white/20" 
-              style={{ backgroundColor: `rgb(${hoveredPixel.r}, ${hoveredPixel.g}, ${hoveredPixel.b})` }} 
-            />
-          </div>
-          <div className="text-emerald-400 mt-1 border-t border-white/5 pt-1">Stored Value (Avg): {hoveredPixel.value}</div>
         </div>
       )}
 
       {/* Bottom Message */}
-      <div className="mt-8 flex items-center justify-center">
-        <div className="bg-indigo-50 border border-indigo-100 rounded-3xl px-8 py-5 text-center">
-          <div className="font-mono text-3xl font-black text-indigo-700">
-            16 × 16 × 3 = 768 values
+      <div className="mt-6 flex flex-col items-center gap-4">
+        <div className="w-full max-w-4xl bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+          <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest font-mono">
+              Flattened 768-Dimensional Vector
+            </span>
+            <span className="text-xs font-bold text-indigo-600 font-mono">
+              16 × 16 × 3 = 768 values
+            </span>
           </div>
-          <div className="text-slate-600 mt-2">
-            Every image becomes a single point in a high-dimensional space.
+          <div className="font-mono text-sm text-indigo-600 leading-relaxed break-all select-all font-medium py-2.5 px-4 bg-slate-50 border border-slate-200 rounded-xl shadow-inner max-h-[80px] overflow-y-auto no-scrollbar">
+            {pixels.length > 0 ? (
+              `[${pixels.slice(0, 16).map(p => `${p.r}, ${p.g}, ${p.b}`).join(', ')}, ...]`
+            ) : (
+              'Loading vector...'
+            )}
+          </div>
+          <div className="text-slate-500 text-xs text-center font-medium mt-1">
+            Every pixel's red, green, and blue values are unrolled into a single continuous list of numbers.
           </div>
         </div>
       </div>

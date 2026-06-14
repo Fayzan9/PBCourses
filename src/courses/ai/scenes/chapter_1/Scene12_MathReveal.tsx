@@ -20,8 +20,8 @@ export const Scene12_MathReveal: React.FC = () => {
           </span>
         </h2>
 
-        <div className="mt-12 bg-white border border-slate-200 rounded-3xl px-10 py-8 shadow-lg">
-          <KaTeXMath tex="\vec{v} = [v_1, v_2, v_3, \dots, v_n]" block />
+        <div className="mt-12 bg-white border border-slate-200 rounded-3xl px-12 py-9 shadow-lg">
+          <KaTeXMath tex="\vec{v} = [v_1, v_2, v_3, \dots, v_n]" block className="!text-3xl sm:!text-4xl md:!text-5xl" />
         </div>
 
         <div className="mt-8 text-3xl font-black text-slate-800">
