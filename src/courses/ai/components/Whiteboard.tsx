@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { 
   Edit2, Eraser, Trash2, Undo2, X, Grid, Check,
   Minus, ArrowUpRight, Square, Circle, Type, MousePointer,
-  ChevronDown
+  ChevronDown, Hand
 } from 'lucide-react';
 
 interface WhiteboardProps {
@@ -10,7 +10,7 @@ interface WhiteboardProps {
   activeChapterIdx: number;
 }
 
-type ToolType = 'select' | 'pencil' | 'eraser' | 'line' | 'arrow' | 'rectangle' | 'circle' | 'text';
+type ToolType = 'select' | 'pencil' | 'eraser' | 'line' | 'arrow' | 'rectangle' | 'circle' | 'text' | 'pan';
 
 interface DrawingElement {
   id: string;
@@ -31,12 +31,7 @@ const COLORS = [
   { name: 'Cyan (SVD)', value: '#0891B2' },
 ];
 
-const BRUSH_SIZES = [
-  { label: 'S', value: 3 },
-  { label: 'M', value: 6 },
-  { label: 'L', value: 12 },
-  { label: 'XL', value: 24 },
-];
+
 
 export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterIdx }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -49,7 +44,14 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
   const [gridType, setGridType] = useState<'fine' | 'normal' | 'none'>('fine');
   
   // Vector shapes state
-  const [elements, setElements] = useState<DrawingElement[]>([]);
+  const [elements, setElements] = useState<DrawingElement[]>(() => {
+    try {
+      const saved = localStorage.getItem(`whiteboard_elements_ch_${activeChapterIdx}`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [history, setHistory] = useState<DrawingElement[][]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
@@ -65,6 +67,40 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
   // Dropdown states
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showSizePicker, setShowSizePicker] = useState(false);
+
+  // Pan states
+  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>(() => {
+    try {
+      const saved = localStorage.getItem(`whiteboard_panOffset_ch_${activeChapterIdx}`);
+      return saved ? JSON.parse(saved) : { x: 0, y: 0 };
+    } catch {
+      return { x: 0, y: 0 };
+    }
+  });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [spacePressed, setSpacePressed] = useState(false);
+
+  // Track spacebar for panning
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        setSpacePressed(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setSpacePressed(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   // Update canvas size on mount & resize
   useEffect(() => {
@@ -91,17 +127,23 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    setHistory([[]]);
+    try {
+      const saved = localStorage.getItem(`whiteboard_elements_ch_${activeChapterIdx}`);
+      const initialElements = saved ? JSON.parse(saved) : [];
+      setHistory([initialElements]);
+    } catch {
+      setHistory([[]]);
+    }
 
     return () => window.removeEventListener('resize', handleResize);
-  }, [elements, selectedElementId]);
+  }, [elements, selectedElementId, panOffset, activeChapterIdx]);
 
-  // Redraw when elements or selection changes
+  // Redraw when elements, selection, or panOffset changes
   useEffect(() => {
     if (contextRef.current) {
       drawAll(contextRef.current, elements, selectedElementId);
     }
-  }, [elements, selectedElementId]);
+  }, [elements, selectedElementId, panOffset]);
 
   // Focus input when text tool is placed
   useEffect(() => {
@@ -109,6 +151,23 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
       textInputRef.current.focus();
     }
   }, [textInputPos]);
+
+  // Persist drawings to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(`whiteboard_elements_ch_${activeChapterIdx}`, JSON.stringify(elements));
+    } catch (e) {
+      console.error('Failed to save whiteboard elements:', e);
+    }
+  }, [elements, activeChapterIdx]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`whiteboard_panOffset_ch_${activeChapterIdx}`, JSON.stringify(panOffset));
+    } catch (e) {
+      console.error('Failed to save whiteboard panOffset:', e);
+    }
+  }, [panOffset, activeChapterIdx]);
 
   const saveHistoryState = (newElements: DrawingElement[]) => {
     setHistory(prev => {
@@ -247,6 +306,10 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.save();
+    // Translate canvas to apply panning
+    ctx.translate(panOffset.x, panOffset.y);
+
     list.forEach((el) => {
       ctx.lineWidth = el.brushSize;
       ctx.strokeStyle = el.color;
@@ -333,17 +396,31 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
         ctx.restore();
       }
     });
+
+    ctx.restore();
   };
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if ('touches' in e && e.touches.length > 1) return;
     e.preventDefault();
     
-    const { x, y } = getCoordinates(e);
+    const { x: screenX, y: screenY } = getCoordinates(e);
 
     // Close dropdowns on canvas click
     setShowColorPicker(false);
     setShowSizePicker(false);
+
+    // Panning is active if pan tool is selected, spacebar is held, or middle-clicked
+    const isPanningActive = tool === 'pan' || spacePressed || ('button' in e && e.button === 1);
+
+    if (isPanningActive) {
+      setIsPanning(true);
+      setPanStart({ x: screenX - panOffset.x, y: screenY - panOffset.y });
+      return;
+    }
+
+    const x = screenX - panOffset.x;
+    const y = screenY - panOffset.y;
 
     if (tool === 'select') {
       let foundId: string | null = null;
@@ -356,6 +433,10 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
       setSelectedElementId(foundId);
       if (foundId) {
         setDragStart({ x, y });
+      } else {
+        // Dragging empty space in select tool also pans the canvas (like Excalidraw)
+        setIsPanning(true);
+        setPanStart({ x: screenX - panOffset.x, y: screenY - panOffset.y });
       }
       return;
     }
@@ -383,7 +464,19 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const { x, y } = getCoordinates(e);
+    const { x: screenX, y: screenY } = getCoordinates(e);
+
+    if (isPanning) {
+      e.preventDefault();
+      setPanOffset({
+        x: screenX - panStart.x,
+        y: screenY - panStart.y
+      });
+      return;
+    }
+
+    const x = screenX - panOffset.x;
+    const y = screenY - panOffset.y;
 
     if (tool === 'select' && selectedElementId && dragStart) {
       e.preventDefault();
@@ -423,6 +516,10 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
   };
 
   const stopDrawing = () => {
+    if (isPanning) {
+      setIsPanning(false);
+      return;
+    }
     if (tool === 'select') {
       if (dragStart) {
         setDragStart(null);
@@ -478,7 +575,13 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
     }
   }, [activeChapterIdx]);
 
-  const activeSizeObj = BRUSH_SIZES.find(s => s.value === brushSize) || { label: 'Custom', value: brushSize };
+  const getCursorClass = () => {
+    if (tool === 'pan' || spacePressed) {
+      return isPanning ? 'cursor-grabbing' : 'cursor-grab';
+    }
+    if (tool === 'select') return 'cursor-default';
+    return 'cursor-crosshair';
+  };
 
   return (
     <div className="absolute inset-0 bg-white z-40 flex flex-col select-none overflow-hidden">
@@ -491,12 +594,13 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
               ? 'space-grid-pattern' 
               : ''
         }`}
+        style={{
+          backgroundPosition: `${panOffset.x}px ${panOffset.y}px`
+        }}
       >
         <canvas
           ref={canvasRef}
-          className={`absolute inset-0 w-full h-full block touch-none ${
-            tool === 'select' ? 'cursor-default' : 'cursor-crosshair'
-          }`}
+          className={`absolute inset-0 w-full h-full block touch-none ${getCursorClass()}`}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
@@ -511,8 +615,8 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
           <div 
             className="absolute z-50 pointer-events-auto"
             style={{ 
-              left: `${textInputPos.x}px`, 
-              top: `${textInputPos.y - (brushSize * 2.5 + 24) / 2}px` 
+              left: `${textInputPos.x + panOffset.x}px`, 
+              top: `${textInputPos.y + panOffset.y - (brushSize * 2.5 + 24) / 2}px` 
             }}
           >
             <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-xl border border-slate-200 shadow-xl">
@@ -580,6 +684,18 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
             title="Select & Move (MousePointer)"
           >
             <MousePointer size={16} />
+          </button>
+
+          <button
+            onClick={() => { setTool('pan'); setTextInputPos(null); setSelectedElementId(null); }}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+              tool === 'pan' 
+                ? 'bg-slate-950 text-white shadow-md' 
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+            title="Pan Hand Tool (Hold Space to Pan)"
+          >
+            <Hand size={16} />
           </button>
           
           <button
@@ -699,7 +815,7 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
         {/* Separator */}
         <div className="h-6 w-[1px] bg-slate-200" />
 
-        {/* Size Selector Dropdown */}
+        {/* Size Selector Slider Popover */}
         <div className="relative">
           <button
             onClick={() => {
@@ -709,29 +825,33 @@ export const Whiteboard: React.FC<WhiteboardProps> = ({ onClose, activeChapterId
             className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full text-xs font-bold text-slate-700 transition-all cursor-pointer active:scale-95"
             title="Stroke Size"
           >
-            <span>{activeSizeObj.label} ({activeSizeObj.value}px)</span>
+            <span>{brushSize}px</span>
             <ChevronDown size={12} className="text-slate-400" />
           </button>
 
-          {/* Size Popover Menu */}
+          {/* Size Popover Slider Menu */}
           {showSizePicker && (
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col gap-1 p-1 bg-white border border-slate-200 shadow-xl rounded-xl z-50 w-28">
-              {BRUSH_SIZES.map((size) => (
-                <button
-                  key={size.value}
-                  onClick={() => {
-                    setBrushSize(size.value);
-                    setShowSizePicker(false);
+            <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 p-4 bg-white border border-slate-200 shadow-xl rounded-2xl z-50 w-48 pointer-events-auto">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Thickness: {brushSize}px</span>
+              <input
+                type="range"
+                min="1"
+                max="40"
+                value={brushSize}
+                onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                className="w-full accent-slate-900 cursor-pointer"
+              />
+              {/* Brush size preview dot */}
+              <div className="h-10 w-10 flex items-center justify-center border border-slate-100 rounded-lg bg-slate-50">
+                <div 
+                  className="rounded-full transition-all"
+                  style={{ 
+                    width: `${Math.max(1, brushSize)}px`, 
+                    height: `${Math.max(1, brushSize)}px`,
+                    backgroundColor: tool === 'eraser' ? '#cbd5e1' : color
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-left text-xs font-bold transition-all cursor-pointer ${
-                    brushSize === size.value 
-                      ? 'bg-slate-900 text-white shadow-sm' 
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  {size.label} ({size.value}px)
-                </button>
-              ))}
+                />
+              </div>
             </div>
           )}
         </div>
