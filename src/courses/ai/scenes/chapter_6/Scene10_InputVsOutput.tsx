@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_10_InputVsOutput: React.FC = () => {
   return (
@@ -40,18 +41,15 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Step 1 · Recall The Dominant Direction
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
 
-                  <p className="text-lg font-bold text-violet-800 mb-4">
-                    From AᵀA we discovered:
+                  <p className="text-lg font-bold text-violet-850 mb-4 self-start">
+                    From <Math tex="A^T A" /> we discovered:
                   </p>
 
-                  <div className="font-mono text-5xl font-black text-violet-700">
-                    v₁ =
-                    [1,1]
-                  </div>
+                  <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-4xl font-bold text-violet-700" />
 
-                  <p className="text-lg text-violet-800 mt-4">
+                  <p className="text-lg text-violet-800 mt-4 text-center">
                     This is the direction that gets stretched the most.
                   </p>
 
@@ -64,15 +62,11 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Step 2 · Normalize The Direction
                 </p>
 
-                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6">
+                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6 flex flex-col items-center">
 
-                  <div className="font-mono text-4xl font-black text-sky-700">
-                    v₁ =
-                    (1/√2)
-                    [1,1]
-                  </div>
+                  <Math tex="v_1 = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-3xl font-bold text-sky-700" />
 
-                  <p className="text-lg text-sky-800 mt-4">
+                  <p className="text-lg text-sky-800 mt-4 text-center">
                     We want a unit vector so we only measure stretching.
                   </p>
 
@@ -85,32 +79,9 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Step 3 · Apply The Original Matrix
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-55 border border-emerald-200 p-6 flex flex-col items-center">
 
-                  <div className="font-mono text-3xl font-black text-slate-800">
-                    Av₁
-                  </div>
-
-                  <div className="font-mono text-3xl font-black text-slate-800 mt-4">
-                    =
-                  </div>
-
-                  <div className="font-mono text-3xl font-black text-slate-800 mt-4">
-                    [3 1]
-                    <br />
-                    [1 3]
-                  </div>
-
-                  <div className="font-mono text-3xl font-black text-slate-800 mt-4">
-                    ×
-                  </div>
-
-                  <div className="font-mono text-3xl font-black text-slate-800 mt-4">
-                    (1/√2)
-                    [1]
-                    <br />
-                    [1]
-                  </div>
+                  <Math tex="Av_1 = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} \left( \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right)" className="text-2xl font-bold text-emerald-800" />
 
                 </div>
               </div>
@@ -121,40 +92,10 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Step 4 · Compute The Result
                 </p>
 
-                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6">
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 flex flex-col items-center gap-4">
 
-                  <div className="space-y-4 font-mono">
-
-                    <div className="text-3xl font-black text-slate-800">
-                      Av₁
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      =
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-800">
-                      (1/√2)
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-800">
-                      [4]
-                      <br />
-                      [4]
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      =
-                    </div>
-
-                    <div className="text-4xl font-black text-amber-700">
-                      4(1/√2)
-                      [1]
-                      <br />
-                      [1]
-                    </div>
-
-                  </div>
+                  <Math tex="Av_1 = \frac{1}{\sqrt{2}} \begin{bmatrix} 4 \\ 4 \end{bmatrix}" className="text-2xl font-bold text-slate-800" />
+                  <Math tex="Av_1 = 4 \left( \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right)" className="text-2xl font-bold text-amber-700" />
 
                 </div>
               </div>
@@ -165,19 +106,17 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Step 5 · Something Interesting Happens
                 </p>
 
-                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6">
+                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-rose-900">
+                  <p className="text-xl font-bold text-rose-900 text-center mb-4">
                     The output vector is longer.
                   </p>
 
-                  <p className="text-lg text-rose-800 mt-4">
+                  <p className="text-lg text-rose-800 text-center">
                     But it points in the same direction.
                   </p>
 
-                  <div className="mt-5 font-mono text-4xl font-black text-rose-700">
-                    Av₁ = 4v₁
-                  </div>
+                  <Math tex="Av_1 = 4v_1" className="text-4xl font-bold text-rose-700 mt-4" />
 
                 </div>
               </div>
@@ -188,23 +127,21 @@ export const Scene6_10_InputVsOutput: React.FC = () => {
                   Important Warning
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-violet-900">
+                  <p className="text-xl font-bold text-violet-900 text-center mb-4">
                     This happens only because our matrix is symmetric.
                   </p>
 
-                  <p className="text-lg text-violet-800 mt-4">
+                  <p className="text-lg text-violet-800 text-center mb-4">
                     Most matrices rotate vectors into completely different directions.
                   </p>
 
-                  <p className="text-lg text-violet-800 mt-2">
+                  <p className="text-lg text-violet-800 text-center">
                     In general:
                   </p>
 
-                  <div className="font-mono text-4xl font-black text-violet-700 mt-4">
-                    Avᵢ ≠ vᵢ
-                  </div>
+                  <Math tex="Av_i \neq v_i" className="text-4xl font-bold text-violet-700 mt-4" />
 
                 </div>
               </div>

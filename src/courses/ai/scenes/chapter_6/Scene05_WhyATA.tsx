@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_5_WhyATA: React.FC = () => {
   return (
@@ -41,14 +42,14 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 1 · Start With The Real Goal
                 </p>
 
-                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 flex justify-center">
 
-                  <p className="text-xl font-semibold text-slate-600 mb-4">
-                    We want the direction that gets stretched the most.
-                  </p>
+                  <div className="flex flex-col items-center">
+                    <p className="text-xl font-semibold text-slate-600 mb-4 text-center">
+                      We want the direction that gets stretched the most.
+                    </p>
 
-                  <div className="font-mono text-5xl font-black text-slate-800">
-                    max ||Av||
+                    <Math tex="\max \|Av\|" className="text-4xl font-bold" />
                   </div>
 
                 </div>
@@ -60,15 +61,13 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 2 · Square The Length
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
 
-                  <p className="text-lg text-emerald-800 mb-4">
+                  <p className="text-lg text-emerald-800 mb-4 text-center font-medium">
                     Same winner. Easier mathematics.
                   </p>
 
-                  <div className="font-mono text-5xl font-black text-emerald-700">
-                    ||Av||²
-                  </div>
+                  <Math tex="\|Av\|^2" className="text-4xl font-bold" />
 
                 </div>
               </div>
@@ -79,23 +78,9 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 3 · Expand The Definition Of Length
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex justify-center">
 
-                  <div className="space-y-4 font-mono">
-
-                    <div className="text-4xl font-black text-slate-800">
-                      ||Av||²
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      =
-                    </div>
-
-                    <div className="text-4xl font-black text-violet-700">
-                      (Av)ᵀ(Av)
-                    </div>
-
-                  </div>
+                  <Math tex="\|Av\|^2 = (Av)^T(Av)" className="text-3xl font-bold" />
 
                 </div>
               </div>
@@ -106,31 +91,15 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 4 · Move The Transpose
                 </p>
 
-                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6">
+                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6 flex flex-col items-center">
 
-                  <div className="space-y-4 font-mono">
+                  <Math tex="(Av)^T (Av) = v^T A^T A v" className="text-3xl font-bold mb-4" />
 
-                    <div className="text-4xl font-black text-slate-800">
-                      (Av)ᵀ(Av)
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      =
-                    </div>
-
-                    <div className="text-4xl font-black text-sky-700">
-                      vᵀAᵀAv
-                    </div>
-
-                  </div>
-
-                  <p className="text-lg text-sky-800 mt-5">
+                  <p className="text-lg text-sky-800 mt-3 text-center">
                     Using the transpose rule:
                   </p>
 
-                  <div className="font-mono text-2xl font-black text-sky-700 mt-2">
-                    (AB)ᵀ = BᵀAᵀ
-                  </div>
+                  <Math tex="(AB)^T = B^T A^T" className="text-xl font-bold mt-2" />
 
                 </div>
               </div>
@@ -141,21 +110,19 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 5 · Something Interesting Appears
                 </p>
 
-                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6">
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 flex flex-col items-center">
 
-                  <div className="font-mono text-5xl font-black text-amber-700 text-center">
-                    vᵀ(AᵀA)v
-                  </div>
+                  <Math tex="v^T (A^T A) v" className="text-4xl font-bold" />
 
-                  <p className="text-xl font-bold text-amber-900 mt-6">
-                    Suddenly AᵀA appears.
+                  <p className="text-xl font-bold text-amber-900 mt-6 text-center">
+                    Suddenly <Math tex="A^T A" /> appears.
                   </p>
 
-                  <p className="text-lg text-amber-800 mt-3">
+                  <p className="text-lg text-amber-800 mt-3 text-center">
                     Nobody invented it.
                   </p>
 
-                  <p className="text-lg text-amber-800 mt-2">
+                  <p className="text-lg text-amber-800 mt-2 text-center">
                     It falls out naturally from measuring stretch.
                   </p>
 
@@ -168,21 +135,19 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Step 6 · Why Focus On AᵀA?
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-emerald-900 mb-4">
-                    Because v is still the thing we're choosing.
+                  <p className="text-xl font-bold text-emerald-900 mb-4 text-center">
+                    Because <Math tex="v" /> is still the thing we're choosing.
                   </p>
 
-                  <div className="font-mono text-4xl font-black text-emerald-700">
-                    vᵀ(AᵀA)v
-                  </div>
+                  <Math tex="v^T (A^T A) v" className="text-3xl font-bold" />
 
-                  <p className="text-lg text-emerald-800 mt-5">
-                    The matrix AᵀA controls how much stretching occurs.
+                  <p className="text-lg text-emerald-800 mt-5 text-center">
+                    The matrix <Math tex="A^T A" /> controls how much stretching occurs.
                   </p>
 
-                  <p className="text-lg text-emerald-800 mt-2">
+                  <p className="text-lg text-emerald-800 mt-2 text-center">
                     It contains the information we care about.
                   </p>
 
@@ -195,13 +160,13 @@ export const Scene6_5_WhyATA: React.FC = () => {
                   Final Discovery
                 </p>
 
-                <div className="rounded-2xl bg-slate-900 p-6 text-white">
+                <div className="rounded-2xl bg-slate-900 p-6 text-white flex flex-col items-center">
 
-                  <p className="text-3xl font-black mb-5">
-                    Stretch Information Lives Inside AᵀA
+                  <p className="text-3xl font-black mb-5 text-center">
+                    Stretch Information Lives Inside <Math tex="A^T A" />
                   </p>
 
-                  <div className="space-y-3 text-xl">
+                  <div className="space-y-3 text-xl w-full max-w-md">
 
                     <p>
                       • We started with a stretching problem
@@ -212,11 +177,11 @@ export const Scene6_5_WhyATA: React.FC = () => {
                     </p>
 
                     <p>
-                      • AᵀA appeared automatically
+                      • <Math tex="A^T A" /> appeared automatically
                     </p>
 
                     <p>
-                      • AᵀA contains all stretch information
+                      • <Math tex="A^T A" /> contains all stretch information
                     </p>
 
                   </div>

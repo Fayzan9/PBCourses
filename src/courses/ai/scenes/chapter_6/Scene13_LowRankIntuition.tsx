@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_13_LowRankIntuition: React.FC = () => {
   return (
@@ -40,18 +41,14 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   Imagine A Larger Matrix
                 </p>
 
-                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 flex justify-center">
 
-                  <div className="font-mono text-4xl font-black text-slate-800 text-center">
-                    σ₁ = 100
-                    <br />
-                    σ₂ = 50
-                    <br />
-                    σ₃ = 10
-                    <br />
-                    σ₄ = 1
-                    <br />
-                    σ₅ = 0.1
+                  <div className="flex flex-col items-center gap-2">
+                    <Math tex="\sigma_1 = 100" className="text-2xl font-bold" />
+                    <Math tex="\sigma_2 = 50" className="text-2xl font-bold" />
+                    <Math tex="\sigma_3 = 10" className="text-2xl font-bold" />
+                    <Math tex="\sigma_4 = 1" className="text-2xl font-bold" />
+                    <Math tex="\sigma_5 = 0.1" className="text-2xl font-bold" />
                   </div>
 
                 </div>
@@ -94,7 +91,7 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-emerald-700">
-                        σ₁ = 100
+                        <Math tex="\sigma_1 = 100" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -110,7 +107,7 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-sky-700">
-                        σ₂ = 50
+                        <Math tex="\sigma_2 = 50" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -129,7 +126,7 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-violet-700">
-                        σ₃ = 10
+                        <Math tex="\sigma_3 = 10" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -148,7 +145,7 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-rose-700">
-                        σ₄ = 1
+                        <Math tex="\sigma_4 = 1" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -175,13 +172,13 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   The Key Question
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
 
-                  <p className="text-2xl font-black text-violet-900">
+                  <p className="text-2xl font-black text-violet-900 text-center mb-4">
                     Do we really need all of them?
                   </p>
 
-                  <p className="text-lg text-violet-800 mt-4">
+                  <p className="text-lg text-violet-800 text-center">
                     What happens if we keep only the biggest singular values?
                   </p>
 
@@ -196,25 +193,21 @@ export const Scene6_13_LowRankIntuition: React.FC = () => {
                   Low-Rank Approximation
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
 
-                  <p className="text-lg text-emerald-800">
+                  <p className="text-lg text-emerald-800 self-start mb-2">
                     Keep:
                   </p>
 
-                  <div className="font-mono text-4xl font-black text-emerald-700 mt-4">
-                    σ₁, σ₂
-                  </div>
+                  <Math tex="\sigma_1, \sigma_2" className="text-3xl font-bold text-emerald-700" />
 
-                  <p className="text-lg text-emerald-800 mt-5">
+                  <p className="text-lg text-emerald-800 self-start mt-4 mb-2">
                     Discard:
                   </p>
 
-                  <div className="font-mono text-4xl font-black text-slate-400 mt-4">
-                    σ₃, σ₄, σ₅
-                  </div>
+                  <Math tex="\sigma_3, \sigma_4, \sigma_5" className="text-3xl font-bold text-slate-450" />
 
-                  <p className="text-xl font-bold text-emerald-900 mt-6">
+                  <p className="text-xl font-bold text-emerald-900 mt-6 text-center">
                     Most of the structure remains.
                   </p>
 

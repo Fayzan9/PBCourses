@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_15_EmbeddingsAndLLMs: React.FC = () => {
   return (
@@ -217,16 +218,16 @@ export const Scene6_15_EmbeddingsAndLLMs: React.FC = () => {
                     After dimensionality reduction:
                   </p>
 
-                  <div className="font-mono text-2xl font-black text-violet-700 mt-5">
-                    King → [2.1, 0.8, -1.3, ...]
+                  <div className="font-mono text-2xl font-black text-violet-700 mt-5 flex justify-center">
+                    <Math tex="\text{King} \rightarrow [2.1, 0.8, -1.3, \dots]" />
                   </div>
 
-                  <div className="font-mono text-2xl font-black text-violet-700 mt-3">
-                    Queen → [2.0, -0.9, -1.2, ...]
+                  <div className="font-mono text-2xl font-black text-violet-700 mt-3 flex justify-center">
+                    <Math tex="\text{Queen} \rightarrow [2.0, -0.9, -1.2, \dots]" />
                   </div>
 
-                  <div className="font-mono text-2xl font-black text-violet-700 mt-3">
-                    Dog → [-1.8, 0.1, 2.4, ...]
+                  <div className="font-mono text-2xl font-black text-violet-700 mt-3 flex justify-center">
+                    <Math tex="\text{Dog} \rightarrow [-1.8, 0.1, 2.4, \dots]" />
                   </div>
 
                 </div>

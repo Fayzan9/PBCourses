@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 const WORDS = [
   { text: 'Rotate.', color: 'text-sky-500' },
@@ -44,18 +45,7 @@ export const Scene6_1_CuriosityHook: React.FC = () => (
       className="mb-10"
     >
       <div className="flex items-center justify-center gap-4 text-slate-800">
-        <span className="text-2xl md:text-3xl font-thin">A =</span>
-
-        <div className="border-l-2 border-r-2 border-slate-700 px-4 py-2">
-          <div className="flex gap-8">
-            <span className="text-3xl md:text-4xl font-black">3</span>
-            <span className="text-3xl md:text-4xl font-black">1</span>
-          </div>
-          <div className="flex gap-8">
-            <span className="text-3xl md:text-4xl font-black">1</span>
-            <span className="text-3xl md:text-4xl font-black">3</span>
-          </div>
-        </div>
+        <Math tex="A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}" className="text-3xl md:text-4xl font-bold" />
       </div>
     </motion.div>
 

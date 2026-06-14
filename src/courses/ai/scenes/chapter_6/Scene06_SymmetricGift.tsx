@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 const TABS = [
   {
@@ -87,30 +88,11 @@ export const Scene6_6_SymmetricGift: React.FC = () => {
               <div className="flex flex-col items-center">
 
                 <div className="mb-10">
-
-                  <div className="flex items-center gap-5">
-                    <span className="text-3xl font-thin text-slate-600">
-                      =
-                    </span>
-
-                    <div className="border-l-[3px] border-r-[3px] border-slate-700 px-5 py-2">
-                      {active.matrix.map((row, r) => (
-                        <div
-                          key={r}
-                          className="flex gap-10 justify-center"
-                        >
-                          {row.map((v, c) => (
-                            <span
-                              key={c}
-                              className="text-5xl font-black text-slate-800"
-                            >
-                              {v}
-                            </span>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  {tab === 0 ? (
+                    <Math tex="A = \begin{bmatrix} 3 & 1 \\ 2 & 4 \end{bmatrix}" className="text-5xl font-bold" />
+                  ) : (
+                    <Math tex="A^T A = \begin{bmatrix} 13 & 11 \\ 11 & 17 \end{bmatrix}" className="text-5xl font-bold" />
+                  )}
                 </div>
 
                 <p

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_8_SingularValues: React.FC = () => {
   return (
@@ -42,24 +43,20 @@ export const Scene6_8_SingularValues: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-5">
 
-                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
-                    <p className="text-sm font-black uppercase tracking-wider text-emerald-600 mb-3">
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
+                    <p className="text-sm font-black uppercase tracking-wider text-emerald-600 mb-3 self-start">
                       Largest Eigenvalue
                     </p>
 
-                    <p className="text-5xl font-black text-emerald-700">
-                      λ₁ = 16
-                    </p>
+                    <Math tex="\lambda_1 = 16" className="text-4xl font-bold text-emerald-700" />
                   </div>
 
-                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
-                    <p className="text-sm font-black uppercase tracking-wider text-violet-600 mb-3">
+                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
+                    <p className="text-sm font-black uppercase tracking-wider text-violet-600 mb-3 self-start">
                       Second Eigenvalue
                     </p>
 
-                    <p className="text-5xl font-black text-violet-700">
-                      λ₂ = 4
-                    </p>
+                    <Math tex="\lambda_2 = 4" className="text-4xl font-bold text-violet-700" />
                   </div>
 
                 </div>
@@ -71,13 +68,11 @@ export const Scene6_8_SingularValues: React.FC = () => {
                   Step 2 · Singular Value Formula
                 </p>
 
-                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-8 text-center">
-                  <p className="text-6xl font-black text-sky-700 font-mono">
-                    σ = √λ
-                  </p>
+                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-8 text-center flex flex-col items-center">
+                  <Math tex="\sigma = \sqrt{\lambda}" className="text-5xl font-bold text-sky-700" />
 
                   <p className="text-xl text-sky-800 font-semibold mt-4">
-                    Singular values are the square roots of the eigenvalues of AᵀA
+                    Singular values are the square roots of the eigenvalues of <Math tex="A^T A" />
                   </p>
                 </div>
               </div>
@@ -90,31 +85,25 @@ export const Scene6_8_SingularValues: React.FC = () => {
 
                 <div className="space-y-5">
 
-                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
-                    <p className="text-lg font-black text-emerald-700 mb-3">
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
+                    <p className="text-lg font-black text-emerald-700 mb-3 self-start">
                       First Direction
                     </p>
 
-                    <div className="font-mono text-3xl font-black text-slate-800">
-                      σ₁ = √16
-                    </div>
-
-                    <div className="font-mono text-4xl font-black text-emerald-700 mt-2">
-                      σ₁ = 4
+                    <div className="flex flex-col gap-2">
+                      <Math tex="\sigma_1 = \sqrt{16}" className="text-2xl font-bold text-slate-700" />
+                      <Math tex="\sigma_1 = 4" className="text-4xl font-bold text-emerald-700" />
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
-                    <p className="text-lg font-black text-violet-700 mb-3">
+                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
+                    <p className="text-lg font-black text-violet-700 mb-3 self-start">
                       Second Direction
                     </p>
 
-                    <div className="font-mono text-3xl font-black text-slate-800">
-                      σ₂ = √4
-                    </div>
-
-                    <div className="font-mono text-4xl font-black text-violet-700 mt-2">
-                      σ₂ = 2
+                    <div className="flex flex-col gap-2">
+                      <Math tex="\sigma_2 = \sqrt{4}" className="text-2xl font-bold text-slate-700" />
+                      <Math tex="\sigma_2 = 2" className="text-4xl font-bold text-violet-700" />
                     </div>
                   </div>
 
@@ -132,7 +121,7 @@ export const Scene6_8_SingularValues: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-emerald-700 text-lg">
-                        σ₁ = 4
+                        <Math tex="\sigma_1 = 4" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -153,7 +142,7 @@ export const Scene6_8_SingularValues: React.FC = () => {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="font-black text-violet-700 text-lg">
-                        σ₂ = 2
+                        <Math tex="\sigma_2 = 2" />
                       </span>
 
                       <span className="font-bold text-slate-500">
@@ -183,30 +172,26 @@ export const Scene6_8_SingularValues: React.FC = () => {
                 <div className="rounded-2xl bg-slate-900 p-6 text-white">
                   <div className="grid grid-cols-2 gap-8">
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Direction
                       </p>
 
-                      <p className="text-3xl font-black">
-                        [1,1]
-                      </p>
+                      <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-2xl font-bold bg-slate-800 px-3 py-1 rounded-xl mb-2" />
 
-                      <p className="text-lg text-slate-400 mt-2">
+                      <p className="text-lg text-slate-400 mt-2 text-center">
                         receives 4× stretch
                       </p>
                     </div>
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Direction
                       </p>
 
-                      <p className="text-3xl font-black">
-                        [1,-1]
-                      </p>
+                      <Math tex="v_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}" className="text-2xl font-bold bg-slate-800 px-3 py-1 rounded-xl mb-2" />
 
-                      <p className="text-lg text-slate-400 mt-2">
+                      <p className="text-lg text-slate-400 mt-2 text-center">
                         receives 2× stretch
                       </p>
                     </div>

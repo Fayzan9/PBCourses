@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_7_EigenvectorsReturn: React.FC = () => {
   return (
@@ -40,21 +41,8 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                   Step 1 · Recall AᵀA
                 </p>
 
-                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-                  <div className="font-mono text-4xl font-black text-slate-800">
-                    AᵀA =
-                    <span className="ml-4">
-                      [10 6]
-                    </span>
-                    <br />
-                    <span className="ml-[125px]">
-                      [6 10]
-                    </span>
-                  </div>
-
-                  <p className="text-lg text-slate-600 mt-4">
-                    This matrix contains all the stretching information.
-                  </p>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 flex justify-center">
+                  <Math tex="A^T A = \begin{bmatrix} 10 & 6 \\ 6 & 10 \end{bmatrix}" className="text-4xl font-bold" />
                 </div>
               </div>
 
@@ -64,33 +52,27 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                   Step 2 · Find Eigenvalues
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center gap-4">
 
-                  <div className="space-y-3 font-mono text-2xl font-black text-slate-800">
-                    <div>det(AᵀA - λI) = 0</div>
-                    <div>(10 - λ)² - 36 = 0</div>
-                  </div>
+                  <Math tex="\det(A^T A - \lambda I) = 0" className="text-2xl font-bold" />
+                  <Math tex="(10 - \lambda)^2 - 36 = 0" className="text-2xl font-bold" />
 
-                  <div className="grid grid-cols-2 gap-5 mt-6">
+                  <div className="grid grid-cols-2 gap-5 mt-6 w-full">
 
-                    <div className="bg-white rounded-xl p-4 border border-emerald-200">
-                      <p className="text-sm uppercase font-black tracking-wider text-emerald-600 mb-2">
+                    <div className="bg-white rounded-xl p-4 border border-emerald-200 flex flex-col items-center">
+                      <p className="text-sm uppercase font-black tracking-wider text-emerald-600 mb-2 self-start">
                         Largest
                       </p>
 
-                      <p className="text-4xl font-black text-emerald-700">
-                        λ₁ = 16
-                      </p>
+                      <Math tex="\lambda_1 = 16" className="text-3xl font-bold text-emerald-700" />
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 border border-emerald-200">
-                      <p className="text-sm uppercase font-black tracking-wider text-emerald-600 mb-2">
+                    <div className="bg-white rounded-xl p-4 border border-emerald-200 flex flex-col items-center">
+                      <p className="text-sm uppercase font-black tracking-wider text-emerald-600 mb-2 self-start">
                         Second
                       </p>
 
-                      <p className="text-4xl font-black text-emerald-700">
-                        λ₂ = 4
-                      </p>
+                      <Math tex="\lambda_2 = 4" className="text-3xl font-bold text-emerald-700" />
                     </div>
 
                   </div>
@@ -104,34 +86,18 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                   Step 3 · Solve For λ₁ = 16
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center gap-4">
 
-                  <div className="font-mono text-2xl font-black text-slate-800">
-                    (AᵀA - 16I)v = 0
-                  </div>
+                  <Math tex="(A^T A - 16I)v = 0" className="text-2xl font-bold" />
+                  <Math tex="\begin{bmatrix} -6 & 6 \\ 6 & -6 \end{bmatrix} v = 0" className="text-3xl font-bold" />
+                  <Math tex="-6x + 6y = 0 \implies x = y" className="text-2xl font-bold animate-pulse" />
 
-                  <div className="font-mono text-3xl font-black text-slate-800 mt-4">
-                    [-6 6]
-                    <br />
-                    [ 6 -6]
-                  </div>
-
-                  <div className="font-mono text-2xl font-black text-slate-800 mt-4">
-                    -6x + 6y = 0
-                  </div>
-
-                  <div className="font-mono text-2xl font-black text-slate-800 mt-2">
-                    x = y
-                  </div>
-
-                  <div className="mt-5 bg-white rounded-xl p-4 border border-violet-200">
-                    <p className="text-sm uppercase font-black tracking-wider text-violet-600 mb-2">
+                  <div className="mt-5 bg-white rounded-xl p-4 border border-violet-200 w-full flex flex-col items-center">
+                    <p className="text-sm uppercase font-black tracking-wider text-violet-600 mb-2 self-start">
                       First Eigenvector
                     </p>
 
-                    <p className="text-4xl font-black text-violet-700 font-mono">
-                      v₁ = [1,1]
-                    </p>
+                    <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-3xl font-bold text-violet-750" />
                   </div>
 
                 </div>
@@ -143,30 +109,17 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                   Step 4 · Solve For λ₂ = 4
                 </p>
 
-                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6">
+                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6 flex flex-col items-center gap-4">
 
-                  <div className="font-mono text-3xl font-black text-slate-800">
-                    [6 6]
-                    <br />
-                    [6 6]
-                  </div>
+                  <Math tex="\begin{bmatrix} 6 & 6 \\ 6 & 6 \end{bmatrix} v = 0" className="text-3xl font-bold" />
+                  <Math tex="6x + 6y = 0 \implies x = -y" className="text-2xl font-bold" />
 
-                  <div className="font-mono text-2xl font-black text-slate-800 mt-4">
-                    6x + 6y = 0
-                  </div>
-
-                  <div className="font-mono text-2xl font-black text-slate-800 mt-2">
-                    x = -y
-                  </div>
-
-                  <div className="mt-5 bg-white rounded-xl p-4 border border-sky-200">
-                    <p className="text-sm uppercase font-black tracking-wider text-sky-600 mb-2">
+                  <div className="mt-5 bg-white rounded-xl p-4 border border-sky-200 w-full flex flex-col items-center">
+                    <p className="text-sm uppercase font-black tracking-wider text-sky-600 mb-2 self-start">
                       Second Eigenvector
                     </p>
 
-                    <p className="text-4xl font-black text-sky-700 font-mono">
-                      v₂ = [1,-1]
-                    </p>
+                    <Math tex="v_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}" className="text-3xl font-bold text-sky-750" />
                   </div>
 
                 </div>
@@ -222,7 +175,7 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                         fontSize="24"
                         fontWeight="900"
                       >
-                        [1,1]
+                        v₁ = [1,1]
                       </text>
 
                       {/* v2 */}
@@ -242,7 +195,7 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
                         fontSize="24"
                         fontWeight="900"
                       >
-                        [1,-1]
+                        v₂ = [1,-1]
                       </text>
 
                       <circle
@@ -270,30 +223,26 @@ export const Scene6_7_EigenvectorsReturn: React.FC = () => {
 
                 <div className="rounded-2xl bg-slate-900 p-6 text-white">
 
-                  <p className="text-3xl font-black mb-4">
+                  <p className="text-3xl font-black mb-4 text-center">
                     Hidden Directions Found
                   </p>
 
                   <div className="grid grid-cols-2 gap-8">
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Strongest Direction
                       </p>
 
-                      <p className="text-4xl font-black">
-                        [1,1]
-                      </p>
+                      <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-2xl font-bold text-white bg-slate-800 px-4 py-2 rounded-xl" />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Second Direction
                       </p>
 
-                      <p className="text-4xl font-black">
-                        [1,-1]
-                      </p>
+                      <Math tex="v_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}" className="text-2xl font-bold text-white bg-slate-800 px-4 py-2 rounded-xl" />
                     </div>
 
                   </div>

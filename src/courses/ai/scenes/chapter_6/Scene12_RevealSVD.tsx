@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_12_RevealSVD: React.FC = () => {
   return (
@@ -78,14 +79,12 @@ export const Scene6_12_RevealSVD: React.FC = () => {
               {/* STEP 2 */}
               <div className="border-t pt-8">
                 <p className="text-sm uppercase tracking-widest font-black text-slate-400 mb-4">
-                  Assemble Everything
+                   Assemble Everything
                 </p>
 
-                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-8 text-center">
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-8 text-center flex justify-center">
 
-                  <div className="font-mono text-7xl font-black text-slate-800">
-                    A = UΣVᵀ
-                  </div>
+                  <Math tex="A = U \Sigma V^T" className="text-6xl font-bold text-slate-800" />
 
                 </div>
               </div>
@@ -106,12 +105,10 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                         1
                       </div>
 
-                      <div>
-                        <p className="text-2xl font-black text-violet-900">
-                          Vᵀ
-                        </p>
+                      <div className="flex flex-col items-start gap-1">
+                        <Math tex="V^T" className="text-2xl font-bold text-violet-900" />
 
-                        <p className="text-lg text-violet-800 mt-1">
+                        <p className="text-lg text-violet-800 mt-1 text-left">
                           Rotate into the important input coordinate system.
                         </p>
                       </div>
@@ -126,12 +123,10 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                         2
                       </div>
 
-                      <div>
-                        <p className="text-2xl font-black text-emerald-900">
-                          Σ
-                        </p>
+                      <div className="flex flex-col items-start gap-1">
+                        <Math tex="\Sigma" className="text-2xl font-bold text-emerald-900" />
 
-                        <p className="text-lg text-emerald-800 mt-1">
+                        <p className="text-lg text-emerald-800 mt-1 text-left">
                           Stretch along those special directions.
                         </p>
                       </div>
@@ -146,12 +141,10 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                         3
                       </div>
 
-                      <div>
-                        <p className="text-2xl font-black text-sky-900">
-                          U
-                        </p>
+                      <div className="flex flex-col items-start gap-1">
+                        <Math tex="U" className="text-2xl font-bold text-sky-900" />
 
-                        <p className="text-lg text-sky-800 mt-1">
+                        <p className="text-lg text-sky-800 mt-1 text-left">
                           Rotate into the final output orientation.
                         </p>
                       </div>
@@ -174,10 +167,8 @@ export const Scene6_12_RevealSVD: React.FC = () => {
 
                   <div className="flex items-center justify-center gap-8 text-center">
 
-                    <div>
-                      <div className="text-5xl font-black text-violet-400">
-                        Vᵀ
-                      </div>
+                    <div className="flex flex-col items-center">
+                      <Math tex="V^T" className="text-4xl font-bold text-violet-400" />
 
                       <div className="mt-2 text-lg text-slate-300">
                         Rotate
@@ -188,10 +179,8 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                       →
                     </div>
 
-                    <div>
-                      <div className="text-5xl font-black text-emerald-400">
-                        Σ
-                      </div>
+                    <div className="flex flex-col items-center">
+                      <Math tex="\Sigma" className="text-4xl font-bold text-emerald-400" />
 
                       <div className="mt-2 text-lg text-slate-300">
                         Stretch
@@ -202,10 +191,8 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                       →
                     </div>
 
-                    <div>
-                      <div className="text-5xl font-black text-sky-400">
-                        U
-                      </div>
+                    <div className="flex flex-col items-center">
+                      <Math tex="U" className="text-4xl font-bold text-sky-400" />
 
                       <div className="mt-2 text-lg text-slate-300">
                         Rotate
@@ -225,17 +212,17 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                   Why This Is Powerful
                 </p>
 
-                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6">
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-amber-900">
+                  <p className="text-xl font-bold text-amber-900 text-center mb-4">
                     A matrix may look complicated...
                   </p>
 
-                  <p className="text-lg text-amber-800 mt-4">
+                  <p className="text-lg text-amber-800 text-center">
                     but SVD reveals that every matrix is secretly just:
                   </p>
 
-                  <div className="font-black text-4xl text-amber-700 mt-6">
+                  <div className="font-black text-4xl text-amber-700 mt-6 text-center">
                     Rotate → Stretch → Rotate
                   </div>
 
@@ -250,13 +237,13 @@ export const Scene6_12_RevealSVD: React.FC = () => {
                   Final Discovery
                 </p>
 
-                <div className="rounded-2xl bg-slate-900 p-6 text-white">
+                <div className="rounded-2xl bg-slate-900 p-6 text-white flex flex-col items-center">
 
-                  <p className="text-3xl font-black mb-5">
+                  <p className="text-3xl font-black mb-5 text-center">
                     Every Matrix Has Hidden Geometry
                   </p>
 
-                  <div className="space-y-3 text-xl">
+                  <div className="space-y-3 text-xl w-full max-w-md">
 
                     <p>
                       • Find important directions
@@ -276,9 +263,7 @@ export const Scene6_12_RevealSVD: React.FC = () => {
 
                   </div>
 
-                  <div className="font-mono text-5xl font-black text-emerald-400 mt-8">
-                    A = UΣVᵀ
-                  </div>
+                  <Math tex="A = U \Sigma V^T" className="text-5xl font-bold text-emerald-400 mt-8" />
 
                 </div>
 

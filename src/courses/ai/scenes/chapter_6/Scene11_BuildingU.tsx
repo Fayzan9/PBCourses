@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_11_BuildingU: React.FC = () => {
   return (
@@ -42,24 +43,20 @@ export const Scene6_11_BuildingU: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-5">
 
-                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
-                    <p className="text-sm uppercase tracking-wider font-black text-violet-600 mb-3">
+                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
+                    <p className="text-sm uppercase tracking-wider font-black text-violet-600 mb-3 self-start">
                       Input Direction
                     </p>
 
-                    <div className="font-mono text-4xl font-black text-violet-700">
-                      v₁
-                    </div>
+                    <Math tex="v_1" className="text-4xl font-bold text-violet-700" />
                   </div>
 
-                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
-                    <p className="text-sm uppercase tracking-wider font-black text-emerald-600 mb-3">
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center">
+                    <p className="text-sm uppercase tracking-wider font-black text-emerald-600 mb-3 self-start">
                       Stretch Amount
                     </p>
 
-                    <div className="font-mono text-4xl font-black text-emerald-700">
-                      σ₁ = 4
-                    </div>
+                    <Math tex="\sigma_1 = 4" className="text-4xl font-bold text-emerald-700" />
                   </div>
 
                 </div>
@@ -71,17 +68,15 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   Step 1 · Apply The Matrix
                 </p>
 
-                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6">
+                <div className="rounded-2xl bg-sky-50 border border-sky-200 p-6 flex flex-col items-center">
 
-                  <div className="font-mono text-4xl font-black text-sky-700">
-                    Av₁
-                  </div>
+                  <Math tex="Av_1" className="text-4xl font-bold text-sky-700" />
 
-                  <p className="text-lg text-sky-800 mt-4">
+                  <p className="text-lg text-sky-850 mt-4 text-center">
                     This gives the actual transformed vector.
                   </p>
 
-                  <p className="text-lg text-sky-800 mt-2">
+                  <p className="text-lg text-sky-800 mt-2 text-center font-medium">
                     But it still contains the stretching.
                   </p>
 
@@ -94,17 +89,15 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   Step 2 · Remove The Stretch
                 </p>
 
-                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6">
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 flex flex-col items-center">
 
-                  <div className="font-mono text-5xl font-black text-amber-700">
-                    u₁ = Av₁ / σ₁
-                  </div>
+                  <Math tex="u_1 = \frac{Av_1}{\sigma_1}" className="text-4xl font-bold text-amber-700" />
 
-                  <p className="text-lg text-amber-800 mt-5">
+                  <p className="text-lg text-amber-800 mt-5 text-center">
                     Divide by the singular value.
                   </p>
 
-                  <p className="text-lg text-amber-800 mt-2">
+                  <p className="text-lg text-amber-800 mt-2 text-center">
                     Remove the stretching.
                   </p>
 
@@ -117,13 +110,13 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   Why Divide By σ?
                 </p>
 
-                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6">
+                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-rose-900 mb-4">
-                    Av₁ contains two things:
+                  <p className="text-xl font-bold text-rose-900 mb-4 text-center">
+                    <Math tex="Av_1" /> contains two things:
                   </p>
 
-                  <div className="space-y-3 text-lg text-rose-800">
+                  <div className="space-y-3 text-lg text-rose-800 w-full max-w-xs text-center font-semibold">
 
                     <p>
                       • Direction
@@ -135,11 +128,11 @@ export const Scene6_11_BuildingU: React.FC = () => {
 
                   </div>
 
-                  <p className="text-lg text-rose-800 mt-5">
-                    Dividing by σ removes the stretching part.
+                  <p className="text-lg text-rose-800 mt-5 text-center">
+                    Dividing by <Math tex="\sigma" /> removes the stretching part.
                   </p>
 
-                  <p className="text-lg text-rose-800 mt-2">
+                  <p className="text-lg text-rose-800 mt-2 text-center">
                     What's left is a pure direction.
                   </p>
 
@@ -152,33 +145,13 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   Example Using Our Matrix
                 </p>
 
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6 flex flex-col items-center gap-4">
 
-                  <div className="space-y-4 font-mono">
+                  <Math tex="Av_1 = 4v_1" className="text-3xl font-bold text-slate-800" />
+                  <Math tex="u_1 = \frac{4v_1}{4}" className="text-3xl font-bold text-slate-800" />
+                  <Math tex="u_1 = v_1" className="text-4xl font-bold text-emerald-700" />
 
-                    <div className="text-3xl font-black text-slate-800">
-                      Av₁ = 4v₁
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      ↓
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-800">
-                      u₁ = (4v₁)/4
-                    </div>
-
-                    <div className="text-3xl font-black text-slate-500">
-                      ↓
-                    </div>
-
-                    <div className="text-4xl font-black text-emerald-700">
-                      u₁ = v₁
-                    </div>
-
-                  </div>
-
-                  <p className="text-lg text-emerald-800 mt-5">
+                  <p className="text-lg text-emerald-800 mt-5 text-center font-medium">
                     In this special example they happen to be identical.
                   </p>
 
@@ -191,22 +164,20 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   General Case
                 </p>
 
-                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6">
+                <div className="rounded-2xl bg-violet-50 border border-violet-200 p-6 flex flex-col items-center">
 
-                  <p className="text-xl font-bold text-violet-900">
+                  <p className="text-xl font-bold text-violet-900 text-center mb-4">
                     Usually:
                   </p>
 
-                  <div className="font-mono text-5xl font-black text-violet-700 mt-4">
-                    uᵢ ≠ vᵢ
-                  </div>
+                  <Math tex="u_i \neq v_i" className="text-5xl font-bold text-violet-700" />
 
-                  <p className="text-lg text-violet-800 mt-5">
+                  <p className="text-lg text-violet-800 mt-5 text-center">
                     Input directions and output directions are different.
                   </p>
 
-                  <p className="text-lg text-violet-800 mt-2">
-                    That's why SVD needs both U and V.
+                  <p className="text-lg text-violet-800 mt-2 text-center">
+                    That's why SVD needs both <Math tex="U" /> and <Math tex="V" />.
                   </p>
 
                 </div>
@@ -218,27 +189,25 @@ export const Scene6_11_BuildingU: React.FC = () => {
                   Final Discovery
                 </p>
 
-                <div className="rounded-2xl bg-slate-900 p-6 text-white">
+                <div className="rounded-2xl bg-slate-900 p-6 text-white flex flex-col items-center">
 
-                  <div className="space-y-4 text-xl">
+                  <div className="space-y-4 text-xl w-full max-w-md">
 
                     <p>
-                      • V contains important input directions
+                      • <Math tex="V" /> contains important input directions
                     </p>
 
                     <p>
-                      • Σ contains stretch amounts
+                      • <Math tex="\Sigma" /> contains stretch amounts
                     </p>
 
                     <p>
-                      • U contains output directions
+                      • <Math tex="U" /> contains output directions
                     </p>
 
                   </div>
 
-                  <div className="font-mono text-4xl font-black text-emerald-400 mt-6">
-                    uᵢ = Avᵢ / σᵢ
-                  </div>
+                  <Math tex="u_i = \frac{Av_i}{\sigma_i}" className="text-4xl font-bold text-emerald-400 mt-6" />
 
                 </div>
               </div>
@@ -275,14 +244,12 @@ export const Scene6_11_BuildingU: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-          <p className="text-xs uppercase tracking-wider font-black text-amber-600 mb-3">
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-col items-center">
+          <p className="text-xs uppercase tracking-wider font-black text-amber-600 mb-3 self-start">
             Formula
           </p>
 
-          <p className="text-2xl font-black text-amber-900 font-mono">
-            uᵢ = Avᵢ/σᵢ
-          </p>
+          <Math tex="u_i = \frac{Av_i}{\sigma_i}" className="text-2xl font-bold text-amber-900" />
         </div>
 
         <div className="bg-slate-900 rounded-2xl p-5 text-white">

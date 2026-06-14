@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_14_NetflixAnalogy: React.FC = () => {
   return (
@@ -137,8 +138,8 @@ export const Scene6_14_NetflixAnalogy: React.FC = () => {
                     This direction explains a huge amount of user behavior.
                   </p>
 
-                  <div className="mt-5 font-mono text-4xl font-black text-emerald-700">
-                    σ₁ = Very Large
+                  <div className="mt-5 font-mono text-4xl font-black text-emerald-700 flex justify-center">
+                    <Math tex="\sigma_1 = \text{Very Large}" />
                   </div>
 
                 </div>
@@ -162,8 +163,8 @@ export const Scene6_14_NetflixAnalogy: React.FC = () => {
                     Another meaningful pattern.
                   </p>
 
-                  <div className="mt-5 font-mono text-4xl font-black text-sky-700">
-                    σ₂ = Large
+                  <div className="mt-5 font-mono text-4xl font-black text-sky-700 flex justify-center">
+                    <Math tex="\sigma_2 = \text{Large}" />
                   </div>
 
                 </div>
@@ -190,8 +191,8 @@ export const Scene6_14_NetflixAnalogy: React.FC = () => {
                     <p>• Weak patterns</p>
                   </div>
 
-                  <div className="mt-6 font-mono text-4xl font-black text-amber-700">
-                    σ ≈ 0
+                  <div className="mt-6 font-mono text-4xl font-black text-amber-700 flex justify-center">
+                    <Math tex="\sigma \approx 0" />
                   </div>
 
                 </div>
@@ -211,8 +212,8 @@ export const Scene6_14_NetflixAnalogy: React.FC = () => {
                     Keep only the strongest singular values.
                   </p>
 
-                  <div className="mt-5 font-mono text-4xl font-black text-rose-700">
-                    σ₁, σ₂
+                  <div className="mt-5 font-mono text-4xl font-black text-rose-700 flex justify-center">
+                    <Math tex="\sigma_1, \sigma_2" />
                   </div>
 
                   <p className="text-lg text-rose-800 mt-5">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 const MATRIX = [
   [3, 1],
@@ -25,7 +26,7 @@ function apply(v: { x: number; y: number }) {
 }
 
 function mag(v: { x: number; y: number }) {
-  return Math.sqrt(v.x * v.x + v.y * v.y);
+  return globalThis.Math.sqrt(v.x * v.x + v.y * v.y);
 }
 
 const W = 860;
@@ -190,26 +191,12 @@ export const Scene6_3_TheRealQuestion: React.FC = () => {
         style={{ flex: '0 0 28%' }}
       >
 
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-          <p className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col items-center">
+          <p className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3 self-start">
             Matrix
           </p>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xl font-thin">A =</span>
-
-            <div className="border-l-2 border-r-2 border-slate-700 px-3 py-1">
-              <div className="flex gap-5">
-                <span className="text-2xl font-black">3</span>
-                <span className="text-2xl font-black">1</span>
-              </div>
-
-              <div className="flex gap-5">
-                <span className="text-2xl font-black">1</span>
-                <span className="text-2xl font-black">3</span>
-              </div>
-            </div>
-          </div>
+          <Math tex="A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}" className="text-2xl font-bold" />
         </div>
 
         <div>

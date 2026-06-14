@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Math } from '../../components/Math';
 
 export const Scene6_9_WorkedExample: React.FC = () => {
   return (
@@ -40,15 +41,8 @@ export const Scene6_9_WorkedExample: React.FC = () => {
                   Step 1 · Start With A Matrix
                 </p>
 
-                <div className="text-4xl font-black text-slate-800 font-mono">
-                  A =
-                  <span className="ml-4">
-                    [3 1]
-                  </span>
-                  <br />
-                  <span className="ml-[78px]">
-                    [1 3]
-                  </span>
+                <div className="flex justify-center p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                  <Math tex="A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}" className="text-4xl font-bold" />
                 </div>
               </div>
 
@@ -58,20 +52,12 @@ export const Scene6_9_WorkedExample: React.FC = () => {
                   Step 2 · Build AᵀA
                 </p>
 
-                <div className="text-3xl font-mono font-black text-slate-800">
-                  AᵀA =
-                  <span className="ml-4">
-                    [10 6]
-                  </span>
-                  <br />
-                  <span className="ml-[95px]">
-                    [6 10]
-                  </span>
+                <div className="flex flex-col items-center gap-4 bg-emerald-50 border border-emerald-150 p-6 rounded-2xl">
+                  <Math tex="A^T A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} = \begin{bmatrix} 10 & 6 \\ 6 & 10 \end{bmatrix}" className="text-2xl font-bold" />
+                  <p className="text-emerald-800 text-center text-lg font-medium">
+                    This matrix contains all stretching information.
+                  </p>
                 </div>
-
-                <p className="text-slate-500 mt-3 text-lg">
-                  This matrix contains all stretching information.
-                </p>
               </div>
 
               {/* STEP 3 */}
@@ -80,11 +66,13 @@ export const Scene6_9_WorkedExample: React.FC = () => {
                   Step 3 · Find Eigenvalues
                 </p>
 
-                <div className="space-y-3 font-mono text-2xl font-black text-slate-800">
-                  <div>det(AᵀA - λI) = 0</div>
-                  <div>(10 - λ)² - 36 = 0</div>
-                  <div>λ₁ = 16</div>
-                  <div>λ₂ = 4</div>
+                <div className="flex flex-col items-center gap-3 bg-violet-50 border border-violet-150 p-6 rounded-2xl">
+                  <Math tex="\det(A^T A - \lambda I) = 0" className="text-2xl font-bold" />
+                  <Math tex="(10 - \lambda)^2 - 36 = 0" className="text-2xl font-bold" />
+                  <div className="flex gap-8 mt-2">
+                    <Math tex="\lambda_1 = 16" className="text-3xl font-bold text-violet-750" />
+                    <Math tex="\lambda_2 = 4" className="text-3xl font-bold text-violet-750" />
+                  </div>
                 </div>
               </div>
 
@@ -96,48 +84,24 @@ export const Scene6_9_WorkedExample: React.FC = () => {
 
                 <div className="space-y-5">
 
-                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5">
-                    <p className="font-black text-emerald-700 mb-2">
-                      For λ = 16
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 flex flex-col items-center gap-2">
+                    <p className="font-black text-emerald-700 mb-2 self-start">
+                      For <Math tex="\lambda = 16" />
                     </p>
 
-                    <div className="font-mono text-xl font-bold text-slate-800">
-                      (AᵀA - 16I)v = 0
-                    </div>
-
-                    <div className="font-mono text-xl font-bold text-slate-800 mt-2">
-                      [-6 6]
-                      <br />
-                      [ 6 -6]
-                    </div>
-
-                    <div className="font-mono text-xl font-bold text-slate-800 mt-2">
-                      x = y
-                    </div>
-
-                    <div className="font-mono text-2xl font-black text-emerald-700 mt-2">
-                      v₁ = [1,1]
-                    </div>
+                    <Math tex="(A^T A - 16I)v = 0" className="text-xl font-bold text-slate-800" />
+                    <Math tex="\begin{bmatrix} -6 & 6 \\ 6 & -6 \end{bmatrix} v = 0 \implies x = y" className="text-xl font-bold text-slate-800" />
+                    <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-2xl font-bold text-emerald-700 mt-2" />
                   </div>
 
-                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-5">
-                    <p className="font-black text-violet-700 mb-2">
-                      For λ = 4
+                  <div className="rounded-2xl bg-violet-50 border border-violet-200 p-5 flex flex-col items-center gap-2">
+                    <p className="font-black text-violet-700 mb-2 self-start">
+                      For <Math tex="\lambda = 4" />
                     </p>
 
-                    <div className="font-mono text-xl font-bold text-slate-800">
-                      [6 6]
-                      <br />
-                      [6 6]
-                    </div>
-
-                    <div className="font-mono text-xl font-bold text-slate-800 mt-2">
-                      x = -y
-                    </div>
-
-                    <div className="font-mono text-2xl font-black text-violet-700 mt-2">
-                      v₂ = [1,-1]
-                    </div>
+                    <Math tex="(A^T A - 4I)v = 0" className="text-xl font-bold text-slate-800" />
+                    <Math tex="\begin{bmatrix} 6 & 6 \\ 6 & 6 \end{bmatrix} v = 0 \implies x = -y" className="text-xl font-bold text-slate-800" />
+                    <Math tex="v_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}" className="text-2xl font-bold text-violet-700 mt-2" />
                   </div>
 
                 </div>
@@ -149,10 +113,12 @@ export const Scene6_9_WorkedExample: React.FC = () => {
                   Step 5 · Compute Singular Values
                 </p>
 
-                <div className="space-y-3 font-mono text-2xl font-black text-slate-800">
-                  <div>σ = √λ</div>
-                  <div>σ₁ = √16 = 4</div>
-                  <div>σ₂ = √4 = 2</div>
+                <div className="flex flex-col items-center gap-3 bg-sky-50 border border-sky-150 p-6 rounded-2xl">
+                  <Math tex="\sigma = \sqrt{\lambda}" className="text-3xl font-bold text-slate-800" />
+                  <div className="flex gap-8 mt-2">
+                    <Math tex="\sigma_1 = \sqrt{16} = 4" className="text-2xl font-bold text-sky-700" />
+                    <Math tex="\sigma_2 = \sqrt{4} = 2" className="text-2xl font-bold text-sky-700" />
+                  </div>
                 </div>
               </div>
 
@@ -165,32 +131,22 @@ export const Scene6_9_WorkedExample: React.FC = () => {
                 <div className="rounded-2xl bg-slate-900 p-6 text-white">
                   <div className="grid grid-cols-2 gap-8">
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Important Directions
                       </p>
 
-                      <p className="text-3xl font-black">
-                        [1,1]
-                      </p>
-
-                      <p className="text-3xl font-black mt-2">
-                        [1,-1]
-                      </p>
+                      <Math tex="v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}" className="text-2xl font-bold mb-2 text-white bg-slate-800 px-3 py-1 rounded-lg" />
+                      <Math tex="v_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}" className="text-2xl font-bold text-white bg-slate-800 px-3 py-1 rounded-lg" />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col items-center">
                       <p className="text-slate-300 font-bold mb-3">
                         Stretch Amounts
                       </p>
 
-                      <p className="text-3xl font-black">
-                        σ₁ = 4
-                      </p>
-
-                      <p className="text-3xl font-black mt-2">
-                        σ₂ = 2
-                      </p>
+                      <Math tex="\sigma_1 = 4" className="text-2xl font-bold mb-2 text-white" />
+                      <Math tex="\sigma_2 = 2" className="text-2xl font-bold text-white" />
                     </div>
 
                   </div>
