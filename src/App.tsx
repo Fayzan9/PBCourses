@@ -3,13 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { LandingPage } from './courses/LandingPage';
 import { CourseViewer } from './courses/CourseViewer';
 import { aiConfig } from './courses/ai';
-import { pythonConfig } from './courses/python';
 import { pythonProConfig } from './courses/python_pro';
-import { javascriptConfig } from './courses/javascript';
 import { marathiConfig } from './courses/marathi';
 import { computerArchitectureConfig } from './courses/computer_architecture';
 
-type CourseType = 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | 'computer_architecture' | null;
+type CourseType = 'ai' | 'python_pro' | 'marathi' | 'computer_architecture' | null;
 
 export const App: React.FC = () => {
   const [currentCourse, setCurrentCourse] = useState<CourseType>(() => {
@@ -60,28 +58,6 @@ export const App: React.FC = () => {
           </motion.div>
         )}
 
-        {currentCourse === 'python' && (
-          <motion.div
-            key="python-course"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.25 }}
-            className="w-full h-screen"
-          >
-            <CourseViewer
-              courseName={pythonConfig.courseName}
-              chapters={pythonConfig.chapters}
-              themes={pythonConfig.themes}
-              hasSandbox={pythonConfig.hasSandbox}
-              SandboxComponent={pythonConfig.SandboxComponent}
-              hasWhiteboard={pythonConfig.hasWhiteboard}
-              WhiteboardComponent={pythonConfig.WhiteboardComponent}
-              onBack={() => updateCourse(null)}
-            />
-          </motion.div>
-        )}
-
         {currentCourse === 'python_pro' && (
           <motion.div
             key="python-pro-course"
@@ -121,24 +97,6 @@ export const App: React.FC = () => {
               WhiteboardComponent={marathiConfig.WhiteboardComponent}
               hasLiveAgent={marathiConfig.hasLiveAgent}
               LiveAgentComponent={marathiConfig.LiveAgentComponent}
-              onBack={() => updateCourse(null)}
-            />
-          </motion.div>
-        )}
-
-        {currentCourse === 'javascript' && (
-          <motion.div
-            key="javascript-course"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.25 }}
-            className="w-full h-screen"
-          >
-            <CourseViewer
-              courseName={javascriptConfig.courseName}
-              chapters={javascriptConfig.chapters}
-              themes={javascriptConfig.themes}
               onBack={() => updateCourse(null)}
             />
           </motion.div>

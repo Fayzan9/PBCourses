@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Code2, Cpu, ArrowRight, BookOpen, Sparkles, Binary, Layers } from 'lucide-react';
+import { Terminal, Cpu, ArrowRight, BookOpen, Sparkles, Binary, Layers } from 'lucide-react';
 
 interface InteractiveConstellationProps {
   accentColor?: string;
@@ -233,7 +233,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
 };
 
 interface LandingPageProps {
-  onSelectCourse: (course: 'ai' | 'python' | 'python_pro' | 'javascript' | 'marathi' | 'computer_architecture') => void;
+  onSelectCourse: (course: 'ai' | 'python_pro' | 'marathi' | 'computer_architecture') => void;
 }
 
 type Category = 'all' | 'ai_systems' | 'programming' | 'languages';
@@ -272,17 +272,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
       icon: <Cpu size={20} />,
     },
     {
-      id: 'python',
-      category: 'programming',
-      title: 'Python Programming Essentials',
-      description: 'Master variables, dynamic typing, and memory mechanics through interactive code playgrounds.',
-      badge: 'Python Foundations',
-      chaptersInfo: '1 Chapter • Interactive Console',
-      glowColor: '#fbbf24', // amber-400
-      textColor: '#d97706', // amber-600
-      icon: <Terminal size={20} />,
-    },
-    {
       id: 'python_pro',
       category: 'programming',
       title: 'Python Pro Curriculum',
@@ -292,17 +281,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
       glowColor: '#818cf8', // indigo-400
       textColor: '#6366f1', // indigo-600
       icon: <Terminal size={20} />,
-    },
-    {
-      id: 'javascript',
-      category: 'programming',
-      title: 'Modern JavaScript Deep Dive',
-      description: 'Visualize scope chains, closures, prototype mechanics, and asynchronous event loops in real time.',
-      badge: 'JavaScript Mastery',
-      chaptersInfo: '1 Chapter • Visualizer',
-      glowColor: '#facc15', // yellow-400
-      textColor: '#eab308', // yellow-600
-      icon: <Code2 size={20} />,
     },
     {
       id: 'marathi',

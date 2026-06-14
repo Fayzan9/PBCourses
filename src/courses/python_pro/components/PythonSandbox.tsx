@@ -61,11 +61,10 @@ export const PythonSandbox: React.FC<PythonSandboxProps> = ({ onClose }) => {
   const [copied, setCopied] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load Pyodide from CDN
   useEffect(() => {
     getOrLoadPyodide()
       .then(() => setPyodideLoaded(true))
-      .catch((err) => setLoadError(err.message || String(err)));
+      .catch((err: any) => setLoadError(err.message || String(err)));
   }, []);
 
   const runCode = async () => {
