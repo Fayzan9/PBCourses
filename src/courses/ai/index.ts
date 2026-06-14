@@ -8,7 +8,6 @@ import { chapter3 } from './scenes/chapter_3';
 import { chapter4 } from './scenes/chapter_4';
 import { chapter5 } from './scenes/chapter_5';
 import { chapter6 } from './scenes/chapter_6';
-import { chapter7 } from './scenes/chapter_7';
 
 export const aiChapters: Chapter[] = [
   chapter1,
@@ -16,8 +15,7 @@ export const aiChapters: Chapter[] = [
   chapter3,
   chapter4,
   chapter5,
-  chapter6,
-  chapter7
+  chapter6
 ];
 
 export const aiThemes: ChapterTheme[] = [
@@ -84,19 +82,8 @@ export const aiThemes: ChapterTheme[] = [
     border: 'border-svd/20',
     glow: 'glow-svd',
     dotBg: 'bg-svd',
-    bgActive: 'bg-svd hover:bg-cyan-700',
+    bgActive: 'bg-svd hover:bg-cyan-600',
     hover: 'hover:bg-svd/5 hover:text-svd'
-  },
-  {
-    id: 7,
-    primary: 'loss',
-    text: 'text-loss',
-    bg: 'bg-loss/10',
-    border: 'border-loss/20',
-    glow: 'glow-loss',
-    dotBg: 'bg-loss',
-    bgActive: 'bg-loss hover:bg-rose-600',
-    hover: 'hover:bg-loss/5 hover:text-loss'
   }
 ];
 
