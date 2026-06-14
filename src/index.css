@@ -7,6 +7,7 @@
   --color-probability: #059669; /* emerald-600 */
   --color-loss: #E11D48; /* rose-600 */
   --color-svd: #0891B2; /* cyan-600 */
+  --color-pca: #4F46E5; /* indigo-600 */
   --color-bg-dark: #F8FAFC; /* Slate-50 light background */
   --color-text-light: #0F172A; /* Slate-900 text */
   --color-muted-light: #64748B; /* Slate-500 muted text */
@@ -131,3 +132,4 @@ body {
 }
 
 .glow-svd { filter: drop-shadow(0 0 10px rgba(8, 145, 178, 0.2)); }
+.glow-pca { filter: drop-shadow(0 0 10px rgba(79, 70, 229, 0.2)); }
