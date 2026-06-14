@@ -5,7 +5,7 @@ import { chapter3 } from './scenes/chapter_3';
 import { chapter4 } from './scenes/chapter_4';
 import { chapter5 } from './scenes/chapter_5';
 import { chapter6 } from './scenes/chapter_6';
-import { PythonSandbox } from '../python/components/PythonSandbox';
+import { PythonSandbox } from './components/PythonSandbox';
 import { Whiteboard } from '../ai/components/Whiteboard';
 
 export const pythonProChapters: Chapter[] = [
