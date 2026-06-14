@@ -159,7 +159,30 @@ Notice that as I change the lengths of vectors A and B, the cosine similarity re
 
 ---
 
-## 🎬 Scene 7: The Normalization Trick
+## 🎬 Scene 7: Cosine Scale Comparison
+### 🎥 Visuals on Screen
+- Same Netflix preferences graph showing Alice, Bob, and Charlie.
+- Vector arrows are drawn from the origin to Alice, Bob, and Charlie.
+- A side panel shows Cosine Scores:
+  - Alice ↔ Bob Cosine Similarity = **1.000** (Angle = 0°)
+  - Alice ↔ Charlie Cosine Similarity = **0.651** (Angle = 49.4°)
+- The screen highlights the comparison between Euclidean distance and Cosine similarity.
+
+### 🎙️ Narration (Voiceover)
+**[6:00 - 7:00]**
+"Now, let's revisit Alice, Bob, and Charlie from Scene 5, but this time using Cosine Similarity.
+
+Because Alice and Bob share the exact same viewing ratios—Action twice as much as Comedy—their vectors lie on the exact same line. The angle between them is 0 degrees. The Cosine Similarity score? A perfect 1.000. 
+
+Meanwhile, Charlie, who prefers Comedy over Action, has a vector pointing in a different direction—forming a 49.4-degree angle with Alice's vector. The cosine similarity is 0.651.
+
+Under Euclidean distance, Bob was further away from Alice than Charlie was, simply because Bob watched more TV. But Cosine Similarity ignores the scale entirely, grouping Alice and Bob as a perfect match while correctly recognizing Charlie as different. 
+
+Now that we see why this works, let's look at the mathematical formula behind it."
+
+---
+
+## 🎬 Scene 8: The Normalization Trick
 ### 🎥 Visuals on Screen
 - A mathematical formula:
   $$\text{cos}(\theta) = \frac{A \cdot B}{\|A\| \|B\|}$$
@@ -170,7 +193,7 @@ Notice that as I change the lengths of vectors A and B, the cosine similarity re
   - **Step 4: Normalize** ➡️ $\frac{160}{8.94 \times 17.89} = 1.000$
 
 ### 🎙️ Narration (Voiceover)
-**[6:00 - 7:00]**
+**[7:00 - 8:00]**
 "How do we calculate this mathematically? It's done with a beautiful normalization trick.
 
 The cosine of the angle is calculated by taking the **Dot Product** of the two vectors, and dividing it by the product of their **Magnitudes**—their lengths.
@@ -181,7 +204,7 @@ As you can see, even if User B watches twice as much as User A, their normalized
 
 ---
 
-## 🎬 Scene 8: What's Next & Outro
+## 🎬 Scene 9: What's Next & Outro
 ### 🎥 Visuals on Screen
 - A teaser slide:
   - **Chapter 3: The Dot Product**
@@ -190,7 +213,7 @@ As you can see, even if User B watches twice as much as User A, their normalized
 - Dynamic icon of vectors crossing.
 
 ### 🎙️ Narration (Voiceover)
-**[7:00 - End]**
+**[8:00 - End]**
 "Now, you might have noticed a new term in that formula: the **Dot Product**.
 
 How does multiplying two vectors together reveal their alignment? And what does it actually represent geometrically?
