@@ -9,7 +9,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
 
       {/* MAIN CONTENT */}
       <div
-        className="flex flex-col items-center justify-center px-4"
+        className="flex flex-col items-center justify-center p-8"
         style={{ flex: '0 0 78%' }}
       >
         {/* HEADER */}
@@ -32,26 +32,26 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
         <div
           className="rounded-3xl overflow-hidden flex flex-col"
           style={{
-            width: 880,
-            height: 520,
+            width: 900,
+            height: 640,
             maxWidth: '100%',
             background:
               'linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%)',
             border: '1px solid #e2e8f0',
-            boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
           }}
         >
           <div
             className="flex-1 min-h-0"
             style={{
               display: 'grid',
-              gridTemplateColumns: '34% 28% 38%',
+              gridTemplateColumns: '35% 27% 38%',
             }}
           >
             {/* LEFT */}
-            <div className="border-r border-slate-200 flex flex-col justify-center min-h-0">
+            <div className="border-r border-slate-200 flex flex-col min-h-0">
 
-              <div className="border-b border-slate-200 py-3 text-center">
+              <div className="border-b border-slate-200 py-4 text-center">
                 <div className="text-xl font-black text-slate-800">
                   Example Dataset
                 </div>
@@ -61,17 +61,17 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 flex flex-col flex-1 justify-center min-h-0 overflow-y-auto">
+              <div className="p-6 flex flex-col flex-1 justify-between min-h-0 overflow-y-auto">
 
                 {/* TABLE */}
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden text-xs">
+                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden text-xs shadow-sm">
 
                   <div className="grid grid-cols-2 bg-slate-100 font-black text-slate-700">
-                    <div className="p-2 border-r border-slate-200">
+                    <div className="p-2.5 border-r border-slate-200 text-center">
                       Height
                     </div>
 
-                    <div className="p-2">
+                    <div className="p-2.5 text-center">
                       Weight
                     </div>
                   </div>
@@ -84,13 +84,13 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                   ].map((row, idx) => (
                     <div
                       key={idx}
-                      className="grid grid-cols-2 border-t border-slate-200"
+                      className="grid grid-cols-2 border-t border-slate-200 text-center"
                     >
-                      <div className="p-2 border-r border-slate-200">
+                      <div className="p-2 border-r border-slate-200 text-slate-600">
                         {row[0]}
                       </div>
 
-                      <div className="p-2">
+                      <div className="p-2 text-slate-600">
                         {row[1]}
                       </div>
                     </div>
@@ -98,18 +98,18 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                 </div>
 
                 {/* QUESTIONS */}
-                <div className="mt-3 space-y-2">
+                <div className="mt-4 space-y-2.5">
 
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
-                    <div className="bg-white border border-slate-200 rounded-xl p-2.5 text-xs">
+                    <div className="bg-white border border-slate-200 rounded-xl p-3 text-xs shadow-sm hover:shadow-md transition-shadow">
                       <div className="font-black text-slate-800">
                         How much does Height vary?
                       </div>
 
-                      <div className="mt-0.5 text-violet-600 font-bold">
+                      <div className="mt-1 text-violet-600 font-bold">
                         → Variance(H)
                       </div>
                     </div>
@@ -120,12 +120,12 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <div className="bg-white border border-slate-200 rounded-xl p-2.5 text-xs">
+                    <div className="bg-white border border-slate-200 rounded-xl p-3 text-xs shadow-sm hover:shadow-md transition-shadow">
                       <div className="font-black text-slate-800">
                         How much does Weight vary?
                       </div>
 
-                      <div className="mt-0.5 text-violet-600 font-bold">
+                      <div className="mt-1 text-violet-600 font-bold">
                         → Variance(W)
                       </div>
                     </div>
@@ -136,12 +136,12 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6 }}
                   >
-                    <div className="bg-violet-50 border border-violet-200 rounded-xl p-2.5 text-xs">
+                    <div className="bg-violet-50 border border-violet-200 rounded-xl p-3 text-xs shadow-sm hover:shadow-md transition-shadow">
                       <div className="font-black text-violet-700">
                         Do Height & Weight move together?
                       </div>
 
-                      <div className="mt-0.5 text-violet-600 font-bold">
+                      <div className="mt-1 text-violet-600 font-bold">
                         → Cov(H,W)
                       </div>
                     </div>
@@ -154,7 +154,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
             </div>
 
             {/* CENTER */}
-            <div className="border-r border-slate-200 flex flex-col items-center justify-center px-4">
+            <div className="border-r border-slate-200 flex flex-col items-center justify-center p-6">
 
               <motion.div
                 initial={{ opacity: 0 }}
@@ -162,31 +162,31 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                 transition={{ delay: 0.8 }}
                 className="text-center w-full"
               >
-                <div className="text-lg font-black text-slate-800">
+                <div className="text-xl font-black text-slate-800">
                   We now have
                 </div>
 
-                <div className="mt-3 space-y-2 text-xs">
+                <div className="mt-5 space-y-3 text-xs">
 
-                  <div className="bg-white border border-slate-200 rounded-xl px-4 py-2 font-semibold">
+                  <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 font-semibold shadow-sm">
                     Variance(H)
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl px-4 py-2 font-semibold">
+                  <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 font-semibold shadow-sm">
                     Variance(W)
                   </div>
 
-                  <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-2 font-semibold text-violet-700">
+                  <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-2.5 font-semibold text-violet-700 shadow-sm">
                     Cov(H,W)
                   </div>
 
                 </div>
 
-                <div className="text-3xl font-black text-violet-500 mt-4">
+                <div className="text-4xl font-black text-violet-500 my-5">
                   →
                 </div>
 
-                <div className="mt-2 text-base font-black text-violet-700">
+                <div className="text-base font-black text-violet-700">
                   Where do we store
                   <br />
                   all of these?
@@ -196,7 +196,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
             </div>
 
             {/* RIGHT */}
-            <div className="flex flex-col items-center justify-center px-5">
+            <div className="flex flex-col items-center justify-center p-6">
 
               <motion.div
                 initial={{
@@ -212,46 +212,46 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                 }}
                 className="w-full"
               >
-                <div className="text-center mb-4">
+                <div className="text-center mb-6">
                   <div className="text-2xl leading-tight font-black text-violet-700">
                     Covariance Matrix
                   </div>
                 </div>
 
                 {/* MATRIX */}
-                <div className="relative">
+                <div className="relative my-6">
 
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[70px] leading-none text-slate-300 font-thin">
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[80px] leading-none text-slate-300 font-thin">
                     [
                   </div>
 
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[70px] leading-none text-slate-300 font-thin">
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[80px] leading-none text-slate-300 font-thin">
                     ]
                   </div>
 
                   <div className="px-8">
 
-                    <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="grid grid-cols-2 gap-3 text-xs">
 
-                      <div className="bg-violet-100 rounded-xl p-2.5 text-center">
+                      <div className="bg-violet-100 rounded-xl p-3 text-center shadow-sm">
                         <div className="font-black text-violet-700">
                           Var(H)
                         </div>
                       </div>
 
-                      <div className="bg-violet-50 rounded-xl p-2.5 text-center">
+                      <div className="bg-violet-50 rounded-xl p-3 text-center shadow-sm">
                         <div className="font-black text-violet-700">
                           Cov(H,W)
                         </div>
                       </div>
 
-                      <div className="bg-violet-50 rounded-xl p-2.5 text-center">
+                      <div className="bg-violet-50 rounded-xl p-3 text-center shadow-sm">
                         <div className="font-black text-violet-700">
                           Cov(H,W)
                         </div>
                       </div>
 
-                      <div className="bg-violet-100 rounded-xl p-2.5 text-center">
+                      <div className="bg-violet-100 rounded-xl p-3 text-center shadow-sm">
                         <div className="font-black text-violet-700">
                           Var(W)
                         </div>
@@ -263,7 +263,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
 
                 </div>
 
-                <div className="mt-4 bg-slate-900 rounded-xl p-3 text-center">
+                <div className="mt-6 bg-slate-900 rounded-xl p-4 text-center shadow-md">
                   <div className="text-white font-black text-sm">
                     Summary of all variation
                     <br />
@@ -282,7 +282,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2 }}
-            className="border-t border-slate-200 bg-violet-50 py-3 px-5 flex-shrink-0"
+            className="border-t border-slate-200 bg-violet-50 py-4 px-6 flex-shrink-0"
           >
             <div className="text-center">
 
@@ -290,7 +290,7 @@ export const Scene7_11_CovarianceMatrix: React.FC = () => {
                 PCA never studies raw points directly.
               </div>
 
-              <div className="text-xs text-slate-500 mt-0.5">
+              <div className="text-xs text-slate-500 mt-1">
                 It studies the covariance matrix built from those points.
               </div>
 
