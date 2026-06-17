@@ -4,10 +4,8 @@ import { LandingPage } from './courses/LandingPage';
 import { CourseViewer } from './courses/CourseViewer';
 import { aiConfig } from './courses/ai';
 import { pythonProConfig } from './courses/python_pro';
-import { marathiConfig } from './courses/marathi';
-import { computerArchitectureConfig } from './courses/computer_architecture';
 
-type CourseType = 'ai' | 'python_pro' | 'marathi' | 'computer_architecture' | null;
+type CourseType = 'ai' | 'python_pro' | null;
 
 export const App: React.FC = () => {
   const [currentCourse, setCurrentCourse] = useState<CourseType>(() => {
@@ -80,45 +78,6 @@ export const App: React.FC = () => {
           </motion.div>
         )}
 
-        {currentCourse === 'marathi' && (
-          <motion.div
-            key="marathi-course"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.25 }}
-            className="w-full h-screen"
-          >
-            <CourseViewer
-              courseName={marathiConfig.courseName}
-              chapters={marathiConfig.chapters}
-              themes={marathiConfig.themes}
-              hasWhiteboard={marathiConfig.hasWhiteboard}
-              WhiteboardComponent={marathiConfig.WhiteboardComponent}
-              hasLiveAgent={marathiConfig.hasLiveAgent}
-              LiveAgentComponent={marathiConfig.LiveAgentComponent}
-              onBack={() => updateCourse(null)}
-            />
-          </motion.div>
-        )}
-
-        {currentCourse === 'computer_architecture' && (
-          <motion.div
-            key="computer-architecture-course"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.25 }}
-            className="w-full h-screen"
-          >
-            <CourseViewer
-              courseName={computerArchitectureConfig.courseName}
-              chapters={computerArchitectureConfig.chapters}
-              themes={computerArchitectureConfig.themes}
-              onBack={() => updateCourse(null)}
-            />
-          </motion.div>
-        )}
       </AnimatePresence>
     </div>
   );

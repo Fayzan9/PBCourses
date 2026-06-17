@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Cpu, ArrowRight, BookOpen, Sparkles, Binary, Layers } from 'lucide-react';
+import { Terminal, Cpu, ArrowRight, Sparkles, Layers } from 'lucide-react';
 
 interface InteractiveConstellationProps {
   accentColor?: string;
@@ -233,10 +233,10 @@ const CourseCard: React.FC<CourseCardProps> = ({
 };
 
 interface LandingPageProps {
-  onSelectCourse: (course: 'ai' | 'python_pro' | 'marathi' | 'computer_architecture') => void;
+  onSelectCourse: (course: 'ai' | 'python_pro') => void;
 }
 
-type Category = 'all' | 'ai_systems' | 'programming' | 'languages';
+type Category = 'all' | 'ai_systems' | 'programming';
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
   const [activeTab, setActiveTab] = useState<Category>('all');
@@ -281,28 +281,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
       glowColor: '#818cf8', // indigo-400
       textColor: '#6366f1', // indigo-600
       icon: <Terminal size={20} />,
-    },
-    {
-      id: 'marathi',
-      category: 'languages',
-      title: 'Marathi Fundamentals',
-      description: 'Learn Marathi from scratch — Devanagari script, grammar, vocabulary, and cultural immersion, from beginner to advanced.',
-      badge: 'Language Learning',
-      chaptersInfo: '1 Chapter • Script & Sounds',
-      glowColor: '#fb923c', // orange-400
-      textColor: '#f97316', // orange-600
-      icon: <BookOpen size={20} />,
-    },
-    {
-      id: 'computer_architecture',
-      category: 'ai_systems',
-      title: 'Computer Architecture Fundamentals',
-      description: 'Learn how computer systems work, how programs run on CPU, memory hierarchy, and basic systems architecture.',
-      badge: 'Computer Systems',
-      chaptersInfo: '1 Chapter • Foundations',
-      glowColor: '#22d3ee', // cyan-400
-      textColor: '#06b6d4', // cyan-600
-      icon: <Binary size={20} />,
     },
   ];
 
@@ -414,7 +392,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectCourse }) => {
               { id: 'all', label: 'All Courses' },
               { id: 'ai_systems', label: 'Systems & AI' },
               { id: 'programming', label: 'Programming' },
-              { id: 'languages', label: 'Languages' },
             ].map((tab) => (
               <button
                 key={tab.id}
