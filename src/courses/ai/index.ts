@@ -8,6 +8,7 @@ import { chapter3 } from './scenes/chapter_3';
 import { chapter4 } from './scenes/chapter_4';
 import { chapter5 } from './scenes/chapter_5';
 import { chapter6 } from './scenes/chapter_6';
+import { chapter7 } from './scenes/chapter_7';
 
 export const aiChapters: Chapter[] = [
   chapter1,
@@ -15,7 +16,8 @@ export const aiChapters: Chapter[] = [
   chapter3,
   chapter4,
   chapter5,
-  chapter6
+  chapter6,
+  chapter7
 ];
 
 export const aiThemes: ChapterTheme[] = [
