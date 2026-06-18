@@ -1,5 +1,6 @@
 import type { Chapter } from '../../../CourseViewer';
 
+import { Scene00_Intro } from './Scene00_Intro';
 import { Scene1_Curiosity } from './Scene01_Curiosity';
 import { Scene2_PersonRep } from './Scene02_PersonRep';
 import { Scene3_PeoplePoints } from './Scene03_PeoplePoints';
@@ -16,6 +17,7 @@ export const chapter1: Chapter = {
   title: "Everything Can Become a Point",
   subtitle: "Chapter 1: The Secret Language of Modern AI",
   scenes: [
+    { component: Scene00_Intro, title: "AI Course" },
     { component: Scene1_Curiosity, title: "Curiosity" },
     { component: Scene2_PersonRep, title: "Measurements to Numbers" },
     { component: Scene3_PeoplePoints, title: "People Become Locations" },
